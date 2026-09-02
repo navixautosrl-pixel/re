@@ -124,8 +124,11 @@
   .oc-mock .bar{ height:7px; border-radius:2px; }
   .oc-label{ padding:0.7rem 0.8rem 0.9rem; font-size:0.8rem; color:var(--ink-soft); }
 
-  /* reveal on scroll — 3D assemble (Motion-driven; .in is the no-JS/fallback target state) */
-  .reveal{ opacity:0; transform:perspective(800px) rotateX(14deg) translateY(30px) scale(0.97); filter:blur(4px); }
+  /* reveal on scroll — 3D assemble. Hidden ONLY once html.js-armed proves JS actually
+     ran (set by an inline script at the very top of body); with JS off/blocked/broken,
+     .reveal content is plain, visible, static content — never hidden waiting on a
+     script that might not run (Quick Look previews, JS errors, blocked CDNs, ...). */
+  html.js-armed .reveal:not(.in){ opacity:0; transform:perspective(800px) rotateX(14deg) translateY(30px) scale(0.97); filter:blur(4px); }
   .reveal.in{ opacity:1; transform:none; filter:blur(0); }
   .reveal.fallback-anim{ transition:opacity 750ms cubic-bezier(.2,.7,.2,1), transform 750ms cubic-bezier(.2,.7,.2,1), filter 750ms ease; }
   @media (prefers-reduced-motion:reduce){ .reveal{opacity:1; transform:none; filter:none; transition:none} }
@@ -210,7 +213,7 @@
 </style>
 </head>
 <body>
-
+<script>document.documentElement.classList.add('js-armed');</script>
 <noscript><style>.reveal{opacity:1 !important; transform:none !important; filter:none !important;}</style></noscript>
 <canvas id="bg-canvas"></canvas>
 <div id="bg-scrim"></div>

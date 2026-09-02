@@ -41,7 +41,7 @@
     font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
   }
-  body.no-scroll{ overflow:hidden; height:100%; }
+  html.js-armed body.no-scroll{ overflow:hidden; height:100%; }
   ::selection{background:var(--blue);color:#020304}
   a{color:inherit}
   img{max-width:100%}
@@ -52,7 +52,10 @@
   .example-tag{ display:inline-flex; align-items:center; gap:0.4rem; font-family:"IBM Plex Mono",monospace; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:#ffb454; border:1px solid rgba(255,180,84,0.4); background:rgba(255,180,84,0.08); padding:0.25rem 0.6rem; border-radius:20px; }
 
   /* intro explode overlay */
-  #intro{
+  /* Only ever shown once html.js-armed proves JS actually ran — otherwise it would be
+     a permanent full-screen block over the whole page with no script left to remove it. */
+  #intro{ display:none; }
+  html.js-armed #intro{
     position:fixed; inset:0; z-index:1000; background:var(--bg);
     display:flex; align-items:center; justify-content:center; cursor:pointer;
   }
@@ -100,7 +103,8 @@
   .wrap{ max-width:1120px; margin:0 auto; padding-inline:1.5rem; position:relative; z-index:2; }
   .nav{ position:sticky; top:0; z-index:30; background:rgba(2,3,4,0.66); backdrop-filter:var(--blur); border-bottom:1px solid var(--line); }
   .nav-inner{ max-width:1120px; margin:0 auto; padding:0.7rem 1.5rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
-  .brand{ display:flex; align-items:center; gap:0.55rem; text-decoration:none; opacity:0; }
+  .brand{ display:flex; align-items:center; gap:0.55rem; text-decoration:none; }
+  html.js-armed #nav-brand{ opacity:0; }
   .brand img{ width:30px; height:30px; }
   .brand span{ font-family:"Rajdhani",sans-serif; font-weight:700; font-size:1.05rem; letter-spacing:0.02em; color:var(--ink); }
   .brand b{ color:var(--blue); }
@@ -117,7 +121,10 @@
   .spec-plate{ margin-top:2.6rem; border:1px solid var(--line); background:var(--panel); backdrop-filter:var(--blur); border-radius:10px; padding:1rem 1.2rem; display:flex; flex-wrap:wrap; gap:0.5rem 1.6rem; font-size:0.78rem; }
   .spec-plate b{font-weight:600; color:var(--cyan); margin-right:0.4em}
 
-  .reveal{ opacity:0; transform:perspective(800px) rotateX(14deg) translateY(30px) scale(0.97); filter:blur(4px); }
+  /* Hidden ONLY once html.js-armed proves JS actually ran (set by an inline script at
+     the very top of body). With JS off/blocked/broken, .reveal content is plain,
+     visible, static content — never hidden waiting on a script that might not run. */
+  html.js-armed .reveal:not(.in){ opacity:0; transform:perspective(800px) rotateX(14deg) translateY(30px) scale(0.97); filter:blur(4px); }
   .reveal.in{ opacity:1; transform:none; filter:blur(0); }
   .reveal.fallback-anim{ transition:opacity 750ms cubic-bezier(.2,.7,.2,1), transform 750ms cubic-bezier(.2,.7,.2,1), filter 750ms ease; }
   @media (prefers-reduced-motion:reduce){ .reveal{opacity:1; transform:none; filter:none; transition:none} }
@@ -191,6 +198,7 @@
 </style>
 </head>
 <body class="no-scroll">
+<script>document.documentElement.classList.add('js-armed');</script>
 
 <noscript><style>.reveal{opacity:1 !important; transform:none !important; filter:none !important;} #intro{display:none !important;} body{overflow:visible !important; height:auto !important;}</style></noscript>
 
