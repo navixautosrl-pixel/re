@@ -26,13 +26,22 @@
     --blur: blur(10px);
   }
   *{box-sizing:border-box}
-  /* mobile/touch: no live WebGL canvas, no backdrop-filter — both are expensive to
-     composite together on iOS Safari and can crash the tab on fast scroll */
-  body.reduced-fx{ --blur: none; }
+  /* mobile/touch: the live WebGL canvas stays off — a continuously-animating canvas
+     under many backdrop-filter panels is what crashed Safari on fast scroll. Blur
+     itself is fine here since there's no moving layer under it any more; the canvas
+     is replaced by cheap, GPU-only drifting gradient blobs (transform + filter baked
+     once, not per frame) so mobile still feels alive, just not by re-rendering WebGL. */
   body.reduced-fx #bg-canvas{ display:none; }
   body.reduced-fx #bg-scrim{
-    background: radial-gradient(1100px 700px at 50% -6%, rgba(63,160,255,0.08), transparent 60%), var(--bg);
+    background: linear-gradient(180deg, rgba(2,3,4,0.25) 0%, rgba(2,3,4,0.55) 60%, rgba(2,3,4,0.7) 100%);
   }
+  .blob{ display:none; position:fixed; z-index:-2; border-radius:50%; filter:blur(60px); pointer-events:none; will-change:transform; }
+  body.reduced-fx .blob{ display:block; }
+  .blob-a{ width:60vmax; height:60vmax; left:-20vmax; top:-24vmax; background:radial-gradient(circle, rgba(63,160,255,0.48), transparent 70%); animation:blob-a 17s ease-in-out infinite; }
+  .blob-b{ width:65vmax; height:65vmax; right:-26vmax; bottom:-20vmax; background:radial-gradient(circle, rgba(95,224,255,0.4), transparent 70%); animation:blob-b 21s ease-in-out infinite; }
+  @keyframes blob-a{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(8vmax,10vmax) scale(1.15); } }
+  @keyframes blob-b{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-7vmax,-9vmax) scale(1.12); } }
+  @media (prefers-reduced-motion:reduce){ .blob{ animation:none !important; } }
   html{scroll-behavior:smooth}
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
   body{
@@ -124,9 +133,9 @@
   /* Hidden ONLY once html.js-armed proves JS actually ran (set by an inline script at
      the very top of body). With JS off/blocked/broken, .reveal content is plain,
      visible, static content — never hidden waiting on a script that might not run. */
-  html.js-armed .reveal:not(.in){ opacity:0; transform:translateY(10px); }
+  html.js-armed .reveal:not(.in){ opacity:0; transform:perspective(700px) rotateX(9deg) translateY(16px) scale(0.98); }
   .reveal.in{ opacity:1; transform:none; filter:blur(0); }
-  .reveal.fallback-anim{ transition:opacity 280ms cubic-bezier(.2,.7,.2,1), transform 280ms cubic-bezier(.2,.7,.2,1); }
+  .reveal.fallback-anim{ transition:opacity 340ms cubic-bezier(.2,.7,.2,1), transform 340ms cubic-bezier(.2,.7,.2,1); }
   @media (prefers-reduced-motion:reduce){ .reveal{opacity:1; transform:none; filter:none; transition:none} }
 
   section.block{ position:relative; padding-block:clamp(3rem,6vw,5.5rem); border-top:1px solid var(--line); }
@@ -212,6 +221,8 @@
 <div id="intro-ring"></div>
 
 <canvas id="bg-canvas"></canvas>
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
 <div id="bg-scrim"></div>
 <div id="spotlight"></div>
 <div id="cursor-ring"></div>
@@ -670,8 +681,8 @@
       var stop = M2.inView(members[0], function(){
         M2.animate(members, {
           opacity: [0, 1],
-          transform: ['translateY(10px)', 'none']
-        }, { duration: 0.28, delay: M2.stagger(0.05), easing: [0.2, 0.7, 0.2, 1] });
+          transform: ['perspective(700px) rotateX(9deg) translateY(16px) scale(0.98)', 'none']
+        }, { duration: 0.34, delay: M2.stagger(0.05), easing: [0.2, 0.7, 0.2, 1] });
         if (stop) stop();
       }, { margin: '0px 0px 20% 0px', amount: 0 });
     });
