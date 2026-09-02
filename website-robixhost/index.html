@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RobixHost</title>
+<meta name="description" content="Hosting, VPS, domenii și suport real — găzduire web rapidă și de încredere.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@13.1.1/dist/motion.js"></script>
+<style>
+  :root{
+    --bg:#020304;
+    --panel: rgba(20,40,70,0.28);
+    --panel-strong: rgba(20,40,70,0.42);
+    --line: rgba(140,190,255,0.14);
+    --line-strong: rgba(140,190,255,0.28);
+    --ink:#f2f6fb;
+    --ink-soft:#93a7bd;
+    --blue:#3fa0ff;
+    --blue-deep:#1450a6;
+    --cyan:#5fe0ff;
+    --focus:#5fe0ff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body.no-scroll{ overflow:hidden; height:100%; }
+  ::selection{background:var(--blue);color:#020304}
+  a{color:inherit}
+  img{max-width:100%}
+  .mono{ font-family:"IBM Plex Mono", ui-monospace, Menlo, monospace; font-variant-numeric:tabular-nums; }
+  h1,h2,h3{ font-family:"Rajdhani", sans-serif; font-weight:700; letter-spacing:0.01em; text-wrap:balance; margin:0; text-transform:uppercase; }
+  .eyebrow{ font-family:"IBM Plex Mono", monospace; font-size:0.72rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--cyan); }
+  .grad-text{ background:linear-gradient(100deg, var(--blue) 0%, var(--cyan) 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .example-tag{ display:inline-flex; align-items:center; gap:0.4rem; font-family:"IBM Plex Mono",monospace; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:#ffb454; border:1px solid rgba(255,180,84,0.4); background:rgba(255,180,84,0.08); padding:0.25rem 0.6rem; border-radius:20px; }
+
+  /* intro explode overlay */
+  #intro{
+    position:fixed; inset:0; z-index:1000; background:var(--bg);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  #intro-logowrap{ position:relative; width:min(46vw,300px); aspect-ratio:1/1; }
+  #intro-logo{ width:100%; height:100%; object-fit:contain; display:block; opacity:0; transform:scale(0.82); }
+  #intro-glow{
+    position:absolute; inset:-40%; border-radius:50%; pointer-events:none;
+    background:radial-gradient(circle, rgba(63,160,255,0.35), transparent 65%);
+    opacity:0; transform:scale(0.6);
+  }
+  #intro-ring{
+    position:fixed; left:50%; top:50%; width:10px; height:10px; margin:-5px 0 0 -5px;
+    border-radius:50%; border:1.5px solid var(--cyan); opacity:0; pointer-events:none;
+  }
+  #intro-skip{
+    position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+    font-family:"IBM Plex Mono",monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--ink-soft); opacity:0; text-decoration:none; padding:0.4rem 0.8rem;
+  }
+  .tile{ position:absolute; background-repeat:no-repeat; will-change:transform,opacity; }
+  @media (prefers-reduced-motion:reduce){ #intro{display:none !important;} body{overflow:visible !important; height:auto !important;} }
+
+  #spotlight{ position:fixed; inset:0; pointer-events:none; z-index:0; background:radial-gradient(460px circle at var(--mx,50%) var(--my,20%), rgba(63,160,255,0.08), transparent 70%); }
+  #bg-canvas{ position:fixed; inset:0; z-index:-2; }
+  #bg-scrim{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background: radial-gradient(1100px 700px at 50% -6%, rgba(63,160,255,0.10), transparent 60%),
+                linear-gradient(180deg, rgba(2,3,4,0.35) 0%, rgba(2,3,4,0.8) 46%, rgba(2,3,4,0.95) 100%);
+  }
+
+  #cursor-ring, #cursor-dot{ position:fixed; top:0; left:0; pointer-events:none; z-index:100; border-radius:50%; transform:translate(-50%,-50%); opacity:0; }
+  #cursor-ring{ width:34px; height:34px; border:1px solid var(--cyan); transition:width 180ms ease, height 180ms ease, opacity 180ms ease; }
+  #cursor-dot{ width:5px; height:5px; background:var(--blue); }
+  #cursor-ring.armed, #cursor-dot.armed{ opacity:0.7; }
+  #cursor-dot.armed{ opacity:1; }
+  body.has-cursor, body.has-cursor a, body.has-cursor button, body.has-cursor .btn{ cursor:none; }
+
+  .btn{ display:inline-flex; align-items:center; gap:0.55rem; padding:0.9rem 1.5rem; border-radius:8px; font-family:"IBM Plex Sans",sans-serif; font-weight:600; font-size:0.95rem; text-decoration:none; cursor:pointer; border:1px solid transparent; transition:transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, background 220ms ease, border-color 220ms ease; }
+  .btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; }
+  .btn-glow{ background:linear-gradient(135deg, var(--blue), var(--cyan)); color:#02121f; box-shadow:0 0 0 1px rgba(63,160,255,0.4), 0 8px 24px -8px rgba(63,160,255,0.55); }
+  .btn-glow:hover{ transform:translateY(-2px) scale(1.02); box-shadow:0 0 0 1px rgba(63,160,255,0.6), 0 16px 36px -8px rgba(95,224,255,0.55); }
+  .btn-ghost{ background:var(--panel); border-color:var(--line-strong); color:var(--ink); backdrop-filter:blur(10px); }
+  .btn-ghost:hover{ background:var(--panel-strong); border-color:var(--cyan); }
+
+  .wrap{ max-width:1120px; margin:0 auto; padding-inline:1.5rem; position:relative; z-index:2; }
+  .nav{ position:sticky; top:0; z-index:30; background:rgba(2,3,4,0.66); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+  .nav-inner{ max-width:1120px; margin:0 auto; padding:0.7rem 1.5rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+  .brand{ display:flex; align-items:center; gap:0.55rem; text-decoration:none; opacity:0; }
+  .brand img{ width:30px; height:30px; }
+  .brand span{ font-family:"Rajdhani",sans-serif; font-weight:700; font-size:1.05rem; letter-spacing:0.02em; color:var(--ink); }
+  .brand b{ color:var(--blue); }
+  .nav-links{ display:none; gap:1.6rem; font-size:0.92rem; font-weight:500; }
+  .nav-links a{ text-decoration:none; color:var(--ink-soft); transition:color 180ms ease; }
+  .nav-links a:hover{color:var(--ink)}
+  @media (min-width:860px){ .nav-links{display:flex} }
+
+  .hero{ position:relative; padding-top:clamp(4rem,10vw,6.5rem); padding-bottom:clamp(3rem,7vw,5rem); }
+  .hero-inner{ max-width:720px; }
+  .hero h1{ font-size:clamp(2.3rem, 6vw, 4rem); line-height:1.05; margin-top:1rem; }
+  .hero p.lead{ max-width:52ch; margin-top:1.2rem; font-size:1.12rem; color:var(--ink-soft); font-family:"IBM Plex Sans",sans-serif; text-transform:none; }
+  .hero-ctas{ display:flex; flex-wrap:wrap; align-items:center; gap:1rem; margin-top:2rem; }
+  .spec-plate{ margin-top:2.6rem; border:1px solid var(--line); background:var(--panel); backdrop-filter:blur(10px); border-radius:10px; padding:1rem 1.2rem; display:flex; flex-wrap:wrap; gap:0.5rem 1.6rem; font-size:0.78rem; }
+  .spec-plate b{font-weight:600; color:var(--cyan); margin-right:0.4em}
+
+  .reveal{ opacity:0; transform:perspective(800px) rotateX(14deg) translateY(30px) scale(0.97); filter:blur(4px); }
+  .reveal.in{ opacity:1; transform:none; filter:blur(0); }
+  .reveal.fallback-anim{ transition:opacity 750ms cubic-bezier(.2,.7,.2,1), transform 750ms cubic-bezier(.2,.7,.2,1), filter 750ms ease; }
+  @media (prefers-reduced-motion:reduce){ .reveal{opacity:1; transform:none; filter:none; transition:none} }
+
+  section.block{ position:relative; padding-block:clamp(3rem,6vw,5.5rem); border-top:1px solid var(--line); }
+  .sheet-index{ font-size:0.68rem; color:var(--ink-soft); letter-spacing:0.08em; display:block; margin-bottom:0.6rem; font-family:"IBM Plex Mono",monospace; }
+  .block h2{ font-size:clamp(1.6rem,3.2vw,2.1rem); margin-top:0.6rem; }
+  .block .section-head{ display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap; }
+
+  .props-grid{ margin-top:2.4rem; display:grid; gap:1.1rem; perspective:1400px; }
+  @media (min-width:760px){ .props-grid{grid-template-columns:repeat(3,1fr)} }
+  .tilt-card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1.9rem 1.7rem; backdrop-filter:blur(10px); transform-style:preserve-3d; will-change:transform; transition:transform 120ms ease, border-color 220ms ease, box-shadow 220ms ease; }
+  .tilt-card:hover{ border-color:var(--line-strong); box-shadow:0 20px 50px -20px rgba(0,0,0,0.7); }
+  .prop h3{ margin-top:1rem; font-size:1.15rem; }
+  .prop p{ color:var(--ink-soft); font-size:0.95rem; margin-top:0.55rem; text-transform:none; font-family:"IBM Plex Sans",sans-serif; font-weight:400; }
+
+  .plan-grid{ margin-top:2.2rem; display:grid; gap:1.2rem; perspective:1400px; }
+  @media (min-width:860px){ .plan-grid{grid-template-columns:repeat(3,1fr); align-items:stretch} }
+  .plan-card{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:1.7rem 1.5rem; display:flex; flex-direction:column; backdrop-filter:blur(10px); transform-style:preserve-3d; will-change:transform; transition:transform 120ms ease, box-shadow 220ms ease, border-color 220ms ease; }
+  .plan-card:hover{ box-shadow:0 30px 60px -25px rgba(0,0,0,0.75); }
+  .plan-card.pop{ border-color:rgba(63,160,255,0.55); box-shadow:0 0 0 1px rgba(63,160,255,0.35), 0 20px 50px -20px rgba(63,160,255,0.3); }
+  .plan-tag{ font-size:0.68rem; font-family:"IBM Plex Mono",monospace; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:0.6rem; }
+  .plan-card h3{ font-size:1.1rem; }
+  .plan-card .amount{ font-family:"IBM Plex Mono",monospace; font-size:1.9rem; font-weight:600; margin-top:0.5rem; text-transform:none; }
+  .plan-card .amount span{ font-size:0.9rem; font-weight:400; color:var(--ink-soft); }
+  .plan-card ul{ list-style:none; margin:1.2rem 0 0; padding:0; display:flex; flex-direction:column; gap:0.55rem; font-size:0.9rem; color:var(--ink-soft); flex:1; }
+  .plan-card li{ display:flex; gap:0.55rem; align-items:flex-start; }
+  .plan-card li svg{ flex:none; margin-top:3px; color:var(--cyan); }
+  .plan-card .btn{ margin-top:1.4rem; justify-content:center; }
+
+  .domain-box{ margin-top:2.2rem; border:1px solid var(--line); background:var(--panel); backdrop-filter:blur(10px); border-radius:14px; padding:1.6rem; }
+  .domain-row{ display:flex; gap:0.7rem; flex-wrap:wrap; }
+  .domain-row input{ flex:1; min-width:200px; font:inherit; padding:0.75rem 0.9rem; border-radius:8px; border:1px solid var(--line-strong); background:rgba(255,255,255,0.04); color:var(--ink); }
+  .domain-row input:focus{ border-color:var(--cyan); }
+  .tld-grid{ margin-top:1.4rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:0.7rem; }
+  .tld{ border:1px solid var(--line); border-radius:8px; padding:0.7rem 0.9rem; text-align:center; }
+  .tld b{ font-family:"IBM Plex Mono",monospace; display:block; color:var(--cyan); font-size:1rem; }
+  .tld span{ font-size:0.75rem; color:var(--ink-soft); }
+
+  .support-grid{ margin-top:2.2rem; display:grid; gap:1.1rem; perspective:1400px; }
+  @media (min-width:760px){ .support-grid{grid-template-columns:repeat(3,1fr)} }
+
+  .gf-grid{ margin-top:2.4rem; display:grid; gap:2.6rem; }
+  @media (min-width:860px){ .gf-grid{grid-template-columns:0.9fr 1.1fr} }
+  .guarantee-box{ border:1px solid rgba(63,160,255,0.35); background:var(--panel); border-radius:14px; padding:1.7rem; backdrop-filter:blur(10px); }
+  .guarantee-box p{ color:var(--ink-soft); font-size:0.95rem; margin-top:0.7rem; text-transform:none; font-family:"IBM Plex Sans",sans-serif; }
+  .faq-item{ border-top:1px solid var(--line); padding-block:1.15rem; }
+  .faq-item:first-child{border-top:none}
+  .faq-item summary{ cursor:pointer; font-weight:600; list-style:none; display:flex; justify-content:space-between; gap:1rem; align-items:center; font-family:"IBM Plex Sans",sans-serif; }
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary .plus{ font-family:"IBM Plex Mono",monospace; color:var(--cyan); flex:none; transition:transform 220ms ease; }
+  .faq-item[open] summary .plus{ color:var(--blue); transform:rotate(45deg); }
+  .faq-item p{ color:var(--ink-soft); font-size:0.93rem; margin-top:0.65rem; max-width:60ch; }
+
+  .contact-grid{ margin-top:2.4rem; display:grid; gap:2.5rem; }
+  @media (min-width:900px){ .contact-grid{grid-template-columns:0.85fr 1.15fr} }
+  .contact-side p{ color:var(--ink-soft); font-size:0.96rem; margin-top:0.85rem; max-width:40ch; text-transform:none; font-family:"IBM Plex Sans",sans-serif; }
+  .contact-side .direct{ margin-top:1.7rem; font-size:0.92rem; }
+  .contact-side .direct a{ text-decoration:underline; text-underline-offset:3px; font-weight:600; color:var(--cyan); }
+  form{ border:1px solid var(--line); background:var(--panel); backdrop-filter:blur(10px); border-radius:16px; padding:1.7rem; display:grid; gap:1.05rem; }
+  @media (min-width:600px){ .row2{display:grid; grid-template-columns:1fr 1fr; gap:1rem} }
+  label{ font-size:0.82rem; font-weight:600; display:block; margin-bottom:0.4rem; }
+  input, select, textarea{ width:100%; font:inherit; font-family:"IBM Plex Sans",sans-serif; padding:0.7rem 0.75rem; border:1px solid var(--line-strong); border-radius:8px; background:rgba(255,255,255,0.04); color:var(--ink); transition:border-color 180ms ease; }
+  input:focus, select:focus, textarea:focus{ border-color:var(--cyan); }
+  textarea{resize:vertical; min-height:5rem}
+  .form-note{ font-size:0.8rem; color:var(--ink-soft); }
+  .form-status{ font-size:0.85rem; color:var(--cyan); min-height:1.2em; }
+
+  footer{ border-top:1px solid var(--line); padding:2.5rem 1.5rem 3rem; position:relative; z-index:2; }
+  .footer-inner{ max-width:1120px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:1.2rem; font-size:0.85rem; color:var(--ink-soft); }
+</style>
+</head>
+<body class="no-scroll">
+
+<noscript><style>.reveal{opacity:1 !important; transform:none !important; filter:none !important;} #intro{display:none !important;} body{overflow:visible !important; height:auto !important;}</style></noscript>
+
+<div id="intro" role="button" aria-label="Sari peste animația de intro" tabindex="0">
+  <div id="intro-logowrap">
+    <div id="intro-glow"></div>
+    <img id="intro-logo" src="assets/logo-700.webp" alt="">
+  </div>
+  <a id="intro-skip" href="#hero">Sari peste ↓</a>
+</div>
+<div id="intro-ring"></div>
+
+<canvas id="bg-canvas"></canvas>
+<div id="bg-scrim"></div>
+<div id="spotlight"></div>
+<div id="cursor-ring"></div>
+<div id="cursor-dot"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="brand" id="nav-brand">
+      <img src="assets/logo-700.webp" alt="RobixHost">
+      <span>ROBIX<b>HOST</b></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#hosting">Hosting</a>
+      <a href="#vps">VPS</a>
+      <a href="#domenii">Domenii</a>
+      <a href="#suport">Suport</a>
+      <a href="#intrebari">Întrebări</a>
+    </nav>
+    <a href="#contact" class="btn btn-glow">Comandă acum</a>
+  </div>
+</header>
+
+<main>
+  <section id="hero" class="hero">
+    <div class="wrap hero-inner">
+      <p class="eyebrow reveal in">Găzduire web de încredere</p>
+      <h1 class="reveal in">Hosting rapid. <span class="grad-text">Fără dureri de cap.</span></h1>
+      <p class="lead reveal in">Găzduire web, VPS și domenii cu suport real, de la oameni care răspund — nu roboți în buclă. Site-ul tău, live în câteva minute.</p>
+      <div class="hero-ctas reveal in">
+        <a href="#hosting" class="btn btn-glow">Vezi planurile</a>
+        <a href="#suport" class="btn btn-ghost">Vorbește cu suportul</a>
+      </div>
+      <div class="spec-plate mono reveal in">
+        <span><b>Stocare</b>SSD NVMe</span>
+        <span><b>Backup</b>zilnic</span>
+        <span><b>Suport</b>24/7</span>
+        <span><b>Activare</b>instant</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="valori" class="block">
+    <div class="wrap">
+      <span class="sheet-index reveal">01 — DE CE ROBIXHOST</span>
+      <p class="eyebrow reveal">De ce RobixHost</p>
+      <h2 class="reveal" style="max-width:30ch;">Infrastructură serioasă, fără jargon inutil.</h2>
+      <div class="props-grid">
+        <div class="prop tilt-card reveal">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--cyan)"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
+          <h3>Viteză reală</h3>
+          <p>Stocare SSD NVMe și cache la nivel de server, ca site-ul tău să se încarce rapid indiferent de trafic.</p>
+        </div>
+        <div class="prop tilt-card reveal">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--cyan)"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/></svg>
+          <h3>Suport uman</h3>
+          <p>Scrii un tichet și răspunde cineva care chiar înțelege problema — nu un script cu răspunsuri predefinite.</p>
+        </div>
+        <div class="prop tilt-card reveal">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--cyan)"><path d="M4 17V9l8-5 8 5v8l-8 5-8-5Z"/><path d="M4 9l8 5 8-5M12 14v8"/></svg>
+          <h3>Scalabil din prima zi</h3>
+          <p>Începi mic și treci la un pachet mai mare oricând, fără să pierzi date sau timp de nefuncționare.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="hosting" class="block">
+    <div class="wrap">
+      <span class="sheet-index reveal">02 — HOSTING</span>
+      <div class="section-head">
+        <p class="eyebrow reveal">Planuri hosting</p>
+        <span class="example-tag reveal">Date exemplu</span>
+      </div>
+      <h2 class="reveal">Alege pachetul potrivit site-ului tău.</h2>
+      <div class="plan-grid">
+        <div class="plan-card tilt-card reveal">
+          <div class="plan-tag">Start</div>
+          <h3>1 site</h3>
+          <div class="amount mono">9,90 <span>RON/lună</span></div>
+          <ul>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>10 GB SSD NVMe</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Trafic nelimitat</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>SSL gratuit</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>5 conturi email</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost">Aleg Start</a>
+        </div>
+        <div class="plan-card pop tilt-card reveal">
+          <div class="plan-tag">Business · popular</div>
+          <h3>Până la 10 site-uri</h3>
+          <div class="amount mono">19,90 <span>RON/lună</span></div>
+          <ul>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>50 GB SSD NVMe</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Tot ce e în Start</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Backup zilnic automat</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>25 conturi email</li>
+          </ul>
+          <a href="#contact" class="btn btn-glow">Aleg Business</a>
+        </div>
+        <div class="plan-card tilt-card reveal">
+          <div class="plan-tag">Pro</div>
+          <h3>Site-uri nelimitate</h3>
+          <div class="amount mono">39,90 <span>RON/lună</span></div>
+          <ul>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>150 GB SSD NVMe</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Tot ce e în Business</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Resurse prioritare</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Email nelimitat</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost">Aleg Pro</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="vps" class="block">
+    <div class="wrap">
+      <span class="sheet-index reveal">03 — VPS</span>
+      <div class="section-head">
+        <p class="eyebrow reveal">Servere VPS</p>
+        <span class="example-tag reveal">Date exemplu</span>
+      </div>
+      <h2 class="reveal">Resurse dedicate, control complet.</h2>
+      <div class="plan-grid">
+        <div class="plan-card tilt-card reveal">
+          <div class="plan-tag">VPS 1</div>
+          <h3>Proiecte mici</h3>
+          <div class="amount mono">29 <span>RON/lună</span></div>
+          <ul>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>2 vCPU · 4 GB RAM</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>60 GB SSD NVMe</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Acces root complet</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost">Aleg VPS 1</a>
+        </div>
+        <div class="plan-card pop tilt-card reveal">
+          <div class="plan-tag">VPS 2 · popular</div>
+          <h3>Aplicații medii</h3>
+          <div class="amount mono">59 <span>RON/lună</span></div>
+          <ul>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>4 vCPU · 8 GB RAM</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>120 GB SSD NVMe</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Backup săptămânal inclus</li>
+          </ul>
+          <a href="#contact" class="btn btn-glow">Aleg VPS 2</a>
+        </div>
+        <div class="plan-card tilt-card reveal">
+          <div class="plan-tag">VPS 3</div>
+          <h3>Trafic ridicat</h3>
+          <div class="amount mono">99 <span>RON/lună</span></div>
+          <ul>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>8 vCPU · 16 GB RAM</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>240 GB SSD NVMe</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>IP dedicat inclus</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost">Aleg VPS 3</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="domenii" class="block">
+    <div class="wrap">
+      <span class="sheet-index reveal">04 — DOMENII</span>
+      <div class="section-head">
+        <p class="eyebrow reveal">Domenii</p>
+        <span class="example-tag reveal">Prețuri exemplu</span>
+      </div>
+      <h2 class="reveal" style="max-width:32ch;">Găsește și înregistrează domeniul potrivit.</h2>
+      <div class="domain-box reveal">
+        <div class="domain-row">
+          <input type="text" placeholder="numeleafacerii.ro" aria-label="Caută domeniu">
+          <button type="button" class="btn btn-glow">Caută</button>
+        </div>
+        <div class="tld-grid">
+          <div class="tld"><b>.ro</b><span>39 RON/an</span></div>
+          <div class="tld"><b>.com</b><span>49 RON/an</span></div>
+          <div class="tld"><b>.net</b><span>55 RON/an</span></div>
+          <div class="tld"><b>.store</b><span>69 RON/an</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="suport" class="block">
+    <div class="wrap">
+      <span class="sheet-index reveal">05 — SUPORT</span>
+      <p class="eyebrow reveal">Suport</p>
+      <h2 class="reveal" style="max-width:34ch;">Când ai o problemă, vorbești cu un om.</h2>
+      <div class="support-grid">
+        <div class="prop tilt-card reveal">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--cyan)"><path d="M21 11.5a8.5 8.5 0 1 1-4.1-7.3L21 3l-1 4.6a8.46 8.46 0 0 1 1 3.9Z"/></svg>
+          <h3>Tichete de suport</h3>
+          <p>Deschizi un tichet direct din panoul de control, cu istoricul mereu la îndemână.</p>
+        </div>
+        <div class="prop tilt-card reveal">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--cyan)"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+          <h3>Disponibil 24/7</h3>
+          <p>Suport tehnic în fiecare zi a săptămânii, inclusiv weekend și sărbători.</p>
+        </div>
+        <div class="prop tilt-card reveal">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--cyan)"><path d="M4 4h16v12H7l-3 3V4Z"/></svg>
+          <h3>Bază de cunoștințe</h3>
+          <p>Ghiduri pas cu pas pentru cele mai comune întrebări, ca să rezolvi rapid și singur când vrei.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="intrebari" class="block">
+    <div class="wrap gf-grid">
+      <div>
+        <span class="sheet-index reveal">06 — GARANȚIE</span>
+        <p class="eyebrow reveal">Garanție</p>
+        <div class="guarantee-box reveal">
+          <h3 style="font-size:1.2rem">30 de zile, bani înapoi</h3>
+          <p>Dacă în prima lună nu ești mulțumit de serviciu, îți returnăm plata integral — fără întrebări.</p>
+        </div>
+      </div>
+      <div>
+        <span class="sheet-index reveal">ÎNTREBĂRI</span>
+        <p class="eyebrow reveal">Întrebări frecvente</p>
+        <div style="margin-top:0.9rem" class="reveal">
+          <details class="faq-item" open>
+            <summary>Pot muta un site existent la RobixHost? <span class="plus mono">+</span></summary>
+            <p>Da — te ajutăm cu migrarea gratuită de la hostingul actual, fără downtime pentru vizitatori.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Pot trece la un plan mai mare mai târziu? <span class="plus mono">+</span></summary>
+            <p>Oricând, direct din panoul de control. Diferența se calculează proporțional, fără costuri ascunse.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Domeniul e inclus în planurile de hosting? <span class="plus mono">+</span></summary>
+            <p>Domeniile se achiziționează separat, dar le poți gestiona din același cont, alături de hostingul tău.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Ce se întâmplă dacă am nevoie de ajutor tehnic? <span class="plus mono">+</span></summary>
+            <p>Deschizi un tichet sau ne scrii direct — echipa de suport răspunde 24/7, în fiecare zi a săptămânii.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="block">
+    <div class="wrap contact-grid">
+      <div class="contact-side">
+        <span class="sheet-index reveal">07 — CONTACT</span>
+        <p class="eyebrow reveal">Hai să vorbim</p>
+        <h2 class="reveal" style="font-size:clamp(1.6rem,3.4vw,2.2rem);">Pornește site-ul tău azi.</h2>
+        <p class="reveal">Spune-ne ce ai nevoie și îți recomandăm planul potrivit — fără presiune de vânzare.</p>
+        <p class="direct reveal">Sau scrie direct la <a href="mailto:contact@robixhost.ro">contact@robixhost.ro</a></p>
+      </div>
+      <form id="lead-form" class="reveal">
+        <div class="row2">
+          <div><label for="f-name">Numele tău</label><input id="f-name" name="name" type="text" required autocomplete="name"></div>
+          <div><label for="f-email">Email</label><input id="f-email" name="email" type="email" required autocomplete="email"></div>
+        </div>
+        <div>
+          <label for="f-plan">Ce te interesează?</label>
+          <select id="f-plan" name="plan">
+            <option>Hosting</option>
+            <option>VPS</option>
+            <option>Domeniu</option>
+            <option>Nu sunt sigur, am nevoie de sfat</option>
+          </select>
+        </div>
+        <div><label for="f-message">Mesaj</label><textarea id="f-message" name="message" placeholder="Ex: vreau să mut un site WordPress existent..."></textarea></div>
+        <button type="submit" class="btn btn-glow">Trimite cererea →</button>
+        <p class="form-note">Trimiterea deschide clientul tău de email, cu mesajul precompletat.</p>
+        <p class="form-status" id="form-status" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <a href="#hero" class="brand" style="opacity:1"><img src="assets/logo-700.webp" alt="RobixHost" style="width:26px;height:26px;"><span>ROBIX<b>HOST</b></span></a>
+      <p style="margin-top:0.5rem">Hosting · VPS · Domenii · Suport</p>
+    </div>
+    <div class="mono">© 2026 RobixHost</div>
+  </div>
+</footer>
+
+<script>
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasFinePointer = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+  function unlockScroll(){ document.body.classList.remove('no-scroll'); }
+
+  // ---------- intro: logo fade-in -> shatter/explode -> settle into nav ----------
+  (function(){
+    var intro = document.getElementById('intro');
+    var logo = document.getElementById('intro-logo');
+    var glow = document.getElementById('intro-glow');
+    var ring = document.getElementById('intro-ring');
+    var skip = document.getElementById('intro-skip');
+    var navBrand = document.getElementById('nav-brand');
+    var done = false;
+
+    function finish(){
+      if (done) return;
+      done = true;
+      intro.style.pointerEvents = 'none';
+      unlockScroll();
+      if (window.Motion) {
+        window.Motion.animate(intro, { opacity: [1, 0] }, { duration: 0.5, easing: [0.2,0.7,0.2,1] }).finished.then(function(){ intro.remove(); });
+        window.Motion.animate(navBrand, { opacity: [0, 1], transform: ['scale(0.7)', 'scale(1)'] }, { duration: 0.5, easing: [0.2,0.7,0.2,1] });
+      } else {
+        intro.style.transition = 'opacity .4s ease';
+        intro.style.opacity = '0';
+        navBrand.style.opacity = '1';
+        setTimeout(function(){ intro.remove(); }, 450);
+      }
+    }
+
+    if (reduceMotion) {
+      intro.remove();
+      navBrand.style.opacity = '1';
+      unlockScroll();
+      return;
+    }
+
+    intro.addEventListener('click', finish);
+    intro.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') finish(); });
+    skip.addEventListener('click', function(e){ e.preventDefault(); finish(); });
+
+    if (!window.Motion) {
+      // no animation engine: show logo briefly, then reveal page
+      logo.style.opacity = '1'; logo.style.transform = 'none';
+      setTimeout(finish, 900);
+      return;
+    }
+    var M = window.Motion;
+
+    M.animate(logo, { opacity: [0, 1], transform: ['scale(0.82)', 'scale(1)'] }, { duration: 0.6, easing: [0.2,0.7,0.2,1] });
+    M.animate(glow, { opacity: [0, 0.8, 0.5], transform: ['scale(0.6)', 'scale(1.1)', 'scale(1)'] }, { duration: 0.9, easing: [0.2,0.7,0.2,1] });
+
+    setTimeout(explode, 1050);
+
+    function explode(){
+      skip.style.opacity = '0';
+      var rect = logo.getBoundingClientRect();
+      var GRID = 7;
+      var tileW = rect.width / GRID, tileH = rect.height / GRID;
+      var container = document.getElementById('intro-logowrap');
+      logo.style.opacity = '0';
+
+      var cx = rect.width / 2, cy = rect.height / 2;
+      var tiles = [];
+      for (var r = 0; r < GRID; r++) {
+        for (var c = 0; c < GRID; c++) {
+          var tile = document.createElement('div');
+          tile.className = 'tile';
+          tile.style.left = (c * tileW) + 'px';
+          tile.style.top = (r * tileH) + 'px';
+          tile.style.width = tileW + 'px';
+          tile.style.height = tileH + 'px';
+          tile.style.backgroundImage = "url('" + logo.src + "')";
+          tile.style.backgroundSize = rect.width + 'px ' + rect.height + 'px';
+          tile.style.backgroundPosition = (-c * tileW) + 'px ' + (-r * tileH) + 'px';
+          container.appendChild(tile);
+          tiles.push(tile);
+
+          var tx = (c * tileW + tileW / 2) - cx, ty = (r * tileH + tileH / 2) - cy;
+          var dist = Math.sqrt(tx * tx + ty * ty) || 1;
+          var force = 260 + Math.random() * 220;
+          var outX = (tx / dist) * force + (Math.random() - 0.5) * 60;
+          var outY = (ty / dist) * force + (Math.random() - 0.5) * 60;
+          var rot = (Math.random() - 0.5) * 420;
+          var delay = (dist / 260) * 0.05;
+
+          M.animate(tile, {
+            transform: ['translate(0px,0px) rotate(0deg) scale(1)', 'translate(' + outX + 'px,' + outY + 'px) rotate(' + rot + 'deg) scale(0.3)'],
+            opacity: [1, 0]
+          }, { duration: 0.75, delay: delay, easing: [0.15, 0.6, 0.25, 1] });
+        }
+      }
+
+      // shockwave ring
+      ring.style.left = (rect.left + rect.width / 2) + 'px';
+      ring.style.top = (rect.top + rect.height / 2) + 'px';
+      M.animate(ring, {
+        opacity: [0.9, 0],
+        transform: ['translate(-50%,-50%) scale(1)', 'translate(-50%,-50%) scale(140)']
+      }, { duration: 0.8, easing: [0.15, 0.7, 0.2, 1] });
+
+      M.animate(glow, { opacity: [0.5, 0] }, { duration: 0.5 });
+
+      setTimeout(finish, 650);
+    }
+  })();
+
+  // spotlight follow
+  if (!reduceMotion) {
+    window.addEventListener('mousemove', function(e){
+      document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+      document.documentElement.style.setProperty('--my', e.clientY + 'px');
+    }, { passive: true });
+  }
+
+  // magnetic custom cursor
+  if (hasFinePointer && !reduceMotion) {
+    document.body.classList.add('has-cursor');
+    var cring = document.getElementById('cursor-ring');
+    var cdot = document.getElementById('cursor-dot');
+    var tx2 = 0, ty2 = 0, rx2 = 0, ry2 = 0, armed = false;
+    window.addEventListener('mousemove', function(e){
+      tx2 = e.clientX; ty2 = e.clientY;
+      if (!armed) { armed = true; rx2 = tx2; ry2 = ty2; cring.classList.add('armed'); cdot.classList.add('armed'); }
+    }, { passive:true });
+    (function loop(){
+      rx2 += (tx2 - rx2) * 0.18; ry2 += (ty2 - ry2) * 0.18;
+      cring.style.left = rx2 + 'px'; cring.style.top = ry2 + 'px';
+      cdot.style.left = tx2 + 'px'; cdot.style.top = ty2 + 'px';
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a, button, summary, input, textarea, select').forEach(function(el){
+      el.addEventListener('mouseenter', function(){ cring.classList.add('magnet'); cring.style.width='64px'; cring.style.height='64px'; });
+      el.addEventListener('mouseleave', function(){ cring.classList.remove('magnet'); cring.style.width='34px'; cring.style.height='34px'; });
+    });
+  } else {
+    var cr = document.getElementById('cursor-ring'), cd = document.getElementById('cursor-dot');
+    if (cr) cr.style.display = 'none';
+    if (cd) cd.style.display = 'none';
+  }
+
+  // scroll reveal — Motion (spring, per-group stagger) with fallback
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal:not(.in)'));
+  if (reduceMotion) {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  } else if (window.Motion && typeof window.Motion.inView === 'function') {
+    var M2 = window.Motion;
+    var groups = new Map();
+    revealEls.forEach(function(el){
+      var p = el.parentElement;
+      if (!groups.has(p)) groups.set(p, []);
+      groups.get(p).push(el);
+    });
+    groups.forEach(function(members){
+      var stop = M2.inView(members[0], function(){
+        M2.animate(members, {
+          opacity: [0, 1],
+          transform: ['perspective(800px) rotateX(14deg) translateY(30px) scale(0.97)', 'none'],
+          filter: ['blur(4px)', 'blur(0px)']
+        }, { duration: 0.7, delay: M2.stagger(0.08), easing: [0.2, 0.7, 0.2, 1] });
+        if (stop) stop();
+      }, { margin: '0px 0px -8% 0px', amount: 0.15 });
+    });
+  } else if ('IntersectionObserver' in window) {
+    revealEls.forEach(function(el){ el.classList.add('fallback-anim'); });
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry, i){
+        if (entry.isIntersecting) {
+          entry.target.style.transitionDelay = (i % 4) * 70 + 'ms';
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // tactile button press
+  if (window.Motion && !reduceMotion) {
+    document.querySelectorAll('.btn').forEach(function(btn){
+      btn.addEventListener('pointerdown', function(){ window.Motion.animate(btn, { scale: 0.96 }, { duration: 0.15, easing: [0.2, 0.7, 0.2, 1] }); });
+      ['pointerup', 'pointerleave'].forEach(function(evt){
+        btn.addEventListener(evt, function(){ window.Motion.animate(btn, { scale: 1 }, { type: 'spring', stiffness: 400, damping: 20 }); });
+      });
+    });
+  }
+
+  // 3D pointer tilt on cards
+  if (hasFinePointer && !reduceMotion) {
+    document.querySelectorAll('.tilt-card').forEach(function(card){
+      card.addEventListener('mousemove', function(e){
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = 'perspective(900px) rotateX(' + (py * -8) + 'deg) rotateY(' + (px * 10) + 'deg) translateZ(6px)';
+      });
+      card.addEventListener('mouseleave', function(){ card.style.transform = 'perspective(900px) rotateX(0) rotateY(0) translateZ(0)'; });
+    });
+  }
+
+  // mailto lead form
+  var form = document.getElementById('lead-form');
+  var status = document.getElementById('form-status');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var data = new FormData(form);
+    var name = data.get('name') || '', email = data.get('email') || '', plan = data.get('plan') || '', message = data.get('message') || '';
+    var subject = 'Cerere ofertă — ' + plan;
+    var body = 'Nume: ' + name + '\nEmail: ' + email + '\nInteres: ' + plan + '\n\nMesaj:\n' + message;
+    status.textContent = 'Se deschide clientul tău de email…';
+    window.location.href = 'mailto:contact@robixhost.ro?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  });
+
+  // persistent 3D backdrop: wave grid + particles, scroll-driven camera
+  (function(){
+    var canvas = document.getElementById('bg-canvas');
+    if (!window.THREE || !canvas) return;
+    var scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x020304, 0.032);
+    var camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 3.2, 9);
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    var segs = 46;
+    var geo = new THREE.PlaneGeometry(40, 34, segs, segs);
+    geo.rotateX(-Math.PI / 2.15);
+    var pos = geo.attributes.position;
+    var base = new Float32Array(pos.count);
+    for (var i = 0; i < pos.count; i++) base[i] = pos.getY(i);
+    var grid = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: 0x3fa0ff, wireframe: true, transparent: true, opacity: 0.32 }));
+    grid.position.set(0, -1.3, -8);
+    scene.add(grid);
+    var grid2 = new THREE.Mesh(geo.clone(), new THREE.MeshBasicMaterial({ color: 0x5fe0ff, wireframe: true, transparent: true, opacity: 0.12 }));
+    grid2.position.set(0, -1.28, -8);
+    grid2.scale.set(1.002, 1, 1.002);
+    scene.add(grid2);
+
+    var PCOUNT = 700;
+    var pgeo = new THREE.BufferGeometry();
+    var parr = new Float32Array(PCOUNT * 3);
+    for (var p = 0; p < PCOUNT; p++) {
+      parr[p*3] = (Math.random() - 0.5) * 46;
+      parr[p*3+1] = Math.random() * 14 - 2;
+      parr[p*3+2] = (Math.random() - 0.5) * 46 - 8;
+    }
+    pgeo.setAttribute('position', new THREE.BufferAttribute(parr, 3));
+    var particles = new THREE.Points(pgeo, new THREE.PointsMaterial({ color: 0x9fd4ff, size: 0.05, transparent: true, opacity: 0.55 }));
+    scene.add(particles);
+
+    function resize(){
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+    window.addEventListener('resize', resize);
+
+    var mouseX = 0, mouseY = 0;
+    if (!reduceMotion) {
+      window.addEventListener('mousemove', function(e){
+        mouseX = (e.clientX / window.innerWidth - 0.5);
+        mouseY = (e.clientY / window.innerHeight - 0.5);
+      }, { passive: true });
+    }
+    function scrollProgress(){
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      return h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
+    }
+    var clock = new THREE.Clock();
+    var still = reduceMotion;
+    function frame(){
+      if (!still) requestAnimationFrame(frame);
+      var t = clock.getElapsedTime();
+      var sp = scrollProgress();
+      for (var i = 0; i < pos.count; i++) {
+        var x = pos.getX(i), z = pos.getZ(i);
+        var wave = Math.sin(x * 0.26 + t * 0.55) * 0.4 + Math.sin(z * 0.2 - t * 0.45) * 0.4;
+        pos.setY(i, base[i] + wave);
+      }
+      pos.needsUpdate = true;
+      particles.rotation.y = t * 0.02;
+      camera.position.z = 9 - sp * 6.5;
+      camera.position.y = 3.2 - sp * 1.4;
+      camera.position.x = Math.sin(t * 0.07) * 0.9 + mouseX * 1.2;
+      camera.lookAt(0.4 * mouseX, 0.3 - sp * 0.4, -8);
+      renderer.render(scene, camera);
+    }
+    frame();
+    if (still) renderer.render(scene, camera);
+  })();
+</script>
+</body>
+</html>
