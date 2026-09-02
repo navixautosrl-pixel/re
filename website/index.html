@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WebRapid</title>
 <meta name="description" content="Site-uri profesionale pentru afaceri locale, livrate în 3 zile, la preț fix.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,7 +47,7 @@
     position:fixed; inset:0; z-index:-1; pointer-events:none;
     background:
       radial-gradient(1100px 700px at 50% -6%, rgba(79,216,255,0.10), transparent 60%),
-      linear-gradient(180deg, rgba(5,7,10,0.35) 0%, rgba(5,7,10,0.78) 46%, rgba(5,7,10,0.94) 100%);
+      linear-gradient(180deg, rgba(5,7,10,0.18) 0%, rgba(5,7,10,0.4) 50%, rgba(5,7,10,0.5) 100%);
   }
   #spotlight{
     position:fixed; inset:0; pointer-events:none; z-index:0;
@@ -195,6 +200,8 @@
   .footer-inner{ max-width:1120px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:1.2rem; font-size:0.85rem; color:var(--ink-soft); }
   .footer-inner .wordmark{font-size:1rem}
 </style>
+</head>
+<body>
 
 <noscript><style>.reveal{opacity:1 !important; transform:none !important; filter:none !important;}</style></noscript>
 <canvas id="bg-canvas"></canvas>
@@ -722,3 +729,5 @@
     if (still) renderer.render(scene, camera);
   })();
 </script>
+</body>
+</html>
