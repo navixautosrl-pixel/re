@@ -4,6 +4,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@13.1.1/dist/motion.js"></script>
 <style>
   :root{
     --bg:#05070a;
@@ -110,9 +111,10 @@
   .oc-mock .bar{ height:7px; border-radius:2px; }
   .oc-label{ padding:0.7rem 0.8rem 0.9rem; font-size:0.8rem; color:var(--ink-soft); }
 
-  /* reveal on scroll — 3D assemble */
-  .reveal{ opacity:0; transform:perspective(800px) rotateX(14deg) translateY(30px) scale(0.97); filter:blur(4px); transition:opacity 750ms cubic-bezier(.2,.7,.2,1), transform 750ms cubic-bezier(.2,.7,.2,1), filter 750ms ease; }
+  /* reveal on scroll — 3D assemble (Motion-driven; .in is the no-JS/fallback target state) */
+  .reveal{ opacity:0; transform:perspective(800px) rotateX(14deg) translateY(30px) scale(0.97); filter:blur(4px); }
   .reveal.in{ opacity:1; transform:none; filter:blur(0); }
+  .reveal.fallback-anim{ transition:opacity 750ms cubic-bezier(.2,.7,.2,1), transform 750ms cubic-bezier(.2,.7,.2,1), filter 750ms ease; }
   @media (prefers-reduced-motion:reduce){ .reveal{opacity:1; transform:none; filter:none; transition:none} }
 
   section.block{ position:relative; padding-block:clamp(3rem,6vw,5.5rem); border-top:1px solid var(--line); }
@@ -194,6 +196,7 @@
   .footer-inner .wordmark{font-size:1rem}
 </style>
 
+<noscript><style>.reveal{opacity:1 !important; transform:none !important; filter:none !important;}</style></noscript>
 <canvas id="bg-canvas"></canvas>
 <div id="bg-scrim"></div>
 <div id="spotlight"></div>
@@ -502,9 +505,31 @@
     if (dotEl) dotEl.style.display = 'none';
   }
 
-  // scroll reveal
-  var revealEls = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window && !reduceMotion) {
+  // scroll reveal — Motion (spring, per-group stagger) when available, else CSS-transition fallback
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal:not(.in)'));
+  if (reduceMotion) {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  } else if (window.Motion && typeof window.Motion.inView === 'function') {
+    var M = window.Motion;
+    // group siblings that share a parent so a whole row/grid assembles together with stagger
+    var groups = new Map();
+    revealEls.forEach(function(el){
+      var p = el.parentElement;
+      if (!groups.has(p)) groups.set(p, []);
+      groups.get(p).push(el);
+    });
+    groups.forEach(function(members){
+      var stop = M.inView(members[0], function(){
+        M.animate(members, {
+          opacity: [0, 1],
+          transform: ['perspective(800px) rotateX(14deg) translateY(30px) scale(0.97)', 'none'],
+          filter: ['blur(4px)', 'blur(0px)']
+        }, { duration: 0.7, delay: M.stagger(0.08), easing: [0.2, 0.7, 0.2, 1] });
+        if (stop) stop(); // reveal once, don't re-fire on re-entry
+      }, { margin: '0px 0px -8% 0px', amount: 0.15 });
+    });
+  } else if ('IntersectionObserver' in window) {
+    revealEls.forEach(function(el){ el.classList.add('fallback-anim'); });
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry, i){
         if (entry.isIntersecting) {
@@ -517,6 +542,16 @@
     revealEls.forEach(function(el){ io.observe(el); });
   } else {
     revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // tactile button press feedback (Motion spring)
+  if (window.Motion && typeof window.Motion.animate === 'function' && !reduceMotion) {
+    document.querySelectorAll('.btn').forEach(function(btn){
+      btn.addEventListener('pointerdown', function(){ window.Motion.animate(btn, { scale: 0.96 }, { duration: 0.15, easing: [0.2, 0.7, 0.2, 1] }); });
+      ['pointerup', 'pointerleave'].forEach(function(evt){
+        btn.addEventListener(evt, function(){ window.Motion.animate(btn, { scale: 1 }, { type: 'spring', stiffness: 400, damping: 20 }); });
+      });
+    });
   }
 
   // 3D pointer tilt on cards
