@@ -22,8 +22,16 @@
     --cyan:#4fd8ff;
     --orange:#ff5a2c;
     --focus:#4fd8ff;
+    --blur: blur(10px);
   }
   *{box-sizing:border-box}
+  /* mobile/touch: no live WebGL canvas, no backdrop-filter — both are expensive to
+     composite together on iOS Safari and can crash the tab on fast scroll */
+  body.reduced-fx{ --blur: none; }
+  body.reduced-fx #bg-canvas{ display:none; }
+  body.reduced-fx #bg-scrim{
+    background: radial-gradient(1100px 700px at 50% -6%, rgba(79,216,255,0.08), transparent 60%), var(--bg);
+  }
   html{scroll-behavior:smooth}
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
   body{
@@ -72,12 +80,12 @@
   .btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; }
   .btn-glow{ background:linear-gradient(135deg, var(--orange), #ff8a4c); color:#180a05; box-shadow:0 0 0 1px rgba(255,90,44,0.4), 0 8px 24px -8px rgba(255,90,44,0.55); }
   .btn-glow:hover{ transform:translateY(-2px) scale(1.02); box-shadow:0 0 0 1px rgba(255,90,44,0.6), 0 16px 36px -8px rgba(255,90,44,0.75); }
-  .btn-ghost{ background:var(--panel); border-color:var(--line-strong); color:var(--ink); backdrop-filter:blur(10px); }
+  .btn-ghost{ background:var(--panel); border-color:var(--line-strong); color:var(--ink); backdrop-filter:var(--blur); }
   .btn-ghost:hover{ background:var(--panel-strong); border-color:var(--cyan); }
 
   .wrap{ max-width:1120px; margin:0 auto; padding-inline:1.5rem; position:relative; z-index:2; }
 
-  .nav{ position:sticky; top:0; z-index:30; background:rgba(5,7,10,0.66); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+  .nav{ position:sticky; top:0; z-index:30; background:rgba(5,7,10,0.66); backdrop-filter:var(--blur); border-bottom:1px solid var(--line); }
   .nav-inner{ max-width:1120px; margin:0 auto; padding:0.95rem 1.5rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
   .wordmark{ font-family:"Archivo", sans-serif; font-weight:900; font-size:1.15rem; letter-spacing:-0.02em; text-decoration:none; color:var(--ink); display:flex; align-items:baseline; gap:0.3rem; }
   .wordmark span{color:var(--orange)}
@@ -92,7 +100,7 @@
   .hero h1{ font-size:clamp(2.3rem, 6vw, 4.1rem); line-height:1.04; margin-top:1rem; }
   .hero p.lead{ max-width:52ch; margin-top:1.2rem; font-size:1.12rem; color:var(--ink-soft); }
   .hero-ctas{ display:flex; flex-wrap:wrap; align-items:center; gap:1rem; margin-top:2rem; }
-  .spec-plate{ margin-top:2.6rem; border:1px solid var(--line); background:var(--panel); backdrop-filter:blur(10px); border-radius:10px; padding:1rem 1.2rem; display:flex; flex-wrap:wrap; gap:0.5rem 1.6rem; font-size:0.78rem; }
+  .spec-plate{ margin-top:2.6rem; border:1px solid var(--line); background:var(--panel); backdrop-filter:var(--blur); border-radius:10px; padding:1rem 1.2rem; display:flex; flex-wrap:wrap; gap:0.5rem 1.6rem; font-size:0.78rem; }
   .spec-plate b{font-weight:600; color:var(--cyan); margin-right:0.4em}
 
   /* orbiting 3D window stack */
@@ -100,7 +108,7 @@
   .orbit-stack{ position:relative; height:210px; transform-style:preserve-3d; }
   .orbit-card{
     position:absolute; top:0; width:min(78vw,300px); border-radius:12px; overflow:hidden;
-    border:1px solid var(--line-strong); background:var(--panel-strong); backdrop-filter:blur(10px);
+    border:1px solid var(--line-strong); background:var(--panel-strong); backdrop-filter:var(--blur);
     box-shadow:0 30px 60px -25px rgba(0,0,0,0.8); transform-style:preserve-3d; will-change:transform;
     animation:orbit-float 7s ease-in-out infinite;
   }
@@ -128,7 +136,7 @@
 
   .props-grid{ margin-top:2.4rem; display:grid; gap:1.1rem; perspective:1400px; }
   @media (min-width:760px){ .props-grid{grid-template-columns:repeat(3,1fr)} }
-  .tilt-card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1.9rem 1.7rem; backdrop-filter:blur(10px); transform-style:preserve-3d; will-change:transform; transition:transform 120ms ease, border-color 220ms ease, box-shadow 220ms ease; }
+  .tilt-card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1.9rem 1.7rem; backdrop-filter:var(--blur); transform-style:preserve-3d; will-change:transform; transition:transform 120ms ease, border-color 220ms ease, box-shadow 220ms ease; }
   .tilt-card:hover{ border-color:var(--line-strong); box-shadow:0 20px 50px -20px rgba(0,0,0,0.7); }
   .prop .num{ font-size:0.75rem; color:var(--cyan); }
   .prop h3{ margin-top:1rem; font-size:1.18rem; font-weight:700; }
@@ -144,7 +152,7 @@
 
   .price-grid{ margin-top:2.6rem; display:grid; gap:1.2rem; perspective:1400px; }
   @media (min-width:860px){ .price-grid{grid-template-columns:repeat(3,1fr); align-items:stretch} }
-  .price-card{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:1.8rem 1.6rem; display:flex; flex-direction:column; backdrop-filter:blur(10px); transform-style:preserve-3d; will-change:transform; transition:transform 120ms ease, box-shadow 220ms ease, border-color 220ms ease; }
+  .price-card{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:1.8rem 1.6rem; display:flex; flex-direction:column; backdrop-filter:var(--blur); transform-style:preserve-3d; will-change:transform; transition:transform 120ms ease, box-shadow 220ms ease, border-color 220ms ease; }
   .price-card:hover{ box-shadow:0 30px 60px -25px rgba(0,0,0,0.75); }
   .price-card.pop{ border-color:rgba(255,90,44,0.55); box-shadow:0 0 0 1px rgba(255,90,44,0.35), 0 20px 50px -20px rgba(255,90,44,0.3); }
   .price-tag{ font-size:0.68rem; font-family:"IBM Plex Mono",monospace; letter-spacing:0.1em; text-transform:uppercase; color:var(--orange); margin-bottom:0.6rem; }
@@ -160,7 +168,7 @@
   .ex-note{ max-width:62ch; color:var(--ink-soft); margin-top:0.9rem; }
   .ex-grid{ margin-top:2.4rem; display:grid; gap:1.5rem; perspective:1400px; }
   @media (min-width:760px){ .ex-grid{grid-template-columns:repeat(3,1fr)} }
-  .ex-card{ border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--panel); backdrop-filter:blur(10px); transform-style:preserve-3d; will-change:transform; transition:transform 120ms ease, box-shadow 220ms ease; }
+  .ex-card{ border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--panel); backdrop-filter:var(--blur); transform-style:preserve-3d; will-change:transform; transition:transform 120ms ease, box-shadow 220ms ease; }
   .ex-card:hover{ box-shadow:0 24px 50px -20px rgba(0,0,0,0.7); }
   .ex-chrome{ display:flex; gap:5px; padding:0.65rem 0.75rem; border-bottom:1px solid var(--line); }
   .ex-chrome i{ width:7px; height:7px; border-radius:50%; background:var(--line-strong); }
@@ -172,7 +180,7 @@
 
   .gf-grid{ margin-top:2.4rem; display:grid; gap:2.6rem; }
   @media (min-width:860px){ .gf-grid{grid-template-columns:0.9fr 1.1fr} }
-  .guarantee-box{ border:1px solid rgba(79,216,255,0.35); background:var(--panel); border-radius:14px; padding:1.7rem; backdrop-filter:blur(10px); }
+  .guarantee-box{ border:1px solid rgba(79,216,255,0.35); background:var(--panel); border-radius:14px; padding:1.7rem; backdrop-filter:var(--blur); }
   .guarantee-box p{ color:var(--ink-soft); font-size:0.95rem; margin-top:0.7rem; }
   .faq-item{ border-top:1px solid var(--line); padding-block:1.15rem; }
   .faq-item:first-child{border-top:none}
@@ -187,7 +195,7 @@
   .contact-side p{ color:var(--ink-soft); font-size:0.96rem; margin-top:0.85rem; max-width:40ch; }
   .contact-side .direct{ margin-top:1.7rem; font-size:0.92rem; }
   .contact-side .direct a{ text-decoration:underline; text-underline-offset:3px; font-weight:600; color:var(--cyan); }
-  form{ border:1px solid var(--line); background:var(--panel); backdrop-filter:blur(10px); border-radius:16px; padding:1.7rem; display:grid; gap:1.05rem; }
+  form{ border:1px solid var(--line); background:var(--panel); backdrop-filter:var(--blur); border-radius:16px; padding:1.7rem; display:grid; gap:1.05rem; }
   @media (min-width:600px){ .row2{display:grid; grid-template-columns:1fr 1fr; gap:1rem} }
   label{ font-size:0.82rem; font-weight:600; display:block; margin-bottom:0.4rem; }
   input, select, textarea{ width:100%; font:inherit; font-family:"IBM Plex Sans",sans-serif; padding:0.7rem 0.75rem; border:1px solid var(--line-strong); border-radius:8px; background:rgba(255,255,255,0.04); color:var(--ink); transition:border-color 180ms ease; }
@@ -476,6 +484,19 @@
 <script>
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hasFinePointer = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  // Phones/touch screens: skip the live WebGL canvas + backdrop-filter blur combo.
+  // The two together are a known cause of Safari-on-iOS tab crashes on fast scroll.
+  var isLowPowerDevice = window.matchMedia('(max-width: 820px)').matches || window.matchMedia('(pointer: coarse)').matches;
+  if (isLowPowerDevice) document.body.classList.add('reduced-fx');
+
+  // Safety net: whatever else happens (a library fails to load, an observer never
+  // fires), nothing stays invisible forever.
+  setTimeout(function(){
+    document.querySelectorAll('.reveal').forEach(function(el){
+      el.classList.add('in');
+      el.style.opacity = '1'; el.style.transform = 'none'; el.style.filter = 'none';
+    });
+  }, 3500);
 
   // spotlight follow
   if (!reduceMotion) {
@@ -606,7 +627,7 @@
   // persistent full-page 3D backdrop: wave grid + particle field + rotating mark, scroll-driven camera
   (function(){
     var canvas = document.getElementById('bg-canvas');
-    if (!window.THREE || !canvas) return;
+    if (!window.THREE || !canvas || isLowPowerDevice) return;
 
     var scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0x05070a, 0.032);
