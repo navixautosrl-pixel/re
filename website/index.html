@@ -3,446 +3,213 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
   :root{
-    --ink:#17222c;
-    --ink-soft:#3d4a56;
-    --paper:#eef1ec;
-    --paper-raise:#fbfbf8;
-    --line:#c3ccc4;
-    --line-soft:#d7ddd6;
-    --blue:#33607e;
-    --stamp:#c1441f;
-    --stamp-ink:#fff6f0;
-    --focus:#33607e;
-    --shadow: 0 1px 0 rgba(23,34,44,0.06);
+    --bg:#05080c;
+    --bg-2:#0a0f16;
+    --panel: rgba(255,255,255,0.045);
+    --panel-strong: rgba(255,255,255,0.07);
+    --line: rgba(255,255,255,0.10);
+    --line-strong: rgba(255,255,255,0.18);
+    --ink:#eef2f5;
+    --ink-soft:#93a4b2;
+    --cyan:#4fd8ff;
+    --orange:#ff5a2c;
+    --focus:#4fd8ff;
   }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --ink:#eceeea;
-      --ink-soft:#aab3ac;
-      --paper:#10161b;
-      --paper-raise:#171f26;
-      --line:#2c3941;
-      --line-soft:#212b32;
-      --blue:#7facc4;
-      --stamp:#e26a41;
-      --stamp-ink:#1a0f0a;
-      --focus:#7facc4;
-      --shadow: 0 1px 0 rgba(0,0,0,0.4);
-    }
-  }
-  :root[data-theme="dark"]{
-    --ink:#eceeea;
-    --ink-soft:#aab3ac;
-    --paper:#10161b;
-    --paper-raise:#171f26;
-    --line:#2c3941;
-    --line-soft:#212b32;
-    --blue:#7facc4;
-    --stamp:#e26a41;
-    --stamp-ink:#1a0f0a;
-    --focus:#7facc4;
-    --shadow: 0 1px 0 rgba(0,0,0,0.4);
-  }
-
   *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
   body{
     margin:0;
-    background:var(--paper);
+    background:var(--bg);
     color:var(--ink);
-    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
     font-size:16px;
-    line-height:1.55;
+    line-height:1.6;
     -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
   }
-  ::selection{background:var(--stamp);color:var(--stamp-ink)}
+  ::selection{background:var(--orange);color:#180a05}
   a{color:inherit}
   img{max-width:100%}
-  .mono{
-    font-family:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
-    font-variant-numeric: tabular-nums;
-  }
-  h1,h2,h3{
-    font-family:"Archivo", ui-sans-serif, system-ui, sans-serif;
-    font-weight:800;
-    letter-spacing:-0.01em;
-    text-wrap:balance;
-    margin:0;
-  }
+  .mono{ font-family:"IBM Plex Mono", ui-monospace, Menlo, monospace; font-variant-numeric:tabular-nums; }
+  h1,h2,h3{ font-family:"Archivo", sans-serif; font-weight:800; letter-spacing:-0.01em; text-wrap:balance; margin:0; }
   .eyebrow{
-    font-family:"IBM Plex Mono", monospace;
-    font-size:0.72rem;
-    font-weight:600;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--blue);
+    font-family:"IBM Plex Mono", monospace; font-size:0.72rem; font-weight:600;
+    letter-spacing:0.16em; text-transform:uppercase; color:var(--cyan);
   }
+  .grad-text{
+    background:linear-gradient(100deg, var(--orange) 0%, #ff9c6b 35%, var(--cyan) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* cursor spotlight */
+  #spotlight{
+    position:fixed; inset:0; pointer-events:none; z-index:1;
+    background:radial-gradient(480px circle at var(--mx,50%) var(--my,20%), rgba(79,216,255,0.08), transparent 70%);
+    transition:opacity 300ms ease;
+  }
+  @media (prefers-reduced-motion:reduce){ #spotlight{display:none} }
+
   .btn{
-    display:inline-flex;
-    align-items:center;
-    gap:0.5rem;
-    padding:0.85rem 1.4rem;
-    border-radius:3px;
-    font-family:"IBM Plex Sans", sans-serif;
-    font-weight:600;
-    font-size:0.95rem;
-    text-decoration:none;
-    cursor:pointer;
-    border:1px solid transparent;
-    transition:transform 150ms ease, background 150ms ease, border-color 150ms ease;
+    display:inline-flex; align-items:center; gap:0.55rem;
+    padding:0.9rem 1.5rem; border-radius:8px;
+    font-family:"IBM Plex Sans", sans-serif; font-weight:600; font-size:0.95rem;
+    text-decoration:none; cursor:pointer; border:1px solid transparent;
+    transition:transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, background 220ms ease, border-color 220ms ease;
   }
   @media (prefers-reduced-motion:reduce){ .btn{transition:none} }
-  .btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{
-    outline:2px solid var(--focus);
-    outline-offset:2px;
+  .btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible{
+    outline:2px solid var(--focus); outline-offset:3px;
   }
-  .btn-stamp{
-    background:var(--stamp);
-    color:var(--stamp-ink);
+  .btn-glow{
+    background:linear-gradient(135deg, var(--orange), #ff8a4c);
+    color:#180a05;
+    box-shadow:0 0 0 1px rgba(255,90,44,0.4), 0 8px 24px -8px rgba(255,90,44,0.55);
   }
-  .btn-stamp:hover{transform:translateY(-1px)}
-  .btn-line{
-    background:transparent;
-    border-color:var(--ink);
-    color:var(--ink);
-  }
-  .btn-line:hover{background:var(--paper-raise)}
+  .btn-glow:hover{ transform:translateY(-2px) scale(1.02); box-shadow:0 0 0 1px rgba(255,90,44,0.6), 0 14px 32px -8px rgba(255,90,44,0.7); }
+  .btn-ghost{ background:var(--panel); border-color:var(--line-strong); color:var(--ink); backdrop-filter:blur(6px); }
+  .btn-ghost:hover{ background:var(--panel-strong); border-color:var(--cyan); }
 
-  .wrap{
-    max-width:1120px;
-    margin:0 auto;
-    padding-inline:1.5rem;
-  }
+  .wrap{ max-width:1120px; margin:0 auto; padding-inline:1.5rem; position:relative; z-index:2; }
 
-  /* ---- nav ---- */
-  .nav{
-    position:sticky;
-    top:0;
-    z-index:20;
-    background:color-mix(in srgb, var(--paper) 88%, transparent);
-    backdrop-filter:blur(6px);
-    border-bottom:1px solid var(--line);
-  }
-  .nav-inner{
-    max-width:1120px;
-    margin:0 auto;
-    padding:0.9rem 1.5rem;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:1rem;
-  }
-  .wordmark{
-    font-family:"Archivo", sans-serif;
-    font-weight:900;
-    font-size:1.15rem;
-    letter-spacing:-0.02em;
-    text-decoration:none;
-    color:var(--ink);
-    display:flex;
-    align-items:baseline;
-    gap:0.4rem;
-  }
-  .wordmark span{color:var(--stamp)}
-  .nav-links{
-    display:none;
-    gap:1.6rem;
-    font-size:0.92rem;
-    font-weight:500;
-  }
-  .nav-links a{text-decoration:none;color:var(--ink-soft)}
+  /* nav */
+  .nav{ position:sticky; top:0; z-index:30; background:rgba(5,8,12,0.72); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  .nav-inner{ max-width:1120px; margin:0 auto; padding:0.95rem 1.5rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+  .wordmark{ font-family:"Archivo", sans-serif; font-weight:900; font-size:1.15rem; letter-spacing:-0.02em; text-decoration:none; color:var(--ink); display:flex; align-items:baseline; gap:0.3rem; }
+  .wordmark span{color:var(--orange)}
+  .nav-links{ display:none; gap:1.6rem; font-size:0.92rem; font-weight:500; }
+  .nav-links a{ text-decoration:none; color:var(--ink-soft); transition:color 180ms ease; }
   .nav-links a:hover{color:var(--ink)}
   @media (min-width:860px){ .nav-links{display:flex} }
 
-  /* ---- sheet section motif ---- */
-  .sheet{
-    position:relative;
-    border-top:1px solid var(--line);
-    padding-block:clamp(2.75rem, 5vw, 5rem);
+  /* hero */
+  .hero{ position:relative; padding-top:clamp(4rem,10vw,7rem); padding-bottom:clamp(4rem,8vw,6rem); overflow:hidden; }
+  #hero-canvas{ position:absolute; inset:0; z-index:0; }
+  .hero::after{
+    content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:linear-gradient(180deg, rgba(5,8,12,0.15) 0%, rgba(5,8,12,0.55) 60%, var(--bg) 100%);
   }
-  .sheet::before, .sheet::after{
-    content:"";
-    position:absolute;
-    top:-1px;
-    width:9px;
-    height:9px;
-    border-top:1px solid var(--ink-soft);
-    opacity:0.55;
-  }
-  .sheet::before{ left:1.5rem; border-left:1px solid var(--ink-soft); }
-  .sheet::after{ right:1.5rem; border-right:1px solid var(--ink-soft); }
-  .sheet-index{
-    position:absolute;
-    top:0.7rem;
-    left:1.5rem;
-    font-size:0.68rem;
-    color:var(--ink-soft);
-    letter-spacing:0.08em;
-  }
-
-  /* ---- hero ---- */
-  .hero{border-top:none; padding-top:clamp(3rem,7vw,5.5rem)}
-  .hero-grid{
-    display:grid;
-    gap:2.5rem;
-  }
-  .hero h1{
-    font-size:clamp(2.1rem, 5.4vw, 3.4rem);
-    line-height:1.06;
-    margin-top:0.9rem;
-  }
-  .hero p.lead{
-    max-width:52ch;
-    margin-top:1.1rem;
-    font-size:1.08rem;
-    color:var(--ink-soft);
-  }
-  .hero-ctas{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:1.3rem;
-    margin-top:1.9rem;
-  }
-  .hero-ctas .see-how{
-    font-size:0.92rem;
-    font-weight:600;
-    text-decoration:underline;
-    text-underline-offset:3px;
-  }
+  .hero-inner{ max-width:760px; }
+  .hero h1{ font-size:clamp(2.3rem, 6vw, 4.1rem); line-height:1.04; margin-top:1rem; }
+  .hero p.lead{ max-width:52ch; margin-top:1.2rem; font-size:1.12rem; color:var(--ink-soft); }
+  .hero-ctas{ display:flex; flex-wrap:wrap; align-items:center; gap:1rem; margin-top:2rem; }
   .spec-plate{
-    margin-top:2.6rem;
-    border:1px solid var(--line);
-    background:var(--paper-raise);
-    border-radius:3px;
-    padding:0.9rem 1.1rem;
-    display:flex;
-    flex-wrap:wrap;
-    gap:0.5rem 1.4rem;
-    font-size:0.78rem;
+    margin-top:2.8rem; border:1px solid var(--line); background:var(--panel); backdrop-filter:blur(8px);
+    border-radius:10px; padding:1rem 1.2rem; display:flex; flex-wrap:wrap; gap:0.5rem 1.6rem; font-size:0.78rem;
   }
-  .spec-plate b{font-weight:600; color:var(--ink-soft); margin-right:0.4em}
+  .spec-plate b{font-weight:600; color:var(--cyan); margin-right:0.4em}
 
-  /* ---- value props ---- */
-  .props-grid{
-    margin-top:2.2rem;
-    display:grid;
-    gap:1px;
-    background:var(--line);
-    border:1px solid var(--line);
-  }
+  /* reveal on scroll */
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1); }
+  .reveal.in{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion:reduce){ .reveal{opacity:1; transform:none; transition:none} }
+
+  section.block{ position:relative; padding-block:clamp(3rem,6vw,5.5rem); border-top:1px solid var(--line); }
+  .sheet-index{ font-size:0.68rem; color:var(--ink-soft); letter-spacing:0.08em; display:block; margin-bottom:0.6rem; }
+  .block h2{ font-size:clamp(1.6rem,3.2vw,2.1rem); margin-top:0.6rem; }
+
+  /* value props */
+  .props-grid{ margin-top:2.4rem; display:grid; gap:1.1rem; }
   @media (min-width:760px){ .props-grid{grid-template-columns:repeat(3,1fr)} }
-  .prop{
-    background:var(--paper);
-    padding:1.8rem 1.6rem;
+  .tilt-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1.9rem 1.7rem;
+    backdrop-filter:blur(8px); transform-style:preserve-3d; will-change:transform;
+    transition:transform 120ms ease, border-color 220ms ease, box-shadow 220ms ease;
   }
-  .prop .num{
-    font-family:"IBM Plex Mono",monospace;
-    font-size:0.75rem;
-    color:var(--blue);
-  }
-  .prop svg{margin-top:0.9rem}
-  .prop h3{
-    margin-top:1rem;
-    font-size:1.15rem;
-    font-weight:700;
-  }
-  .prop p{color:var(--ink-soft); font-size:0.95rem; margin-top:0.5rem}
+  .tilt-card:hover{ border-color:var(--line-strong); box-shadow:0 20px 50px -20px rgba(0,0,0,0.6); }
+  .prop .num{ font-size:0.75rem; color:var(--cyan); }
+  .prop h3{ margin-top:1rem; font-size:1.18rem; font-weight:700; }
+  .prop p{ color:var(--ink-soft); font-size:0.95rem; margin-top:0.55rem; }
 
-  /* ---- process schedule ---- */
-  .schedule{
-    margin-top:2.4rem;
-    display:grid;
-    gap:0;
-  }
-  .step{
-    display:grid;
-    grid-template-columns:88px 1fr;
-    gap:1.2rem;
-    padding-block:1.3rem;
-    border-top:1px dashed var(--line);
-    position:relative;
-  }
+  /* process */
+  .schedule{ margin-top:2.6rem; display:grid; gap:0; }
+  .step{ display:grid; grid-template-columns:92px 1fr; gap:1.3rem; padding-block:1.4rem; border-top:1px dashed var(--line); }
   .step:first-child{border-top:none}
-  .step .day{
-    font-family:"IBM Plex Mono",monospace;
-    font-weight:600;
-    font-size:0.82rem;
-    color:var(--stamp);
-    padding-top:0.15rem;
-  }
-  .step h3{font-size:1.05rem; font-weight:700}
-  .step p{color:var(--ink-soft); font-size:0.94rem; margin-top:0.35rem; max-width:56ch}
-  .schedule-note{
-    margin-top:1.2rem;
-    font-size:0.85rem;
-    color:var(--ink-soft);
-    border-left:2px solid var(--line);
-    padding-left:0.9rem;
-  }
+  .step .day{ font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:0.82rem; color:var(--orange); padding-top:0.15rem; }
+  .step h3{ font-size:1.08rem; font-weight:700; }
+  .step p{ color:var(--ink-soft); font-size:0.95rem; margin-top:0.35rem; max-width:56ch; }
+  .schedule-note{ margin-top:1.3rem; font-size:0.85rem; color:var(--ink-soft); border-left:2px solid var(--cyan); padding-left:0.9rem; }
 
-  /* ---- pricing ---- */
-  .price-grid{
-    margin-top:2.4rem;
-    display:grid;
-    gap:1.1rem;
-  }
+  /* pricing */
+  .price-grid{ margin-top:2.6rem; display:grid; gap:1.2rem; perspective:1400px; }
   @media (min-width:860px){ .price-grid{grid-template-columns:repeat(3,1fr); align-items:stretch} }
   .price-card{
-    border:1px solid var(--line);
-    background:var(--paper-raise);
-    border-radius:4px;
-    padding:1.6rem 1.5rem;
-    display:flex;
-    flex-direction:column;
-    box-shadow:var(--shadow);
+    background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:1.8rem 1.6rem;
+    display:flex; flex-direction:column; backdrop-filter:blur(8px);
+    transform-style:preserve-3d; will-change:transform;
+    transition:transform 120ms ease, box-shadow 220ms ease, border-color 220ms ease;
   }
-  .price-card.pop{
-    border-color:var(--stamp);
-    box-shadow: 0 0 0 1px var(--stamp);
-  }
-  .price-tag{
-    font-size:0.68rem;
-    font-family:"IBM Plex Mono",monospace;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:var(--stamp);
-    margin-bottom:0.6rem;
-  }
-  .price-card h3{font-size:1.15rem}
-  .price-card .amount{
-    font-family:"IBM Plex Mono",monospace;
-    font-size:1.9rem;
-    font-weight:600;
-    margin-top:0.5rem;
-  }
-  .price-card .amount span{font-size:0.95rem; font-weight:400; color:var(--ink-soft)}
-  .price-card ul{
-    list-style:none;
-    margin:1.2rem 0 0;
-    padding:0;
-    display:flex;
-    flex-direction:column;
-    gap:0.55rem;
-    font-size:0.9rem;
-    color:var(--ink-soft);
-    flex:1;
-  }
-  .price-card li{display:flex; gap:0.55rem; align-items:flex-start}
-  .price-card li svg{flex:none; margin-top:3px; color:var(--blue)}
-  .price-card .btn{margin-top:1.4rem; justify-content:center}
-  .price-foot{
-    margin-top:1.4rem;
-    font-size:0.85rem;
-    color:var(--ink-soft);
-  }
+  .price-card:hover{ box-shadow:0 30px 60px -25px rgba(0,0,0,0.7); }
+  .price-card.pop{ border-color:rgba(255,90,44,0.55); box-shadow:0 0 0 1px rgba(255,90,44,0.35), 0 20px 50px -20px rgba(255,90,44,0.25); }
+  .price-tag{ font-size:0.68rem; font-family:"IBM Plex Mono",monospace; letter-spacing:0.1em; text-transform:uppercase; color:var(--orange); margin-bottom:0.6rem; }
+  .price-card h3{ font-size:1.15rem; }
+  .price-card .amount{ font-family:"IBM Plex Mono",monospace; font-size:2rem; font-weight:600; margin-top:0.5rem; }
+  .price-card .amount span{ font-size:0.95rem; font-weight:400; color:var(--ink-soft); }
+  .price-card ul{ list-style:none; margin:1.3rem 0 0; padding:0; display:flex; flex-direction:column; gap:0.6rem; font-size:0.9rem; color:var(--ink-soft); flex:1; }
+  .price-card li{ display:flex; gap:0.55rem; align-items:flex-start; }
+  .price-card li svg{ flex:none; margin-top:3px; color:var(--cyan); }
+  .price-card .btn{ margin-top:1.5rem; justify-content:center; }
+  .price-foot{ margin-top:1.5rem; font-size:0.85rem; color:var(--ink-soft); }
 
-  /* ---- examples ---- */
-  .ex-note{max-width:62ch; color:var(--ink-soft); margin-top:0.9rem}
-  .ex-grid{
-    margin-top:2.2rem;
-    display:grid;
-    gap:1.4rem;
-  }
+  /* examples */
+  .ex-note{ max-width:62ch; color:var(--ink-soft); margin-top:0.9rem; }
+  .ex-grid{ margin-top:2.4rem; display:grid; gap:1.5rem; perspective:1400px; }
   @media (min-width:760px){ .ex-grid{grid-template-columns:repeat(3,1fr)} }
   .ex-card{
-    border:1px solid var(--line);
-    border-radius:5px;
-    overflow:hidden;
-    background:var(--paper-raise);
+    border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--panel);
+    backdrop-filter:blur(8px); transform-style:preserve-3d; will-change:transform;
+    transition:transform 120ms ease, box-shadow 220ms ease;
   }
-  .ex-chrome{
-    display:flex;
-    gap:5px;
-    padding:0.6rem 0.7rem;
-    border-bottom:1px solid var(--line);
-  }
-  .ex-chrome i{width:7px;height:7px;border-radius:50%;background:var(--line-soft)}
+  .ex-card:hover{ box-shadow:0 24px 50px -20px rgba(0,0,0,0.65); }
+  .ex-chrome{ display:flex; gap:5px; padding:0.65rem 0.75rem; border-bottom:1px solid var(--line); }
+  .ex-chrome i{ width:7px; height:7px; border-radius:50%; background:var(--line-strong); }
   .ex-mock{ height:132px; padding:0.9rem; display:flex; flex-direction:column; gap:0.4rem; }
-  .ex-mock .bar{height:8px;border-radius:2px}
-  .ex-body{padding:1rem 1.1rem 1.2rem}
-  .ex-body h3{font-size:0.98rem; font-weight:700}
-  .ex-body p{font-size:0.85rem; color:var(--ink-soft); margin-top:0.4rem}
+  .ex-mock .bar{ height:8px; border-radius:2px; }
+  .ex-body{ padding:1.05rem 1.15rem 1.3rem; }
+  .ex-body h3{ font-size:0.98rem; font-weight:700; }
+  .ex-body p{ font-size:0.85rem; color:var(--ink-soft); margin-top:0.4rem; }
 
-  /* ---- guarantee / faq ---- */
-  .gf-grid{margin-top:2.2rem; display:grid; gap:2.6rem}
+  /* guarantee / faq */
+  .gf-grid{ margin-top:2.4rem; display:grid; gap:2.6rem; }
   @media (min-width:860px){ .gf-grid{grid-template-columns:0.9fr 1.1fr} }
-  .guarantee-box{
-    border:1px solid var(--line);
-    background:var(--paper-raise);
-    border-radius:4px;
-    padding:1.6rem;
-  }
-  .guarantee-box .eyebrow{margin-bottom:0.6rem}
-  .guarantee-box p{color:var(--ink-soft); font-size:0.95rem; margin-top:0.6rem}
-  .faq-item{border-top:1px solid var(--line); padding-block:1.1rem}
+  .guarantee-box{ border:1px solid rgba(79,216,255,0.35); background:var(--panel); border-radius:14px; padding:1.7rem; backdrop-filter:blur(8px); }
+  .guarantee-box p{ color:var(--ink-soft); font-size:0.95rem; margin-top:0.7rem; }
+  .faq-item{ border-top:1px solid var(--line); padding-block:1.15rem; }
   .faq-item:first-child{border-top:none}
-  .faq-item summary{
-    cursor:pointer;
-    font-weight:600;
-    list-style:none;
-    display:flex;
-    justify-content:space-between;
-    gap:1rem;
-    align-items:center;
-  }
+  .faq-item summary{ cursor:pointer; font-weight:600; list-style:none; display:flex; justify-content:space-between; gap:1rem; align-items:center; }
   .faq-item summary::-webkit-details-marker{display:none}
-  .faq-item summary .plus{
-    font-family:"IBM Plex Mono",monospace;
-    color:var(--blue);
-    flex:none;
-  }
-  .faq-item[open] summary .plus{color:var(--stamp)}
-  .faq-item p{color:var(--ink-soft); font-size:0.93rem; margin-top:0.6rem; max-width:60ch}
+  .faq-item summary .plus{ font-family:"IBM Plex Mono",monospace; color:var(--cyan); flex:none; transition:transform 220ms ease; }
+  .faq-item[open] summary .plus{ color:var(--orange); transform:rotate(45deg); }
+  .faq-item p{ color:var(--ink-soft); font-size:0.93rem; margin-top:0.65rem; max-width:60ch; }
 
-  /* ---- contact ---- */
-  .contact-grid{margin-top:2.2rem; display:grid; gap:2.4rem}
+  /* contact */
+  .contact-grid{ margin-top:2.4rem; display:grid; gap:2.5rem; }
   @media (min-width:900px){ .contact-grid{grid-template-columns:0.85fr 1.15fr} }
-  .contact-side p{color:var(--ink-soft); font-size:0.96rem; margin-top:0.8rem; max-width:40ch}
-  .contact-side .direct{margin-top:1.6rem; font-size:0.92rem}
-  .contact-side .direct a{text-decoration:underline; text-underline-offset:3px; font-weight:600}
-  form{
-    border:1px solid var(--line);
-    background:var(--paper-raise);
-    border-radius:5px;
-    padding:1.6rem;
-    display:grid;
-    gap:1rem;
-  }
+  .contact-side p{ color:var(--ink-soft); font-size:0.96rem; margin-top:0.85rem; max-width:40ch; }
+  .contact-side .direct{ margin-top:1.7rem; font-size:0.92rem; }
+  .contact-side .direct a{ text-decoration:underline; text-underline-offset:3px; font-weight:600; color:var(--cyan); }
+  form{ border:1px solid var(--line); background:var(--panel); backdrop-filter:blur(8px); border-radius:16px; padding:1.7rem; display:grid; gap:1.05rem; }
   @media (min-width:600px){ .row2{display:grid; grid-template-columns:1fr 1fr; gap:1rem} }
-  label{font-size:0.82rem; font-weight:600; display:block; margin-bottom:0.35rem}
+  label{ font-size:0.82rem; font-weight:600; display:block; margin-bottom:0.4rem; }
   input, select, textarea{
-    width:100%;
-    font:inherit;
-    font-family:"IBM Plex Sans",sans-serif;
-    padding:0.65rem 0.7rem;
-    border:1px solid var(--line);
-    border-radius:3px;
-    background:var(--paper);
-    color:var(--ink);
+    width:100%; font:inherit; font-family:"IBM Plex Sans",sans-serif; padding:0.7rem 0.75rem;
+    border:1px solid var(--line-strong); border-radius:8px; background:rgba(255,255,255,0.03); color:var(--ink);
+    transition:border-color 180ms ease;
   }
+  input:focus, select:focus, textarea:focus{ border-color:var(--cyan); }
   textarea{resize:vertical; min-height:5rem}
-  .form-note{font-size:0.8rem; color:var(--ink-soft)}
-  .form-status{font-size:0.85rem; color:var(--blue); min-height:1.2em}
+  .form-note{ font-size:0.8rem; color:var(--ink-soft); }
+  .form-status{ font-size:0.85rem; color:var(--cyan); min-height:1.2em; }
 
-  footer{
-    border-top:1px solid var(--line);
-    padding:2.4rem 1.5rem 3rem;
-  }
-  .footer-inner{
-    max-width:1120px;
-    margin:0 auto;
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:space-between;
-    gap:1.2rem;
-    font-size:0.85rem;
-    color:var(--ink-soft);
-  }
+  footer{ border-top:1px solid var(--line); padding:2.5rem 1.5rem 3rem; position:relative; z-index:2; }
+  .footer-inner{ max-width:1120px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:1.2rem; font-size:0.85rem; color:var(--ink-soft); }
   .footer-inner .wordmark{font-size:1rem}
 </style>
+
+<div id="spotlight"></div>
 
 <header class="nav">
   <div class="nav-inner">
@@ -454,52 +221,51 @@
       <a href="#exemple">Exemple</a>
       <a href="#garantie-faq">Întrebări</a>
     </nav>
-    <a href="#contact" class="btn btn-stamp">Cere ofertă</a>
+    <a href="#contact" class="btn btn-glow">Cere ofertă</a>
   </div>
 </header>
 
 <main>
-  <section id="hero" class="sheet hero">
-    <div class="wrap hero-grid">
-      <div>
-        <p class="eyebrow">Atelier digital pentru afaceri locale</p>
-        <h1>Vitrina ta digitală, ridicată în 3 zile.</h1>
-        <p class="lead">Construim site-uri profesionale pentru saloane, restaurante, clinici și afaceri locale — fără abonamente ascunse, fără șabloane reciclate, fără așteptare de luni de zile.</p>
-        <div class="hero-ctas">
-          <a href="#contact" class="btn btn-stamp">Cere ofertă gratuită</a>
-          <a href="#proces" class="see-how">Vezi cum funcționează ↓</a>
-        </div>
-        <div class="spec-plate mono">
-          <span><b>Livrare</b>72h</span>
-          <span><b>Revizii</b>2 incluse</span>
-          <span><b>Garanție</b>7 zile bani înapoi</span>
-          <span><b>Preț</b>fix, stabilit înainte</span>
-        </div>
+  <section id="hero" class="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="wrap hero-inner">
+      <p class="eyebrow reveal in">Atelier digital pentru afaceri locale</p>
+      <h1 class="reveal in">Vitrina ta digitală, <span class="grad-text">ridicată în 3 zile.</span></h1>
+      <p class="lead reveal in">Construim site-uri profesionale pentru saloane, restaurante, clinici și afaceri locale — fără abonamente ascunse, fără șabloane reciclate, fără așteptare de luni de zile.</p>
+      <div class="hero-ctas reveal in">
+        <a href="#contact" class="btn btn-glow">Cere ofertă gratuită</a>
+        <a href="#proces" class="btn btn-ghost">Vezi cum funcționează ↓</a>
+      </div>
+      <div class="spec-plate mono reveal in">
+        <span><b>Livrare</b>72h</span>
+        <span><b>Revizii</b>2 incluse</span>
+        <span><b>Garanție</b>7 zile bani înapoi</span>
+        <span><b>Preț</b>fix, stabilit înainte</span>
       </div>
     </div>
   </section>
 
-  <section id="valori" class="sheet">
-    <span class="sheet-index mono">P.02 — DE CE WEBRAPID</span>
+  <section id="valori" class="block">
     <div class="wrap">
-      <p class="eyebrow">De ce WebRapid</p>
-      <h2 style="font-size:clamp(1.5rem,3vw,2rem); margin-top:0.6rem; max-width:30ch;">Trei motive pentru care merită să renunți la varianta „mai încolo”.</h2>
+      <span class="sheet-index mono reveal">P.02 — DE CE WEBRAPID</span>
+      <p class="eyebrow reveal">De ce WebRapid</p>
+      <h2 class="reveal" style="max-width:30ch;">Trei motive pentru care merită să renunți la varianta „mai încolo”.</h2>
       <div class="props-grid">
-        <div class="prop">
+        <div class="prop tilt-card reveal">
           <span class="num mono">01</span>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--blue)"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--cyan)"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
           <h3>72 de ore, nu 6 săptămâni</h3>
           <p>De la prima discuție până la site live. Îți spun exact ziua în care primești linkul, nu „în curând”.</p>
         </div>
-        <div class="prop">
+        <div class="prop tilt-card reveal">
           <span class="num mono">02</span>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--blue)"><path d="M4 4h9l7 7-9 9-7-7V4Z"/><circle cx="9" cy="9" r="1.4" fill="currentColor" stroke="none"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--cyan)"><path d="M4 4h9l7 7-9 9-7-7V4Z"/><circle cx="9" cy="9" r="1.4" fill="currentColor" stroke="none"/></svg>
           <h3>Preț fix, stabilit din start</h3>
           <p>Afli costul înainte să începem lucrul. Nicio factură surpriză „pentru ore suplimentare”.</p>
         </div>
-        <div class="prop">
+        <div class="prop tilt-card reveal">
           <span class="num mono">03</span>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--blue)"><path d="M3 21 14 10M14 10l3-3 3 3-3 3M14 10l4 4M4 20l3-3"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--cyan)"><path d="M3 21 14 10M14 10l3-3 3 3-3 3M14 10l4 4M4 20l3-3"/></svg>
           <h3>Construit pe afacerea ta</h3>
           <p>Pornim de la pozele, meniul, serviciile și programul tău reale — nu un șablon căruia îi schimbăm doar textul.</p>
         </div>
@@ -507,40 +273,28 @@
     </div>
   </section>
 
-  <section id="proces" class="sheet">
-    <span class="sheet-index mono">P.03 — PROCES</span>
+  <section id="proces" class="block">
     <div class="wrap">
-      <p class="eyebrow">Cum funcționează</p>
-      <h2 style="font-size:clamp(1.5rem,3vw,2rem); margin-top:0.6rem; max-width:34ch;">Un program clar, de la discuție la site live.</h2>
+      <span class="sheet-index mono reveal">P.03 — PROCES</span>
+      <p class="eyebrow reveal">Cum funcționează</p>
+      <h2 class="reveal" style="max-width:34ch;">Un program clar, de la discuție la site live.</h2>
       <div class="schedule">
-        <div class="step">
-          <span class="day mono">ZIUA&nbsp;0</span>
-          <div><h3>Discuție de 20 de minute</h3><p>Îmi spui ce faci, cine sunt clienții tăi și ce vrei să facă site-ul: prezentare, rezervări, comenzi.</p></div>
-        </div>
-        <div class="step">
-          <span class="day mono">ZIUA&nbsp;1</span>
-          <div><h3>Plan și concept vizual</h3><p>Primești structura paginilor și un concept de culori și tipografie potrivit afacerii tale, înainte să scriu vreo linie de cod.</p></div>
-        </div>
-        <div class="step">
-          <span class="day mono">ZIUA&nbsp;2</span>
-          <div><h3>Construcție</h3><p>Site-ul prinde formă: pagini, conținut, formular de contact, hartă, optimizare pentru mobil și viteză.</p></div>
-        </div>
-        <div class="step">
-          <span class="day mono">ZIUA&nbsp;3</span>
-          <div><h3>Livrare și revizii</h3><p>Site-ul e live pe domeniul tău. Ai 2 runde de revizii incluse ca să-l aducem exact cum îl vrei.</p></div>
-        </div>
+        <div class="step reveal"><span class="day mono">ZIUA&nbsp;0</span><div><h3>Discuție de 20 de minute</h3><p>Îmi spui ce faci, cine sunt clienții tăi și ce vrei să facă site-ul: prezentare, rezervări, comenzi.</p></div></div>
+        <div class="step reveal"><span class="day mono">ZIUA&nbsp;1</span><div><h3>Plan și concept vizual</h3><p>Primești structura paginilor și un concept de culori și tipografie potrivit afacerii tale, înainte să scriu vreo linie de cod.</p></div></div>
+        <div class="step reveal"><span class="day mono">ZIUA&nbsp;2</span><div><h3>Construcție</h3><p>Site-ul prinde formă: pagini, conținut, formular de contact, hartă, optimizare pentru mobil și viteză.</p></div></div>
+        <div class="step reveal"><span class="day mono">ZIUA&nbsp;3</span><div><h3>Livrare și revizii</h3><p>Site-ul e live pe domeniul tău. Ai 2 runde de revizii incluse ca să-l aducem exact cum îl vrei.</p></div></div>
       </div>
-      <p class="schedule-note">Pentru pachetul „Comandă Online” adaug 2–3 zile pentru integrarea rezervărilor sau comenzilor.</p>
+      <p class="schedule-note reveal">Pentru pachetul „Comandă Online” adaug 2–3 zile pentru integrarea rezervărilor sau comenzilor.</p>
     </div>
   </section>
 
-  <section id="preturi" class="sheet">
-    <span class="sheet-index mono">P.04 — PREȚURI</span>
+  <section id="preturi" class="block">
     <div class="wrap">
-      <p class="eyebrow">Prețuri</p>
-      <h2 style="font-size:clamp(1.5rem,3vw,2rem); margin-top:0.6rem;">Trei pachete, plată unică, fără abonament obligatoriu.</h2>
+      <span class="sheet-index mono reveal">P.04 — PREȚURI</span>
+      <p class="eyebrow reveal">Prețuri</p>
+      <h2 class="reveal">Trei pachete, plată unică, fără abonament obligatoriu.</h2>
       <div class="price-grid">
-        <div class="price-card">
+        <div class="price-card tilt-card reveal">
           <div class="price-tag mono">Vitrină</div>
           <h3>Prezentare simplă</h3>
           <div class="amount mono">900 <span>RON</span></div>
@@ -550,9 +304,9 @@
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Hartă Google și date de contact</li>
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Livrare în 72 de ore</li>
           </ul>
-          <a href="#contact" class="btn btn-line">Aleg Vitrină</a>
+          <a href="#contact" class="btn btn-ghost">Aleg Vitrină</a>
         </div>
-        <div class="price-card pop">
+        <div class="price-card pop tilt-card reveal">
           <div class="price-tag mono">Afacere · cel mai ales</div>
           <h3>Prezentare completă</h3>
           <div class="amount mono">1.800 <span>RON</span></div>
@@ -563,9 +317,9 @@
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Formular de contact funcțional</li>
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>2 runde de revizii incluse</li>
           </ul>
-          <a href="#contact" class="btn btn-stamp">Aleg Afacere</a>
+          <a href="#contact" class="btn btn-glow">Aleg Afacere</a>
         </div>
-        <div class="price-card">
+        <div class="price-card tilt-card reveal">
           <div class="price-tag mono">Comandă online</div>
           <h3>Rezervări sau comenzi</h3>
           <div class="amount mono">3.500 <span>RON</span></div>
@@ -575,21 +329,21 @@
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>Galerie foto extinsă sau meniu digital</li>
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg>1 lună de suport tehnic inclus</li>
           </ul>
-          <a href="#contact" class="btn btn-line">Aleg Comandă Online</a>
+          <a href="#contact" class="btn btn-ghost">Aleg Comandă Online</a>
         </div>
       </div>
-      <p class="price-foot">Mentenanță lunară opțională: <span class="mono">120 RON/lună</span> — actualizări de conținut, backup, suport tehnic.</p>
+      <p class="price-foot reveal">Mentenanță lunară opțională: <span class="mono">120 RON/lună</span> — actualizări de conținut, backup, suport tehnic.</p>
     </div>
   </section>
 
-  <section id="exemple" class="sheet">
-    <span class="sheet-index mono">P.05 — EXEMPLE</span>
+  <section id="exemple" class="block">
     <div class="wrap">
-      <p class="eyebrow">Concepte, nu povești inventate</p>
-      <h2 style="font-size:clamp(1.5rem,3vw,2rem); margin-top:0.6rem; max-width:36ch;">WebRapid tocmai a pornit — iată exact stilul la care te poți aștepta.</h2>
-      <p class="ex-note">În loc de recenzii sau clienți inventați, îți arăt direcția vizuală pentru trei tipuri reale de afaceri locale. Site-ul tău pornește de la aceeași atenție la detaliu, adaptată afacerii tale.</p>
+      <span class="sheet-index mono reveal">P.05 — EXEMPLE</span>
+      <p class="eyebrow reveal">Concepte, nu povești inventate</p>
+      <h2 class="reveal" style="max-width:36ch;">WebRapid tocmai a pornit — iată exact stilul la care te poți aștepta.</h2>
+      <p class="ex-note reveal">În loc de recenzii sau clienți inventați, îți arăt direcția vizuală pentru trei tipuri reale de afaceri locale. Site-ul tău pornește de la aceeași atenție la detaliu, adaptată afacerii tale.</p>
       <div class="ex-grid">
-        <div class="ex-card">
+        <div class="ex-card tilt-card reveal">
           <div class="ex-chrome"><i></i><i></i><i></i></div>
           <div class="ex-mock" style="background:#f6ece7">
             <div class="bar" style="width:55%;background:#c98a6b"></div>
@@ -598,7 +352,7 @@
           </div>
           <div class="ex-body"><h3>Salon de înfrumusețare</h3><p>Paletă roz-pudră și auriu, programări vizibile din prima secundă.</p></div>
         </div>
-        <div class="ex-card">
+        <div class="ex-card tilt-card reveal">
           <div class="ex-chrome"><i></i><i></i><i></i></div>
           <div class="ex-mock" style="background:#f4efe4">
             <div class="bar" style="width:60%;background:#a8442c"></div>
@@ -607,7 +361,7 @@
           </div>
           <div class="ex-body"><h3>Restaurant de cartier</h3><p>Cărămiziu și cremă, meniu digital ușor de citit de pe telefon.</p></div>
         </div>
-        <div class="ex-card">
+        <div class="ex-card tilt-card reveal">
           <div class="ex-chrome"><i></i><i></i><i></i></div>
           <div class="ex-mock" style="background:#eaf1ee">
             <div class="bar" style="width:50%;background:#3f7f6e"></div>
@@ -620,19 +374,20 @@
     </div>
   </section>
 
-  <section id="garantie-faq" class="sheet">
-    <span class="sheet-index mono">P.06 — GARANȚIE / ÎNTREBĂRI</span>
+  <section id="garantie-faq" class="block">
     <div class="wrap gf-grid">
       <div>
-        <p class="eyebrow">Garanție</p>
-        <div class="guarantee-box">
+        <span class="sheet-index mono reveal">P.06 — GARANȚIE</span>
+        <p class="eyebrow reveal">Garanție</p>
+        <div class="guarantee-box reveal">
           <h3 style="font-size:1.2rem">7 zile, bani înapoi</h3>
           <p>Dacă în prima săptămână nu ești mulțumit de conceptul propus în Ziua 1, îți returnez integral avansul. Fără întrebări, fără condiții ascunse.</p>
         </div>
       </div>
       <div>
-        <p class="eyebrow">Întrebări frecvente</p>
-        <div style="margin-top:0.9rem">
+        <span class="sheet-index mono reveal">ÎNTREBĂRI</span>
+        <p class="eyebrow reveal">Întrebări frecvente</p>
+        <div style="margin-top:0.9rem" class="reveal">
           <details class="faq-item" open>
             <summary>Am nevoie de domeniu și găzduire? <span class="plus mono">+</span></summary>
             <p>Te ajut să alegi și cumperi un domeniu (ex: numeleafacerii.ro). Găzduirea este inclusă în primul an la pachetele Afacere și Comandă Online.</p>
@@ -654,25 +409,19 @@
     </div>
   </section>
 
-  <section id="contact" class="sheet">
-    <span class="sheet-index mono">P.07 — CONTACT</span>
+  <section id="contact" class="block">
     <div class="wrap contact-grid">
       <div class="contact-side">
-        <p class="eyebrow">Hai să vorbim</p>
-        <h2 style="font-size:clamp(1.6rem,3.4vw,2.2rem); margin-top:0.6rem;">Hai să-ți construim vitrina.</h2>
-        <p>Completează formularul cu câteva detalii despre afacerea ta. Îți răspund în aceeași zi cu o propunere de pachet și disponibilitate.</p>
-        <p class="direct">Sau scrie direct la <a href="mailto:contact@webrapid.ro">contact@webrapid.ro</a></p>
+        <span class="sheet-index mono reveal">P.07 — CONTACT</span>
+        <p class="eyebrow reveal">Hai să vorbim</p>
+        <h2 class="reveal" style="font-size:clamp(1.6rem,3.4vw,2.2rem);">Hai să-ți construim vitrina.</h2>
+        <p class="reveal">Completează formularul cu câteva detalii despre afacerea ta. Îți răspund în aceeași zi cu o propunere de pachet și disponibilitate.</p>
+        <p class="direct reveal">Sau scrie direct la <a href="mailto:contact@webrapid.ro">contact@webrapid.ro</a></p>
       </div>
-      <form id="lead-form">
+      <form id="lead-form" class="reveal">
         <div class="row2">
-          <div>
-            <label for="f-name">Numele tău</label>
-            <input id="f-name" name="name" type="text" required autocomplete="name">
-          </div>
-          <div>
-            <label for="f-business">Numele afacerii</label>
-            <input id="f-business" name="business" type="text" required autocomplete="organization">
-          </div>
+          <div><label for="f-name">Numele tău</label><input id="f-name" name="name" type="text" required autocomplete="name"></div>
+          <div><label for="f-business">Numele afacerii</label><input id="f-business" name="business" type="text" required autocomplete="organization"></div>
         </div>
         <div class="row2">
           <div>
@@ -685,20 +434,11 @@
               <option>Altceva</option>
             </select>
           </div>
-          <div>
-            <label for="f-email">Email</label>
-            <input id="f-email" name="email" type="email" required autocomplete="email">
-          </div>
+          <div><label for="f-email">Email</label><input id="f-email" name="email" type="email" required autocomplete="email"></div>
         </div>
-        <div>
-          <label for="f-phone">Telefon (opțional)</label>
-          <input id="f-phone" name="phone" type="tel" autocomplete="tel">
-        </div>
-        <div>
-          <label for="f-message">Ce vrei să facă site-ul tău?</label>
-          <textarea id="f-message" name="message" placeholder="Ex: prezentare + programări online, meniu digital, galerie foto..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-stamp">Trimite cererea →</button>
+        <div><label for="f-phone">Telefon (opțional)</label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
+        <div><label for="f-message">Ce vrei să facă site-ul tău?</label><textarea id="f-message" name="message" placeholder="Ex: prezentare + programări online, meniu digital, galerie foto..."></textarea></div>
+        <button type="submit" class="btn btn-glow">Trimite cererea →</button>
         <p class="form-note">Trimiterea deschide clientul tău de email, cu mesajul precompletat către contact@webrapid.ro.</p>
         <p class="form-status" id="form-status" role="status"></p>
       </form>
@@ -717,6 +457,48 @@
 </footer>
 
 <script>
+  // cursor spotlight
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduceMotion) {
+    window.addEventListener('mousemove', function(e){
+      document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+      document.documentElement.style.setProperty('--my', e.clientY + 'px');
+    }, { passive: true });
+  }
+
+  // scroll reveal
+  var revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry, i){
+        if (entry.isIntersecting) {
+          entry.target.style.transitionDelay = (i % 4) * 60 + 'ms';
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // 3D tilt on cards
+  if (!reduceMotion && matchMedia('(hover:hover)').matches) {
+    document.querySelectorAll('.tilt-card').forEach(function(card){
+      card.addEventListener('mousemove', function(e){
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = 'perspective(900px) rotateX(' + (py * -8) + 'deg) rotateY(' + (px * 10) + 'deg) translateZ(6px)';
+      });
+      card.addEventListener('mouseleave', function(){
+        card.style.transform = 'perspective(900px) rotateX(0) rotateY(0) translateZ(0)';
+      });
+    });
+  }
+
+  // mailto lead form
   var form = document.getElementById('lead-form');
   var status = document.getElementById('form-status');
   form.addEventListener('submit', function(e){
@@ -729,14 +511,96 @@
     var phone = data.get('phone') || '';
     var message = data.get('message') || '';
     var subject = 'Cerere ofertă site — ' + business;
-    var body =
-      'Nume: ' + name + '\n' +
-      'Afacere: ' + business + ' (' + type + ')\n' +
-      'Email: ' + email + '\n' +
-      'Telefon: ' + phone + '\n\n' +
-      'Mesaj:\n' + message;
+    var body = 'Nume: ' + name + '\nAfacere: ' + business + ' (' + type + ')\nEmail: ' + email + '\nTelefon: ' + phone + '\n\nMesaj:\n' + message;
     var href = 'mailto:contact@webrapid.ro?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     status.textContent = 'Se deschide clientul tău de email…';
     window.location.href = href;
   });
+
+  // Three.js animated blueprint grid
+  (function(){
+    var canvas = document.getElementById('hero-canvas');
+    var hero = document.getElementById('hero');
+    if (!window.THREE || !canvas) return;
+
+    var scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x05080c, 0.045);
+
+    var camera = new THREE.PerspectiveCamera(55, hero.clientWidth / hero.clientHeight, 0.1, 100);
+    camera.position.set(0, 3.4, 8.5);
+    camera.lookAt(0, 0.2, -4);
+
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(hero.clientWidth, hero.clientHeight);
+
+    var segs = 46;
+    var geo = new THREE.PlaneGeometry(34, 26, segs, segs);
+    geo.rotateX(-Math.PI / 2.15);
+    var pos = geo.attributes.position;
+    var base = new Float32Array(pos.count);
+    for (var i = 0; i < pos.count; i++) base[i] = pos.getY(i);
+
+    var mat = new THREE.MeshBasicMaterial({ color: 0x4fd8ff, wireframe: true, transparent: true, opacity: 0.35 });
+    var grid = new THREE.Mesh(geo, mat);
+    grid.position.set(0, -1.1, -5);
+    scene.add(grid);
+
+    var matOrange = new THREE.MeshBasicMaterial({ color: 0xff5a2c, wireframe: true, transparent: true, opacity: 0.14 });
+    var grid2 = new THREE.Mesh(geo.clone(), matOrange);
+    grid2.position.set(0, -1.08, -5);
+    grid2.scale.set(1.002, 1, 1.002);
+    scene.add(grid2);
+
+    // a few riser nodes: "your business appearing on the grid"
+    var nodeGeo = new THREE.SphereGeometry(0.05, 8, 8);
+    var nodeMat = new THREE.MeshBasicMaterial({ color: 0xff8a4c });
+    var nodes = [];
+    for (var n = 0; n < 5; n++) {
+      var node = new THREE.Mesh(nodeGeo, nodeMat);
+      node.userData.x = (Math.random() - 0.5) * 20;
+      node.userData.z = -2 - Math.random() * 14;
+      node.userData.phase = Math.random() * Math.PI * 2;
+      scene.add(node);
+      nodes.push(node);
+    }
+
+    function resize(){
+      var w = hero.clientWidth, h = hero.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+    window.addEventListener('resize', resize);
+
+    var clock = new THREE.Clock();
+    var still = reduceMotion;
+
+    function animate(){
+      if (!still) requestAnimationFrame(animate);
+      var t = clock.getElapsedTime();
+
+      for (var i = 0; i < pos.count; i++) {
+        var x = pos.getX(i), z = pos.getZ(i);
+        var wave = Math.sin(x * 0.28 + t * 0.6) * 0.35 + Math.sin(z * 0.22 - t * 0.5) * 0.35;
+        pos.setY(i, base[i] + wave);
+      }
+      pos.needsUpdate = true;
+      geo.computeVertexNormals();
+
+      nodes.forEach(function(node){
+        var wave = Math.sin(node.userData.x * 0.28 + t * 0.6) * 0.35 + Math.sin(node.userData.z * 0.22 - t * 0.5) * 0.35;
+        node.position.set(node.userData.x, -1.1 + wave + 0.06, node.userData.z);
+        var s = 0.75 + 0.35 * Math.sin(t * 1.6 + node.userData.phase);
+        node.scale.setScalar(s);
+      });
+
+      camera.position.x = Math.sin(t * 0.08) * 0.8;
+      camera.lookAt(0, 0.2, -4);
+
+      renderer.render(scene, camera);
+    }
+    animate();
+    if (still) { renderer.render(scene, camera); }
+  })();
 </script>
