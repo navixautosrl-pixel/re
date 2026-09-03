@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/* Self-hosted fonts (no external font CDN at build or runtime) */
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/space-grotesk/700.css";
+@import "@fontsource/manrope/400.css";
+@import "@fontsource/manrope/500.css";
+@import "@fontsource/manrope/600.css";
+@import "@fontsource/manrope/700.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+
+:root {
+  /* RobixHost design tokens — dark data-center palette.
+     Signal teal = fiber/data activity. Alert red = threat/blocked traffic only. */
+  --background: #05070b;
+  --surface: #0b0f17;
+  --surface-elevated: #131a26;
+  --border: #1c2430;
+  --border-strong: #2a3444;
+  --foreground: #e7ecf2;
+  --muted-foreground: #8a97ab;
+
+  /* Anchored to the existing RobixHost logo mark's blue, not invented fresh */
+  --primary: #3b93ff;
+  --primary-foreground: #04101f;
+  --primary-dim: #1d5fb0;
+
+  --alert: #ff5252;
+  --alert-foreground: #1a0505;
+
+  --warning: #f5a623;
+
+  --radius: 0.625rem;
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-dim: var(--primary-dim);
+  --color-alert: var(--alert);
+  --color-alert-foreground: var(--alert-foreground);
+  --color-warning: var(--warning);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-data: var(--font-data);
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-primary) 35%, transparent);
+  color: var(--color-foreground);
+}
+
+/* Visible, on-brand focus ring — never remove focus outlines */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Subtle structural grid — used behind hero/section backgrounds, never full-bleed neon */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-border) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-border) 70%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.text-glow {
+  text-shadow: 0 0 24px color-mix(in srgb, var(--color-primary) 45%, transparent);
+}
+
+.font-data {
+  font-family: var(--font-data);
+}
+
+@keyframes packet-pass {
+  0% { left: 4%; opacity: 0; }
+  8% { opacity: 1; }
+  100% { left: 94%; opacity: 1; }
+}
+
+@keyframes packet-blocked {
+  0% { left: 4%; opacity: 0; }
+  8% { opacity: 1; }
+  46% { left: 47%; opacity: 1; }
+  54% { left: 49%; opacity: 0; }
+  100% { left: 49%; opacity: 0; }
+}
+
+@keyframes shield-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 45%, transparent); }
+  50% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--color-primary) 0%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
