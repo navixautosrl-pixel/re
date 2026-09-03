@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RbtPro Fishing</title>
+<meta name="description" content="Boilies și nadă pe bază de făină de pește, în loturi proaspete, testate la baltă.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@13.1.1/dist/motion.js"></script>
+<style>
+  :root{
+    --bg:#051312;
+    --panel: rgba(15,50,44,0.32);
+    --panel-strong: rgba(15,50,44,0.48);
+    --line: rgba(140,255,210,0.14);
+    --line-strong: rgba(140,255,210,0.28);
+    --ink:#eef8f3;
+    --ink-soft:#9cb6ac;
+    --sonar:#4dffb0;
+    --amber:#ff9a2e;
+    --focus:#4dffb0;
+    --blur: blur(10px);
+  }
+  *{box-sizing:border-box}
+  /* mobile/touch: the live WebGL canvas stays off — a continuously-animating canvas
+     under many backdrop-filter panels is what crashes Safari on fast scroll. Blur
+     itself is fine here since there's no moving layer under it any more; the canvas
+     is replaced by cheap, GPU-only drifting gradient blobs (transform + filter baked
+     once, not per frame) so mobile still feels alive, just not by re-rendering WebGL. */
+  body.reduced-fx #bg-canvas{ display:none; }
+  body.reduced-fx #bg-scrim{
+    background: linear-gradient(180deg, rgba(5,19,18,0.25) 0%, rgba(5,19,18,0.55) 60%, rgba(5,19,18,0.7) 100%);
+  }
+  .blob{ display:none; position:fixed; z-index:-2; border-radius:50%; filter:blur(60px); pointer-events:none; will-change:transform; }
+  body.reduced-fx .blob{ display:block; }
+  .blob-a{ width:60vmax; height:60vmax; left:-20vmax; top:-24vmax; background:radial-gradient(circle, rgba(77,255,176,0.42), transparent 70%); animation:blob-a 17s ease-in-out infinite; }
+  .blob-b{ width:65vmax; height:65vmax; right:-26vmax; bottom:-20vmax; background:radial-gradient(circle, rgba(255,154,46,0.36), transparent 70%); animation:blob-b 21s ease-in-out infinite; }
+  @keyframes blob-a{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(8vmax,10vmax) scale(1.15); } }
+  @keyframes blob-b{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-7vmax,-9vmax) scale(1.12); } }
+  @media (prefers-reduced-motion:reduce){ .blob{ animation:none !important; } }
+
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body.no-scroll{ overflow:hidden; height:100%; }
+  ::selection{background:var(--amber);color:#1a0f02}
+  a{color:inherit}
+  img{max-width:100%}
+  .mono{ font-family:"IBM Plex Mono", ui-monospace, Menlo, monospace; font-variant-numeric:tabular-nums; }
+  h1,h2,h3{ font-family:"Oswald", sans-serif; font-weight:700; letter-spacing:0.005em; text-wrap:balance; margin:0; text-transform:uppercase; }
+  .eyebrow{ font-family:"IBM Plex Mono", monospace; font-size:0.72rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--sonar); }
+  .grad-text{ background:linear-gradient(100deg, var(--amber) 0%, #ffc978 35%, var(--sonar) 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .example-tag{ display:inline-flex; align-items:center; gap:0.4rem; font-family:"IBM Plex Mono",monospace; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:#ffb454; border:1px solid rgba(255,180,84,0.4); background:rgba(255,180,84,0.08); padding:0.25rem 0.6rem; border-radius:20px; }
+
+  /* ---- sonar intro ---- */
+  #intro{ display:none; }
+  html.js-armed #intro{
+    position:fixed; inset:0; z-index:1000; background:var(--bg);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  #sonar-wrap{ position:relative; width:min(60vw,280px); aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; }
+  #sonar-sweep{
+    position:absolute; inset:0; border-radius:50%; opacity:0;
+    background:conic-gradient(from 0deg, rgba(77,255,176,0.55), transparent 28%, transparent 100%);
+  }
+  .sonar-ring{ position:absolute; border:1px solid rgba(77,255,176,0.55); border-radius:50%; opacity:0; }
+  .sonar-ring.r1{ inset:32%; }
+  .sonar-ring.r2{ inset:16%; }
+  .sonar-ring.r3{ inset:0%; }
+  #intro-word{ position:relative; z-index:2; text-align:center; opacity:0; }
+  #intro-word .l1{ font-family:"Oswald",sans-serif; font-weight:700; font-size:clamp(1.6rem,7vw,2.3rem); letter-spacing:0.03em; }
+  #intro-word .l1 span{ color:var(--amber); }
+  #intro-word .l2{ font-family:"IBM Plex Mono",monospace; font-size:0.7rem; letter-spacing:0.35em; color:var(--ink-soft); margin-top:0.3rem; }
+  #intro-skip{
+    position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+    font-family:"IBM Plex Mono",monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--ink-soft); opacity:0; text-decoration:none; padding:0.4rem 0.8rem;
+  }
+  @media (prefers-reduced-motion:reduce){ #intro{display:none !important;} body{overflow:visible !important; height:auto !important;} }
+
+  #spotlight{ position:fixed; inset:0; pointer-events:none; z-index:0; background:radial-gradient(460px circle at var(--mx,50%) var(--my,20%), rgba(77,255,176,0.07), transparent 70%); }
+  #bg-canvas{ position:fixed; inset:0; z-index:-2; }
+  #bg-scrim{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background: radial-gradient(1100px 700px at 50% -6%, rgba(77,255,176,0.10), transparent 60%),
+                linear-gradient(180deg, rgba(5,19,18,0.18) 0%, rgba(5,19,18,0.4) 50%, rgba(5,19,18,0.5) 100%);
+  }
+
+  #cursor-ring, #cursor-dot{ position:fixed; top:0; left:0; pointer-events:none; z-index:100; border-radius:50%; transform:translate(-50%,-50%); opacity:0; }
+  #cursor-ring{ width:34px; height:34px; border:1px solid var(--sonar); transition:width 180ms ease, height 180ms ease, opacity 180ms ease; }
+  #cursor-dot{ width:5px; height:5px; background:var(--amber); }
+  #cursor-ring.armed, #cursor-dot.armed{ opacity:0.7; }
+  #cursor-dot.armed{ opacity:1; }
+  body.has-cursor, body.has-cursor a, body.has-cursor button, body.has-cursor .btn{ cursor:none; }
+
+  .btn{ display:inline-flex; align-items:center; gap:0.55rem; padding:0.9rem 1.5rem; border-radius:8px; font-family:"IBM Plex Sans",sans-serif; font-weight:600; font-size:0.95rem; text-decoration:none; cursor:pointer; border:1px solid transparent; transition:transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease, background 220ms ease, border-color 220ms ease; }
+  .btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; }
+  .btn-glow{ background:linear-gradient(135deg, var(--amber), #ffc25c); color:#1a0f02; box-shadow:0 0 0 1px rgba(255,154,46,0.4), 0 8px 24px -8px rgba(255,154,46,0.55); }
+  .btn-glow:hover{ transform:translateY(-2px) scale(1.02); box-shadow:0 0 0 1px rgba(255,154,46,0.6), 0 16px 36px -8px rgba(255,154,46,0.75); }
+  .btn-ghost{ background:var(--panel); border-color:var(--line-strong); color:var(--ink); backdrop-filter:var(--blur); }
+  .btn-ghost:hover{ background:var(--panel-strong); border-color:var(--sonar); }
+
+  .wrap{ max-width:1120px; margin:0 auto; padding-inline:1.5rem; position:relative; z-index:2; }
+  .nav{ position:sticky; top:0; z-index:30; background:rgba(5,19,18,0.66); backdrop-filter:var(--blur); border-bottom:1px solid var(--line); }
+  .nav-inner{ max-width:1120px; margin:0 auto; padding:0.9rem 1.5rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+  .brand{ display:flex; align-items:baseline; gap:0.35rem; text-decoration:none; font-family:"Oswald",sans-serif; font-weight:700; font-size:1.15rem; letter-spacing:0.02em; color:var(--ink); }
+  .brand b{ color:var(--amber); }
+  .brand small{ font-family:"IBM Plex Mono",monospace; font-size:0.6rem; letter-spacing:0.2em; color:var(--ink-soft); font-weight:500; }
+  .nav-links{ display:none; gap:1.6rem; font-size:0.92rem; font-weight:500; }
+  .nav-links a{ text-decoration:none; color:var(--ink-soft); transition:color 180ms ease; }
+  .nav-links a:hover{color:var(--ink)}
+  @media (min-width:860px){ .nav-links{display:flex} }
+
+  .hero{ position:relative; padding-top:clamp(4rem,10vw,6.5rem); padding-bottom:clamp(3rem,7vw,5rem); }
+  .hero-inner{ max-width:720px; }
+  .hero h1{ font-size:clamp(2.1rem, 5.6vw, 3.7rem); line-height:1.06; margin-top:1rem; }
+  .hero p.lead{ max-width:52ch; margin-top:1.2rem; font-size:1.12rem; color:var(--ink-soft); font-family:"IBM Plex Sans",sans-serif; text-transform:none; }
+  .hero-ctas{ display:flex; flex-wrap:wrap; align-items:center; gap:1rem; margin-top:2rem; }
+  .spec-plate{ margin-top:2.6rem; border:1px solid var(--line); background:var(--panel); backdrop-filter:var(--blur); border-radius:10px; padding:1rem 1.2rem; display:flex; flex-wrap:wrap; gap:0.5rem 1.6rem; font-size:0.78rem; }
+  .spec-plate b{font-weight:600; color:var(--sonar); margin-right:0.4em}
+
+  html.js-armed .reveal:not(.in){ opacity:0; transform:perspective(700px) rotateX(9deg) translateY(16px) scale(0.98); }
+  .reveal.in{ opacity:1; transform:none; }
+  .reveal.fallback-anim{ transition:opacity 340ms cubic-bezier(.2,.7,.2,1), transform 340ms cubic-bezier(.2,.7,.2,1); }
+  @media (prefers-reduced-motion:reduce){ .reveal{opacity:1; transform:none; transition:none} }
+
+  section.block{ position:relative; padding-block:clamp(3rem,6vw,5.5rem); border-top:1px solid var(--line); }
+  .sheet-index{ font-size:0.68rem; color:var(--ink-soft); letter-spacing:0.08em; display:block; margin-bottom:0.6rem; font-family:"IBM Plex Mono",monospace; }
+  .block h2{ font-size:clamp(1.5rem,3vw,2rem); margin-top:0.6rem; }
+  .block .section-head{ display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap; }
+
+  .props-grid{ margin-top:2.4rem; display:grid; gap:1.1rem; perspective:1400px; }
+  @media (min-width:760px){ .props-grid{grid-template-columns:repeat(3,1fr)} }
+  .tilt-card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1.9rem 1.7rem; backdrop-filter:var(--blur); transform-style:preserve-3d; will-change:transform; transition:transform 120ms ease, border-color 220ms ease, box-shadow 220ms ease; }
+  .tilt-card:hover{ border-color:var(--line-strong); box-shadow:0 20px 50px -20px rgba(0,0,0,0.7); }
+  .prop .num{ font-size:0.75rem; color:var(--sonar); }
+  .prop h3{ margin-top:1rem; font-size:1.1rem; }
+  .prop p{ color:var(--ink-soft); font-size:0.95rem; margin-top:0.55rem; text-transform:none; font-family:"IBM Plex Sans",sans-serif; font-weight:400; }
+
+  .schedule{ margin-top:2.6rem; display:grid; gap:0; }
+  .step{ display:grid; grid-template-columns:36px 1fr; gap:1.3rem; padding-block:1.4rem; border-top:1px dashed var(--line); }
+  .step:first-child{border-top:none}
+  .step .num2{ font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:0.9rem; color:var(--amber); padding-top:0.15rem; }
+  .step h3{ font-size:1.02rem; }
+  .step p{ color:var(--ink-soft); font-size:0.95rem; margin-top:0.35rem; max-width:56ch; text-transform:none; font-family:"IBM Plex Sans",sans-serif; font-weight:400; }
+
+  .price-grid{ margin-top:2.4rem; display:grid; gap:1.2rem; perspective:1400px; }
+  @media (min-width:760px){ .price-grid{grid-template-columns:repeat(2,1fr)} }
+  @media (min-width:1000px){ .price-grid{grid-template-columns:repeat(4,1fr)} }
+  .price-card{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:1.6rem 1.4rem; display:flex; flex-direction:column; backdrop-filter:var(--blur); transform-style:preserve-3d; will-change:transform; transition:transform 120ms ease, box-shadow 220ms ease, border-color 220ms ease; }
+  .price-card:hover{ box-shadow:0 30px 60px -25px rgba(0,0,0,0.75); }
+  .price-tag{ font-size:0.68rem; font-family:"IBM Plex Mono",monospace; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber); margin-bottom:0.5rem; }
+  .price-card h3{ font-size:1rem; }
+  .price-card .amount{ font-family:"IBM Plex Mono",monospace; font-size:1.5rem; font-weight:600; margin-top:0.5rem; text-transform:none; }
+  .price-card .amount span{ font-size:0.82rem; font-weight:400; color:var(--ink-soft); }
+  .price-card p.desc{ color:var(--ink-soft); font-size:0.87rem; margin-top:0.7rem; text-transform:none; font-family:"IBM Plex Sans",sans-serif; flex:1; }
+  .price-card .btn{ margin-top:1.2rem; justify-content:center; font-size:0.85rem; padding:0.7rem 1rem; }
+  .price-foot{ margin-top:1.5rem; font-size:0.85rem; color:var(--ink-soft); }
+
+  .wholesale-box{ margin-top:2.2rem; border:1px solid rgba(255,154,46,0.35); background:var(--panel); border-radius:14px; padding:1.8rem; backdrop-filter:var(--blur); display:flex; flex-wrap:wrap; gap:1.5rem; align-items:center; justify-content:space-between; }
+  .wholesale-box p{ color:var(--ink-soft); font-size:0.95rem; margin-top:0.5rem; max-width:48ch; text-transform:none; font-family:"IBM Plex Sans",sans-serif; }
+
+  .honest-box{ border:1px solid rgba(77,255,176,0.35); background:var(--panel); border-radius:14px; padding:1.7rem; backdrop-filter:var(--blur); }
+  .honest-box p{ color:var(--ink-soft); font-size:0.95rem; margin-top:0.7rem; text-transform:none; font-family:"IBM Plex Sans",sans-serif; }
+
+  .gf-grid{ margin-top:2.4rem; display:grid; gap:2.6rem; }
+  @media (min-width:860px){ .gf-grid{grid-template-columns:0.9fr 1.1fr} }
+  .faq-item{ border-top:1px solid var(--line); padding-block:1.15rem; }
+  .faq-item:first-child{border-top:none}
+  .faq-item summary{ cursor:pointer; font-weight:600; list-style:none; display:flex; justify-content:space-between; gap:1rem; align-items:center; font-family:"IBM Plex Sans",sans-serif; }
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary .plus{ font-family:"IBM Plex Mono",monospace; color:var(--sonar); flex:none; transition:transform 220ms ease; }
+  .faq-item[open] summary .plus{ color:var(--amber); transform:rotate(45deg); }
+  .faq-item p{ color:var(--ink-soft); font-size:0.93rem; margin-top:0.65rem; max-width:60ch; }
+
+  .contact-grid{ margin-top:2.4rem; display:grid; gap:2.5rem; }
+  @media (min-width:900px){ .contact-grid{grid-template-columns:0.85fr 1.15fr} }
+  .contact-side p{ color:var(--ink-soft); font-size:0.96rem; margin-top:0.85rem; max-width:40ch; text-transform:none; font-family:"IBM Plex Sans",sans-serif; }
+  .contact-side .direct{ margin-top:1.7rem; font-size:0.92rem; }
+  .contact-side .direct a{ text-decoration:underline; text-underline-offset:3px; font-weight:600; color:var(--sonar); }
+  form{ border:1px solid var(--line); background:var(--panel); backdrop-filter:var(--blur); border-radius:16px; padding:1.7rem; display:grid; gap:1.05rem; }
+  @media (min-width:600px){ .row2{display:grid; grid-template-columns:1fr 1fr; gap:1rem} }
+  label{ font-size:0.82rem; font-weight:600; display:block; margin-bottom:0.4rem; }
+  input, select, textarea{ width:100%; font:inherit; font-family:"IBM Plex Sans",sans-serif; padding:0.7rem 0.75rem; border:1px solid var(--line-strong); border-radius:8px; background:rgba(255,255,255,0.04); color:var(--ink); transition:border-color 180ms ease; }
+  input:focus, select:focus, textarea:focus{ border-color:var(--sonar); }
+  textarea{resize:vertical; min-height:5rem}
+  .form-note{ font-size:0.8rem; color:var(--ink-soft); }
+  .form-status{ font-size:0.85rem; color:var(--sonar); min-height:1.2em; }
+
+  footer{ border-top:1px solid var(--line); padding:2.5rem 1.5rem 3rem; position:relative; z-index:2; }
+  .footer-inner{ max-width:1120px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:1.2rem; font-size:0.85rem; color:var(--ink-soft); }
+</style>
+</head>
+<body class="no-scroll">
+<script>document.documentElement.classList.add('js-armed');</script>
+
+<noscript><style>.reveal{opacity:1 !important; transform:none !important;} #intro{display:none !important;} body{overflow:visible !important; height:auto !important;}</style></noscript>
+
+<div id="intro" role="button" aria-label="Sari peste animația de intro" tabindex="0">
+  <div id="sonar-wrap">
+    <div id="sonar-sweep"></div>
+    <div class="sonar-ring r1"></div>
+    <div class="sonar-ring r2"></div>
+    <div class="sonar-ring r3"></div>
+    <div id="intro-word">
+      <div class="l1">RBT<span>PRO</span></div>
+      <div class="l2">F I S H I N G</div>
+    </div>
+  </div>
+  <a id="intro-skip" href="#hero">Sari peste ↓</a>
+</div>
+
+<canvas id="bg-canvas"></canvas>
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
+<div id="bg-scrim"></div>
+<div id="spotlight"></div>
+<div id="cursor-ring"></div>
+<div id="cursor-dot"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="brand">RBT<b>PRO</b><small style="margin-left:0.5rem">FISHING</small></a>
+    <nav class="nav-links">
+      <a href="#gama">Gama</a>
+      <a href="#dece">De ce noi</a>
+      <a href="#engros">En-gros</a>
+      <a href="#intrebari">Întrebări</a>
+    </nav>
+    <a href="#contact" class="btn btn-glow">Comandă acum</a>
+  </div>
+</header>
+
+<main>
+  <section id="hero" class="hero">
+    <div class="wrap hero-inner">
+      <p class="eyebrow reveal in">Boilies &amp; nadă pe bază de făină de pește</p>
+      <h1 class="reveal in">Nadă <span class="grad-text">gândită pe baltă.</span></h1>
+      <p class="lead reveal in">Boilies, pop-up-uri și nadă preparate în loturi mici, cu bază de făină de pește — testate la baltă, nu doar în laborator.</p>
+      <div class="hero-ctas reveal in">
+        <a href="#gama" class="btn btn-glow">Vezi gama</a>
+        <a href="#engros" class="btn btn-ghost">Comandă en-gros</a>
+      </div>
+      <div class="spec-plate mono reveal in">
+        <span><b>Bază</b>făină de pește</span>
+        <span><b>Loturi</b>proaspete, la comandă</span>
+        <span><b>Rețete</b>testate la baltă</span>
+        <span><b>Livrare</b>în toată țara</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="dece" class="block">
+    <div class="wrap">
+      <span class="sheet-index reveal">01 — DE CE RBTPRO</span>
+      <p class="eyebrow reveal">De ce RbtPro</p>
+      <h2 class="reveal" style="max-width:30ch;">Nadă făcută de pescari, pentru pescari.</h2>
+      <div class="props-grid">
+        <div class="prop tilt-card reveal">
+          <span class="num mono">01</span>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--sonar)"><path d="M3 12c3-5 15-5 18 0-3 5-15 5-18 0Z"/><circle cx="15" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>
+          <h3>Ingrediente reale</h3>
+          <p>Bază de făină de pește de calitate, fără umpluturi puse doar ca sacul să cântărească mai mult.</p>
+        </div>
+        <div class="prop tilt-card reveal">
+          <span class="num mono">02</span>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--sonar)"><circle cx="12" cy="12" r="9"/><path d="M12 5v7l5 3"/></svg>
+          <h3>Testat la baltă</h3>
+          <p>Fiecare rețetă trece prin sesiuni reale de pescuit înainte să ajungă în sacul tău.</p>
+        </div>
+        <div class="prop tilt-card reveal">
+          <span class="num mono">03</span>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--sonar)"><path d="M4 4h9l7 7-9 9-7-7V4Z"/><circle cx="9" cy="9" r="1.4" fill="currentColor" stroke="none"/></svg>
+          <h3>Loturi proaspete</h3>
+          <p>Producem la comandă, în cantități mici — ca aroma să nu se piardă stând luni pe raft.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <span class="sheet-index reveal">02 — PROCES</span>
+      <p class="eyebrow reveal">De la baltă la sac</p>
+      <h2 class="reveal" style="max-width:34ch;">Cum ajunge nada la tine.</h2>
+      <div class="schedule">
+        <div class="step reveal"><span class="num2 mono">01</span><div><h3>Selecție ingrediente</h3><p>Alegem făina de pește și aromele în funcție de sezon și tipul de baltă vizat.</p></div></div>
+        <div class="step reveal"><span class="num2 mono">02</span><div><h3>Testare la baltă</h3><p>Rețeta e verificată în sesiuni reale de pescuit, nu doar în hârtii și rapoarte.</p></div></div>
+        <div class="step reveal"><span class="num2 mono">03</span><div><h3>Producție în lot mic</h3><p>Preparăm cantitatea comandată — nu stăm cu saci pe stoc luni de zile.</p></div></div>
+        <div class="step reveal"><span class="num2 mono">04</span><div><h3>Livrare rapidă</h3><p>Sacul ajunge la tine proaspăt prin curier, gata pentru următoarea sesiune.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gama" class="block">
+    <div class="wrap">
+      <span class="sheet-index reveal">03 — GAMA DE PRODUSE</span>
+      <div class="section-head">
+        <p class="eyebrow reveal">Gama de produse</p>
+        <span class="example-tag reveal">Prețuri exemplu</span>
+      </div>
+      <h2 class="reveal">Boilies, pop-up-uri, nadă și particule.</h2>
+      <div class="price-grid">
+        <div class="price-card tilt-card reveal">
+          <div class="price-tag mono">Boilies clasici</div>
+          <h3>16 / 20 / 24 mm</h3>
+          <div class="amount mono">45 <span>RON/kg</span></div>
+          <p class="desc">Bază de făină de pește, aromă la alegere. Rulați și uscați în lot mic.</p>
+          <a href="#contact" class="btn btn-ghost">Comandă</a>
+        </div>
+        <div class="price-card tilt-card reveal">
+          <div class="price-tag mono">Pop-up-uri</div>
+          <h3>Flotante, aromate</h3>
+          <div class="amount mono">25 <span>RON/100g</span></div>
+          <p class="desc">Pentru montaje pe fund sau combinate cu boilies clasici.</p>
+          <a href="#contact" class="btn btn-ghost">Comandă</a>
+        </div>
+        <div class="price-card tilt-card reveal">
+          <div class="price-tag mono">Nadă / Groundbait</div>
+          <h3>Bază de pește + cereale</h3>
+          <div class="amount mono">30 <span>RON/kg</span></div>
+          <p class="desc">Amestec pentru momit, granulație fină, aceeași bază ca boilies-urile.</p>
+          <a href="#contact" class="btn btn-ghost">Comandă</a>
+        </div>
+        <div class="price-card tilt-card reveal">
+          <div class="price-tag mono">Particule &amp; Pellets</div>
+          <h3>Hidratate / uscate</h3>
+          <div class="amount mono">20 <span>RON/kg</span></div>
+          <p class="desc">Pentru spod mix sau momit pe termen lung.</p>
+          <a href="#contact" class="btn btn-ghost">Comandă</a>
+        </div>
+      </div>
+      <p class="price-foot">Dimensiuni și arome personalizate disponibile la comenzi mai mari — scrie-ne ce cauți.</p>
+    </div>
+  </section>
+
+  <section id="engros" class="block">
+    <div class="wrap">
+      <span class="sheet-index reveal">04 — EN-GROS</span>
+      <p class="eyebrow reveal">Comenzi en-gros</p>
+      <h2 class="reveal" style="max-width:36ch;">Pentru cluburi de pescuit și magazine.</h2>
+      <div class="wholesale-box reveal">
+        <div>
+          <h3 style="font-size:1.05rem">Prețuri speciale la cantitate</h3>
+          <p>Dacă ești magazin de articole de pescuit, club sau organizezi concursuri, scrie-ne cantitatea și aroma dorită — revenim cu o ofertă.</p>
+        </div>
+        <a href="#contact" class="btn btn-glow">Cere ofertă en-gros</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <span class="sheet-index reveal">05 — LA ÎNCEPUT DE DRUM</span>
+      <p class="eyebrow reveal">Cinstit, de la primul sac</p>
+      <div class="honest-box reveal" style="margin-top:1.4rem; max-width:70ch;">
+        <h3 style="font-size:1.1rem">Suntem la început — dar fiecare rețetă e testată de noi</h3>
+        <p>În loc de recenzii inventate sau capturi de pe internet, îți spunem cinstit: RbtPro Fishing e o afacere nouă. Ce poți conta e că nu vindem nimic ce nu am testat noi înșine la baltă, cu propriile lansete.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="intrebari" class="block">
+    <div class="wrap gf-grid">
+      <div>
+        <span class="sheet-index reveal">06 — LIVRARE</span>
+        <p class="eyebrow reveal">Livrare</p>
+        <div class="honest-box reveal">
+          <h3 style="font-size:1.1rem">Prin curier, în toată țara</h3>
+          <p>Comenzile se preduc pentru livrare în câteva zile lucrătoare. Pentru cantități mari sau termene urgente, scrie-ne înainte să comanzi.</p>
+        </div>
+      </div>
+      <div>
+        <span class="sheet-index reveal">ÎNTREBĂRI</span>
+        <p class="eyebrow reveal">Întrebări frecvente</p>
+        <div style="margin-top:0.9rem" class="reveal">
+          <details class="faq-item" open>
+            <summary>Cât timp se păstrează boilies-urile? <span class="plus mono">+</span></summary>
+            <p>Fiecare pungă are data producției și recomandarea de păstrare trecute pe etichetă — le facem proaspete, la comandă, nu stăm cu stoc vechi.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Faceți arome sau dimensiuni personalizate? <span class="plus mono">+</span></summary>
+            <p>Da, pentru comenzi mai mari putem ajusta aroma, dimensiunea și duritatea boilies-urilor.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Livrați și către magazine sau cluburi? <span class="plus mono">+</span></summary>
+            <p>Da — vezi secțiunea En-gros de mai sus sau scrie-ne direct cu cantitatea dorită.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Cum aleg dimensiunea potrivită de boilies? <span class="plus mono">+</span></summary>
+            <p>Depinde de baltă și de presiunea de pescuit — spune-ne unde pescuiești și te ajutăm să alegi.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="block">
+    <div class="wrap contact-grid">
+      <div class="contact-side">
+        <span class="sheet-index reveal">07 — CONTACT</span>
+        <p class="eyebrow reveal">Hai să vorbim</p>
+        <h2 class="reveal" style="font-size:clamp(1.5rem,3.2vw,2.1rem);">Pregătim comanda ta.</h2>
+        <p>Completează formularul cu ce cauți — boilies, nadă sau o comandă en-gros. Îți răspundem cu detalii și disponibilitate.</p>
+        <p class="direct reveal">Sau scrie direct la <a href="mailto:contact@rbtprofishing.ro">contact@rbtprofishing.ro</a></p>
+      </div>
+      <form id="lead-form" class="reveal">
+        <div class="row2">
+          <div><label for="f-name">Numele tău</label><input id="f-name" name="name" type="text" required autocomplete="name"></div>
+          <div><label for="f-shop">Club / magazin (opțional)</label><input id="f-shop" name="shop" type="text"></div>
+        </div>
+        <div class="row2">
+          <div>
+            <label for="f-type">Ce te interesează?</label>
+            <select id="f-type" name="type">
+              <option>Boilies</option>
+              <option>Pop-up-uri</option>
+              <option>Nadă / Groundbait</option>
+              <option>Particule / Pellets</option>
+              <option>Comandă en-gros</option>
+            </select>
+          </div>
+          <div><label for="f-email">Email</label><input id="f-email" name="email" type="email" required autocomplete="email"></div>
+        </div>
+        <div><label for="f-qty">Cantitate estimată (opțional)</label><input id="f-qty" name="qty" type="text" placeholder="Ex: 10 kg boilies 20mm"></div>
+        <div><label for="f-message">Mesaj</label><textarea id="f-message" name="message" placeholder="Aromă preferată, baltă, orice detaliu ajută..."></textarea></div>
+        <button type="submit" class="btn btn-glow">Trimite cererea →</button>
+        <p class="form-note">Trimiterea deschide clientul tău de email, cu mesajul precompletat.</p>
+        <p class="form-status" id="form-status" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <a href="#hero" class="brand" style="font-size:1rem">RBT<b>PRO</b></a>
+      <p style="margin-top:0.5rem">Boilies &amp; nadă pe bază de făină de pește.</p>
+    </div>
+    <div class="mono">© 2026 RbtPro Fishing</div>
+  </div>
+</footer>
+
+<script>
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasFinePointer = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  var isLowPowerDevice = window.matchMedia('(max-width: 820px)').matches || window.matchMedia('(pointer: coarse)').matches;
+  if (isLowPowerDevice) document.body.classList.add('reduced-fx');
+
+  function unlockScroll(){ document.body.classList.remove('no-scroll'); }
+
+  // ---------- sonar-ping intro ----------
+  (function(){
+    var intro = document.getElementById('intro');
+    var sweep = document.getElementById('sonar-sweep');
+    var rings = document.querySelectorAll('.sonar-ring');
+    var word = document.getElementById('intro-word');
+    var skip = document.getElementById('intro-skip');
+    var done = false;
+
+    function finish(){
+      if (done) return;
+      done = true;
+      intro.style.pointerEvents = 'none';
+      unlockScroll();
+      if (window.Motion) {
+        window.Motion.animate(intro, { opacity: [1, 0] }, { duration: 0.45, easing: [0.2,0.7,0.2,1] }).finished.then(function(){ intro.remove(); });
+      } else {
+        intro.style.transition = 'opacity .4s ease';
+        intro.style.opacity = '0';
+        setTimeout(function(){ intro.remove(); }, 450);
+      }
+    }
+
+    if (reduceMotion) { intro.remove(); unlockScroll(); return; }
+
+    intro.addEventListener('click', finish);
+    intro.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') finish(); });
+    skip.addEventListener('click', function(e){ e.preventDefault(); finish(); });
+
+    if (!window.Motion) {
+      word.style.opacity = '1';
+      skip.style.opacity = '0.7';
+      rings.forEach(function(r){ r.style.opacity = '0.5'; });
+      setTimeout(finish, 700);
+      return;
+    }
+    var M = window.Motion;
+
+    M.animate(sweep, { opacity: [0, 0.9, 0], rotate: [0, 340] }, { duration: 1.1, easing: 'linear' });
+    rings.forEach(function(ring, i){
+      M.animate(ring, { opacity: [0.9, 0], scale: [0.3, 1] }, { duration: 1.3, delay: i * 0.22, easing: [0.2,0.6,0.3,1] });
+    });
+    M.animate(word, { opacity: [0, 1] }, { duration: 0.5, delay: 0.35 });
+    M.animate(skip, { opacity: [0, 0.7] }, { duration: 0.4, delay: 0.6 });
+
+    setTimeout(finish, 1750);
+  })();
+
+  // spotlight follow
+  if (!reduceMotion) {
+    window.addEventListener('mousemove', function(e){
+      document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+      document.documentElement.style.setProperty('--my', e.clientY + 'px');
+    }, { passive: true });
+  }
+
+  // magnetic custom cursor
+  if (hasFinePointer && !reduceMotion) {
+    document.body.classList.add('has-cursor');
+    var ring = document.getElementById('cursor-ring');
+    var dot = document.getElementById('cursor-dot');
+    var tx = 0, ty = 0, rx = 0, ry = 0, armed = false;
+    window.addEventListener('mousemove', function(e){
+      tx = e.clientX; ty = e.clientY;
+      if (!armed) { armed = true; rx = tx; ry = ty; ring.classList.add('armed'); dot.classList.add('armed'); }
+    }, { passive:true });
+    (function loop(){
+      rx += (tx - rx) * 0.18; ry += (ty - ry) * 0.18;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      dot.style.left = tx + 'px'; dot.style.top = ty + 'px';
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a, button, summary, input, textarea, select').forEach(function(el){
+      el.addEventListener('mouseenter', function(){ ring.classList.add('magnet'); ring.style.width='64px'; ring.style.height='64px'; });
+      el.addEventListener('mouseleave', function(){ ring.classList.remove('magnet'); ring.style.width='34px'; ring.style.height='34px'; });
+    });
+  } else {
+    var cr = document.getElementById('cursor-ring'), cd = document.getElementById('cursor-dot');
+    if (cr) cr.style.display = 'none';
+    if (cd) cd.style.display = 'none';
+  }
+
+  // scroll reveal — Motion (spring, per-group stagger) with fallback
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal:not(.in)'));
+  if (reduceMotion) {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  } else if (window.Motion && typeof window.Motion.inView === 'function') {
+    var M2 = window.Motion;
+    var groups = new Map();
+    revealEls.forEach(function(el){
+      var p = el.parentElement;
+      if (!groups.has(p)) groups.set(p, []);
+      groups.get(p).push(el);
+    });
+    groups.forEach(function(members){
+      var stop = M2.inView(members[0], function(){
+        M2.animate(members, {
+          opacity: [0, 1],
+          transform: ['perspective(700px) rotateX(9deg) translateY(16px) scale(0.98)', 'none']
+        }, { duration: 0.34, delay: M2.stagger(0.05), easing: [0.2, 0.7, 0.2, 1] });
+        if (stop) stop();
+      }, { margin: '0px 0px 20% 0px', amount: 0 });
+    });
+  } else if ('IntersectionObserver' in window) {
+    revealEls.forEach(function(el){ el.classList.add('fallback-anim'); });
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry, i){
+        if (entry.isIntersecting) {
+          entry.target.style.transitionDelay = (i % 4) * 40 + 'ms';
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px 20% 0px' });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // watchdog: nothing stays invisible forever
+  setTimeout(function(){
+    document.querySelectorAll('.reveal').forEach(function(el){
+      el.classList.add('in');
+      el.style.opacity = '1'; el.style.transform = 'none';
+    });
+  }, 3500);
+
+  // tactile button press
+  if (window.Motion && !reduceMotion) {
+    document.querySelectorAll('.btn').forEach(function(btn){
+      btn.addEventListener('pointerdown', function(){ window.Motion.animate(btn, { scale: 0.96 }, { duration: 0.15, easing: [0.2, 0.7, 0.2, 1] }); });
+      ['pointerup', 'pointerleave'].forEach(function(evt){
+        btn.addEventListener(evt, function(){ window.Motion.animate(btn, { scale: 1 }, { type: 'spring', stiffness: 400, damping: 20 }); });
+      });
+    });
+  }
+
+  // 3D pointer tilt on cards
+  if (hasFinePointer && !reduceMotion) {
+    document.querySelectorAll('.tilt-card').forEach(function(card){
+      card.addEventListener('mousemove', function(e){
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = 'perspective(900px) rotateX(' + (py * -8) + 'deg) rotateY(' + (px * 10) + 'deg) translateZ(6px)';
+      });
+      card.addEventListener('mouseleave', function(){ card.style.transform = 'perspective(900px) rotateX(0) rotateY(0) translateZ(0)'; });
+    });
+  }
+
+  // mailto lead form
+  var form = document.getElementById('lead-form');
+  var status = document.getElementById('form-status');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var data = new FormData(form);
+    var name = data.get('name') || '', shop = data.get('shop') || '', type = data.get('type') || '', email = data.get('email') || '', qty = data.get('qty') || '', message = data.get('message') || '';
+    var subject = 'Comandă RbtPro — ' + type;
+    var body = 'Nume: ' + name + '\nClub/magazin: ' + shop + '\nInteres: ' + type + '\nCantitate: ' + qty + '\nEmail: ' + email + '\n\nMesaj:\n' + message;
+    status.textContent = 'Se deschide clientul tău de email…';
+    window.location.href = 'mailto:contact@rbtprofishing.ro?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  });
+
+  // persistent full-page 3D backdrop (desktop/fine-pointer only): sonar-green wave grid + particles
+  (function(){
+    var canvas = document.getElementById('bg-canvas');
+    if (!window.THREE || !canvas || isLowPowerDevice) return;
+    var scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x051312, 0.032);
+    var camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 3.2, 9);
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    var segs = 46;
+    var geo = new THREE.PlaneGeometry(40, 34, segs, segs);
+    geo.rotateX(-Math.PI / 2.15);
+    var pos = geo.attributes.position;
+    var base = new Float32Array(pos.count);
+    for (var i = 0; i < pos.count; i++) base[i] = pos.getY(i);
+    var grid = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: 0x4dffb0, wireframe: true, transparent: true, opacity: 0.32 }));
+    grid.position.set(0, -1.3, -8);
+    scene.add(grid);
+    var grid2 = new THREE.Mesh(geo.clone(), new THREE.MeshBasicMaterial({ color: 0xff9a2e, wireframe: true, transparent: true, opacity: 0.12 }));
+    grid2.position.set(0, -1.28, -8);
+    grid2.scale.set(1.002, 1, 1.002);
+    scene.add(grid2);
+
+    // bite markers: amber nodes rising off the sonar floor
+    var nodeGeo = new THREE.SphereGeometry(0.055, 8, 8);
+    var nodeMat = new THREE.MeshBasicMaterial({ color: 0xffb454 });
+    var nodes = [];
+    for (var n = 0; n < 7; n++) {
+      var node = new THREE.Mesh(nodeGeo, nodeMat);
+      node.userData.x = (Math.random() - 0.5) * 24;
+      node.userData.z = -3 - Math.random() * 18;
+      node.userData.phase = Math.random() * Math.PI * 2;
+      scene.add(node);
+      nodes.push(node);
+    }
+
+    var PCOUNT = 700;
+    var pgeo = new THREE.BufferGeometry();
+    var parr = new Float32Array(PCOUNT * 3);
+    for (var p = 0; p < PCOUNT; p++) {
+      parr[p*3] = (Math.random() - 0.5) * 46;
+      parr[p*3+1] = Math.random() * 14 - 2;
+      parr[p*3+2] = (Math.random() - 0.5) * 46 - 8;
+    }
+    pgeo.setAttribute('position', new THREE.BufferAttribute(parr, 3));
+    var particles = new THREE.Points(pgeo, new THREE.PointsMaterial({ color: 0x9fffd6, size: 0.05, transparent: true, opacity: 0.5 }));
+    scene.add(particles);
+
+    function resize(){
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+    window.addEventListener('resize', resize);
+
+    var mouseX = 0, mouseY = 0;
+    if (!reduceMotion) {
+      window.addEventListener('mousemove', function(e){
+        mouseX = (e.clientX / window.innerWidth - 0.5);
+        mouseY = (e.clientY / window.innerHeight - 0.5);
+      }, { passive: true });
+    }
+    function scrollProgress(){
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      return h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
+    }
+    var clock = new THREE.Clock();
+    var still = reduceMotion;
+    function frame(){
+      if (!still) requestAnimationFrame(frame);
+      var t = clock.getElapsedTime();
+      var sp = scrollProgress();
+      for (var i = 0; i < pos.count; i++) {
+        var x = pos.getX(i), z = pos.getZ(i);
+        var wave = Math.sin(x * 0.26 + t * 0.55) * 0.4 + Math.sin(z * 0.2 - t * 0.45) * 0.4;
+        pos.setY(i, base[i] + wave);
+      }
+      pos.needsUpdate = true;
+      nodes.forEach(function(node){
+        var wave = Math.sin(node.userData.x * 0.26 + t * 0.55) * 0.4 + Math.sin(node.userData.z * 0.2 - t * 0.45) * 0.4;
+        node.position.set(node.userData.x, -1.3 + wave + 0.07, node.userData.z);
+        node.scale.setScalar(0.75 + 0.35 * Math.sin(t * 1.6 + node.userData.phase));
+      });
+      particles.rotation.y = t * 0.02;
+      camera.position.z = 9 - sp * 6.5;
+      camera.position.y = 3.2 - sp * 1.4;
+      camera.position.x = Math.sin(t * 0.07) * 0.9 + mouseX * 1.2;
+      camera.lookAt(0.4 * mouseX, 0.3 - sp * 0.4, -8);
+      renderer.render(scene, camera);
+    }
+    frame();
+    if (still) renderer.render(scene, camera);
+  })();
+</script>
+</body>
+</html>
