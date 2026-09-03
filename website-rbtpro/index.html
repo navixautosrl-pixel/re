@@ -7,7 +7,7 @@
 <meta name="description" content="Boilies și nadă pe bază de făină de pește, în loturi proaspete, testate la baltă.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Anton&family=Caveat:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@13.1.1/dist/motion.js"></script>
 <style>
@@ -195,6 +195,47 @@
   .form-note{ font-size:0.8rem; color:var(--ink-soft); }
   .form-status{ font-size:0.85rem; color:var(--sonar); min-height:1.2em; }
 
+  /* ---- spotlight: one deliberate color-inverted "editorial" section, self-contained tokens ---- */
+  .spotlight-section{
+    --spot-bg:#ecdfc0; --spot-ink:#241a0d; --spot-ink-soft:#6b5a3d; --spot-accent:#b23a2e; --spot-line:rgba(36,26,13,0.16);
+    position:relative; background:var(--spot-bg); color:var(--spot-ink); overflow:hidden;
+    padding-block:clamp(3.5rem,7vw,6rem);
+  }
+  .spotlight-section::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(36,26,13,0.05) 0 2px, transparent 2px 22px),
+      repeating-linear-gradient(-45deg, rgba(36,26,13,0.05) 0 2px, transparent 2px 22px);
+  }
+  .spotlight-grid{ position:relative; z-index:1; display:grid; gap:2.5rem; align-items:center; }
+  @media (min-width:900px){ .spotlight-grid{ grid-template-columns:1.1fr 0.9fr; gap:3rem; } }
+  .spot-eyebrow{ font-family:"IBM Plex Mono",monospace; font-size:0.72rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--spot-accent); }
+  .spot-headline{
+    font-family:"Anton",sans-serif; font-weight:400; text-transform:uppercase;
+    font-size:clamp(3.2rem,10vw,6.4rem); line-height:0.92; letter-spacing:0.005em; margin-top:0.5rem;
+    color:var(--spot-ink); text-shadow:5px 5px 0 var(--spot-accent);
+  }
+  .spot-script{
+    font-family:"Caveat",cursive; font-weight:700; font-size:clamp(1.5rem,3vw,2rem);
+    color:var(--spot-accent); margin-top:0.8rem; transform:rotate(-2deg); display:inline-block;
+  }
+  .spot-card{
+    margin-top:2rem; background:#fffaf0; border:1px solid var(--spot-line); border-radius:10px;
+    padding:1.3rem 1.4rem; max-width:320px; box-shadow:0 18px 40px -20px rgba(36,26,13,0.35);
+    transform:rotate(-1.2deg);
+  }
+  .spot-card-row{ display:flex; justify-content:space-between; gap:1rem; font-size:0.92rem; padding-block:0.4rem; border-bottom:1px dashed var(--spot-line); }
+  .spot-card-row span{ color:var(--spot-ink-soft); }
+  .spot-card-row b{ font-weight:600; }
+  .spot-card-row.price{ border-bottom:none; padding-top:0.7rem; justify-content:flex-start; }
+  .spot-card-row.price span{ font-family:"IBM Plex Mono",monospace; font-size:1.3rem; font-weight:600; color:var(--spot-ink); }
+  .spot-card .btn-dark{ margin-top:0.9rem; width:100%; justify-content:center; background:var(--spot-ink); color:var(--spot-bg); }
+  .spot-card .btn-dark:hover{ background:var(--spot-accent); }
+  .spot-art{ display:flex; align-items:center; justify-content:center; }
+  .spot-art svg{ width:min(100%,340px); height:auto; }
+  @media (prefers-reduced-motion:no-preference){ .spot-art svg .hook-line{ animation:hook-sway 4s ease-in-out infinite; transform-origin:50% 0%; } }
+  @keyframes hook-sway{ 0%,100%{ transform:rotate(-3deg); } 50%{ transform:rotate(3deg); } }
+
   footer{ border-top:1px solid var(--line); padding:2.5rem 1.5rem 3rem; position:relative; z-index:2; }
   .footer-inner{ max-width:1120px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:1.2rem; font-size:0.85rem; color:var(--ink-soft); }
 </style>
@@ -254,6 +295,40 @@
         <span><b>Loturi</b>proaspete, la comandă</span>
         <span><b>Rețete</b>testate la baltă</span>
         <span><b>Livrare</b>în toată țara</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="spotlight-section">
+    <div class="wrap spotlight-grid">
+      <div class="reveal">
+        <span class="spot-eyebrow">Rețeta lunii</span>
+        <h2 class="spot-headline">Boilies<br>Scopex</h2>
+        <span class="spot-script">proaspete din lot, nu de pe raft</span>
+        <div class="spot-card">
+          <div class="spot-card-row"><span>Aromă</span><b>Scopex &amp; portocală</b></div>
+          <div class="spot-card-row"><span>Dimensiune</span><b>20mm</b></div>
+          <div class="spot-card-row"><span>Bază</span><b>Făină de pește</b></div>
+          <div class="spot-card-row price"><span>45 RON/kg</span></div>
+          <a href="#gama" class="btn btn-dark">Vezi gama →</a>
+        </div>
+      </div>
+      <div class="spot-art reveal">
+        <svg viewBox="0 0 240 300" aria-hidden="true">
+          <circle cx="120" cy="255" r="26" fill="none" stroke="#241a0d" stroke-opacity="0.15" stroke-width="2"/>
+          <circle cx="120" cy="255" r="42" fill="none" stroke="#241a0d" stroke-opacity="0.1" stroke-width="2"/>
+          <g class="hook-line">
+            <line x1="120" y1="0" x2="120" y2="95" stroke="#241a0d" stroke-width="3"/>
+            <circle cx="120" cy="150" r="56" fill="#d9a441" stroke="#241a0d" stroke-width="4"/>
+            <circle cx="98" cy="130" r="4" fill="#241a0d" opacity="0.25"/>
+            <circle cx="142" cy="138" r="3" fill="#241a0d" opacity="0.25"/>
+            <circle cx="110" cy="168" r="3.5" fill="#241a0d" opacity="0.25"/>
+            <circle cx="146" cy="164" r="4" fill="#241a0d" opacity="0.25"/>
+            <circle cx="126" cy="122" r="2.5" fill="#241a0d" opacity="0.2"/>
+            <circle cx="104" cy="158" r="2.5" fill="#241a0d" opacity="0.2"/>
+            <path d="M120 176 Q120 208 150 208 Q176 208 176 186 Q176 168 159 168" fill="none" stroke="#b23a2e" stroke-width="7" stroke-linecap="round"/>
+          </g>
+        </svg>
       </div>
     </div>
   </section>
