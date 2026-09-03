@@ -1,3 +1,17 @@
 __pycache__/
 *.pyc
 node_modules/
+
+# Secrets — never commit real values. Copy .env.example to .env.local instead.
+.env
+.env.local
+.env.*.local
+
+# Build output
+.next/
+dist/
+build/
+
+# Supabase CLI local state
+supabase/.branches/
+supabase/.temp/
