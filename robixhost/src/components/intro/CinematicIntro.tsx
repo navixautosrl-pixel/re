@@ -3,24 +3,25 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ParticleBurst } from "./ParticleBurst";
-import { isLowPowerDevice } from "@/lib/device";
+import { AmbientField } from "./AmbientField";
 
 const SESSION_KEY = "robixhost-intro-seen";
 
-type Phase = "connecting" | "exploding" | "done";
+type Phase = "connecting" | "dissolving" | "done";
 
+/**
+ * A single, quiet product-reveal moment — not a gaming loading screen.
+ * Logo resolves into focus, connection status confirms itself line by
+ * line, then the whole overlay dissolves (fade + slight scale/blur push)
+ * to reveal the hero already mounted beneath it. No particle explosion.
+ */
 export function CinematicIntro() {
   const prefersReducedMotion = useReducedMotion();
   const [shouldShow, setShouldShow] = useState(false);
   const [phase, setPhase] = useState<Phase>("connecting");
   const [ip, setIp] = useState<string | null | "loading">("loading");
-  const [lowPower, setLowPower] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  // Reads sessionStorage/device capability (external systems) to decide
-  // whether this visit should show the intro — an effect is the correct
-  // place for this; there is no external-system read without it.
   useEffect(() => {
     let seen = false;
     try {
@@ -30,38 +31,46 @@ export function CinematicIntro() {
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShouldShow(!seen);
-     
-    setLowPower(isLowPowerDevice());
   }, []);
 
   useEffect(() => {
     if (!shouldShow || phase !== "connecting") return;
 
-    fetch("/api/ip")
+    // Client-side only, public IP-echo lookup — the visitor's own browser
+    // asks a third party what its address looks like from the outside.
+    // Nothing is sent to RobixHost, nothing is stored, nothing reaches
+    // analytics (see CinematicIntro's privacy note in the privacy page).
+    fetch("https://api.ipify.org?format=json")
       .then((r) => r.json())
-      .then((data: { ip: string | null }) => setIp(data.ip))
+      .then((data: { ip?: string }) => setIp(data.ip ?? null))
       .catch(() => setIp(null));
 
-    // Reduced motion: short, mostly static hold instead of the full sequence.
-    const holdMs = prefersReducedMotion ? 500 : lowPower ? 1400 : 2200;
-    const t = setTimeout(() => setPhase("exploding"), holdMs);
+    const holdMs = prefersReducedMotion ? 400 : 2400;
+    const t = setTimeout(() => setPhase("dissolving"), holdMs);
     timers.current.push(t);
     return () => clearTimeout(t);
-  }, [shouldShow, phase, prefersReducedMotion, lowPower]);
+  }, [shouldShow, phase, prefersReducedMotion]);
 
   const finish = () => {
     try {
       window.sessionStorage.setItem(SESSION_KEY, "1");
     } catch {
-      /* sessionStorage unavailable (private mode) — intro just replays, not fatal */
+      /* private mode — intro just replays, not fatal */
     }
     setPhase("done");
   };
 
   useEffect(() => {
-    // Intentionally reads the ref's value at unmount time (not a snapshot
-    // taken now) — timers scheduled after this effect runs still need to
-    // be cleared.
+    if (phase !== "dissolving") return;
+    const t = setTimeout(finish, prefersReducedMotion ? 150 : 900);
+    timers.current.push(t);
+    return () => clearTimeout(t);
+     
+  }, [phase, prefersReducedMotion]);
+
+  useEffect(() => {
+    // Intentionally reads the ref's value at unmount time — timers
+    // scheduled after this effect runs still need to be cleared.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => timers.current.forEach(clearTimeout);
   }, []);
@@ -83,89 +92,55 @@ export function CinematicIntro() {
       {phase !== "done" ? (
         <motion.div
           key="intro"
-        role="dialog"
-        aria-label="Se stabilește conexiunea securizată"
-        aria-live="polite"
-        className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-background"
-        initial={{ opacity: 1 }}
-        animate={{ opacity: phase === "exploding" ? 1 : 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: prefersReducedMotion ? 0.15 : 0.6, ease: "easeInOut" }}
-        onAnimationComplete={() => {
-          if (phase === "exploding" && !prefersReducedMotion) {
-            // let the particle burst / logo pulse play, handled below
-          }
-        }}
-      >
-        <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.15]" />
+          role="dialog"
+          aria-label="Se verifică securitatea conexiunii"
+          aria-live="polite"
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-background"
+          initial={{ opacity: 1 }}
+          animate={{
+            opacity: phase === "dissolving" ? 0 : 1,
+            scale: phase === "dissolving" ? 1.04 : 1,
+            filter: phase === "dissolving" ? "blur(10px)" : "blur(0px)",
+          }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: prefersReducedMotion ? 0.15 : 0.9, ease: [0.65, 0, 0.35, 1] }}
+        >
+          <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.05]" />
+          <AmbientField active={!prefersReducedMotion} />
 
-        <ParticleBurst
-          active={phase === "exploding" && !prefersReducedMotion}
-          intensity={lowPower ? "reduced" : "full"}
-          onComplete={finish}
-        />
-        {phase === "exploding" && prefersReducedMotion ? (
-          <ImmediateFinish onFinish={finish} />
-        ) : null}
+          <div className="relative flex flex-col items-center gap-7 px-6 text-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, filter: "blur(6px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col items-center gap-4"
+            >
+              <Image src="/brand/logo.webp" alt="RobixHost" width={64} height={64} priority className="h-14 w-14 sm:h-16 sm:w-16" />
+              <motion.span
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+                className="h-px w-16 origin-center bg-border-strong"
+              />
+            </motion.div>
 
-        <div className="relative flex flex-col items-center gap-6 px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{
-              opacity: 1,
-              scale: phase === "exploding" && !prefersReducedMotion ? [1, 1.08, 0.9] : 1,
-            }}
-            transition={{
-              opacity: { duration: 0.5 },
-              scale:
-                phase === "exploding"
-                  ? { duration: 0.7, ease: "easeInOut" }
-                  : { duration: 0.5 },
-            }}
-          >
-            <Image
-              src="/brand/logo.webp"
-              alt="RobixHost"
-              width={88}
-              height={88}
-              priority
-              className="h-20 w-20 sm:h-24 sm:w-24"
-            />
-          </motion.div>
-
-          <AnimatePresence>
-            {phase === "connecting" ? (
-              <motion.div
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: 0.35, duration: 0.4 }}
-                className="flex flex-col items-center gap-2 font-data text-xs tracking-wide text-muted-foreground sm:text-sm"
-              >
-                <StatusLine delay={0.5} text="SECURE CONNECTION ESTABLISHED" tone="primary" />
-                <StatusLine delay={0.75} text="DDoS PROTECTION ACTIVE" tone="primary" />
-                <StatusLine
-                  delay={1}
-                  text={
-                    ip === "loading"
-                      ? "IP: se verifică…"
-                      : ip
-                        ? `IP: ${ip}`
-                        : "IP: indisponibil"
-                  }
-                  tone="muted"
-                />
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
-        </div>
+            <div className="flex flex-col items-center gap-2 font-mono-tech text-xs tracking-[0.04em] text-muted-foreground sm:text-[13px]">
+              <StatusLine delay={0.6} text="CONNECTION SECURED" tone="accent" />
+              <StatusLine delay={0.85} text="DDoS PROTECTED" tone="accent" />
+              <StatusLine
+                delay={1.1}
+                text={ip === "loading" ? "IP —" : ip ? `IP ${ip}` : "IP indisponibil"}
+                tone="muted"
+              />
+            </div>
+          </div>
 
           <button
             type="button"
             onClick={finish}
-            className="absolute bottom-8 right-1/2 translate-x-1/2 rounded-md border border-border bg-surface/70 px-4 py-2 font-data text-xs text-muted-foreground backdrop-blur-sm transition-colors hover:text-foreground sm:bottom-10 sm:right-10 sm:translate-x-0"
+            className="absolute bottom-8 right-8 font-mono-tech text-xs text-muted-foreground transition-colors hover:text-foreground"
           >
-            Sari intro
+            Sari — Esc
           </button>
         </motion.div>
       ) : null}
@@ -173,32 +148,15 @@ export function CinematicIntro() {
   );
 }
 
-function StatusLine({
-  text,
-  delay,
-  tone,
-}: {
-  text: string;
-  delay: number;
-  tone: "primary" | "muted";
-}) {
+function StatusLine({ text, delay, tone }: { text: string; delay: number; tone: "accent" | "muted" }) {
   return (
     <motion.p
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ delay, duration: 0.4 }}
-      className={tone === "primary" ? "text-primary" : "text-muted-foreground"}
+      transition={{ delay, duration: 0.5 }}
+      className={tone === "accent" ? "text-accent" : "text-muted-foreground"}
     >
       {text}
     </motion.p>
   );
-}
-
-function ImmediateFinish({ onFinish }: { onFinish: () => void }) {
-  useEffect(() => {
-    const t = setTimeout(onFinish, 250);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return null;
 }

@@ -1,51 +1,65 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ConfigBadge } from "./ConfigBadge";
+import { AnimatedPrice } from "./AnimatedPrice";
 import { cn } from "@/lib/utils";
-import type { HostingPlan } from "@/lib/constants";
+import { annualMonthlyEquivalent, orderUrl, type HostingPlan } from "@/lib/constants";
+import type { BillingPeriod } from "./BillingToggle";
 
-export function PricingCard({ plan }: { plan: HostingPlan }) {
+export function PricingCard({
+  plan,
+  billingPeriod,
+}: {
+  plan: HostingPlan;
+  billingPeriod: BillingPeriod;
+}) {
+  const price =
+    billingPeriod === "annual" ? annualMonthlyEquivalent(plan.monthlyRon) : plan.monthlyRon;
+
   return (
     <div
       className={cn(
-        "flex h-full flex-col rounded-lg border p-6",
-        plan.featured
-          ? "border-primary bg-surface-elevated shadow-[0_0_0_1px_var(--color-primary),0_0_40px_-12px_var(--color-primary)]"
-          : "border-border bg-surface"
+        "flex h-full flex-col rounded-lg border p-7",
+        plan.featured ? "border-foreground/25 bg-surface" : "border-border"
       )}
     >
-      {plan.featured ? (
-        <span className="mb-4 w-fit rounded-full bg-primary px-3 py-1 font-data text-[11px] font-medium text-primary-foreground">
-          RECOMANDAT
-        </span>
-      ) : (
-        <div className="mb-4 h-[26px]" aria-hidden="true" />
-      )}
-      <h3 className="font-display text-xl font-semibold">{plan.name}</h3>
-      <div className="mt-3 flex items-baseline gap-2">
-        <span className="font-display text-3xl font-bold">{plan.price}</span>
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-medium">{plan.name}</h3>
+        {plan.featured ? (
+          <span className="rounded-xs bg-accent-soft px-2 py-0.5 font-mono-tech text-[10px] uppercase tracking-[0.06em] text-accent">
+            Recomandat
+          </span>
+        ) : null}
       </div>
-      <p className="mt-1 text-xs text-muted-foreground">{plan.billingNote}</p>
+
+      <div className="mt-6 flex items-baseline gap-1.5">
+        <AnimatedPrice
+          value={String(price)}
+          className="text-4xl font-semibold tracking-[-0.02em] tabular-nums"
+        />
+        <span className="text-sm text-muted-foreground">RON / lună</span>
+      </div>
+      <p className="mt-1 font-mono-tech text-xs text-muted-foreground">
+        {billingPeriod === "annual" ? "facturat anual" : "facturat lunar"}
+      </p>
 
       <Button
-        className={cn(
-          "mt-6 w-full",
-          plan.featured
-            ? "bg-primary text-primary-foreground hover:bg-primary/90"
-            : "bg-surface-elevated text-foreground border border-border hover:border-primary/60"
-        )}
+        asChild
+        variant={plan.featured ? "primary" : "outline"}
+        className="mt-7 w-full"
       >
-        Comandă {plan.name}
+        <a href={orderUrl} target="_blank" rel="noopener noreferrer">
+          Comandă {plan.name}
+        </a>
       </Button>
 
-      <ul className="mt-6 flex flex-col gap-3 border-t border-border pt-6 text-sm">
+      <ul className="mt-7 flex flex-col gap-3 border-t border-border pt-7 text-sm">
         {plan.features.map((f) => (
-          <li key={f.label} className="flex items-center justify-between gap-3">
-            <span className="flex items-center gap-2 text-foreground/90">
-              <Check className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden="true" />
+          <li key={f.label} className="flex items-start justify-between gap-3">
+            <span className="flex shrink-0 items-start gap-2 text-foreground/90">
+              <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" aria-hidden="true" strokeWidth={1.75} />
               {f.label}
             </span>
-            <ConfigBadge>{f.value}</ConfigBadge>
+            <span className="text-right text-muted-foreground">{f.value}</span>
           </li>
         ))}
       </ul>

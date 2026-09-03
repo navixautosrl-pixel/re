@@ -1,15 +1,13 @@
 import { CinematicIntro } from "@/components/intro/CinematicIntro";
 import { Hero } from "@/components/sections/Hero";
+import { Performance } from "@/components/sections/Performance";
 import { LiveInfrastructure } from "@/components/sections/LiveInfrastructure";
-import { HostingProducts } from "@/components/sections/HostingProducts";
-import { HostingPlans } from "@/components/sections/HostingPlans";
-import { WhyRobixHost } from "@/components/sections/WhyRobixHost";
 import { DDoSProtection } from "@/components/sections/DDoSProtection";
+import { HostingProducts } from "@/components/sections/HostingProducts";
 import { ServerInfrastructure } from "@/components/sections/ServerInfrastructure";
-import { Speed } from "@/components/sections/Speed";
 import { GameServers } from "@/components/sections/GameServers";
-import { DomainSearch } from "@/components/sections/DomainSearch";
-import { Reviews } from "@/components/sections/Reviews";
+import { HostingPlans } from "@/components/sections/HostingPlans";
+import { Trust } from "@/components/sections/Trust";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
@@ -18,18 +16,16 @@ export default function Home() {
     <>
       <CinematicIntro />
       <Hero />
+      <Performance />
       <LiveInfrastructure />
-      <HostingProducts />
-      <HostingPlans />
-      <WhyRobixHost />
       <DDoSProtection />
+      <HostingProducts />
       <ServerInfrastructure />
-      <Speed />
       <GameServers />
-      <DomainSearch />
-      <Reviews />
-      <FAQSection />
-      <FinalCTA />
+      <HostingPlans />
+      <Trust />
+      <FAQSection index="09" />
+      <FinalCTA index="10" />
     </>
   );
 }

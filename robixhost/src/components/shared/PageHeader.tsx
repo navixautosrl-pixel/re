@@ -11,17 +11,19 @@ export function PageHeader({
 }) {
   return (
     <section className="relative overflow-hidden border-b border-border">
-      <div className="absolute inset-0 bg-grid opacity-[0.08]" aria-hidden="true" />
-      <div className="relative mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 sm:py-20 lg:px-8">
+      <div className="absolute inset-0 bg-grid opacity-[0.06]" aria-hidden="true" />
+      <div className="relative mx-auto max-w-4xl px-6 py-20 sm:px-8 sm:py-28 lg:px-12">
         <Reveal>
           {eyebrow ? (
-            <p className="mb-3 font-data text-xs text-primary">{eyebrow}</p>
+            <p className="mb-4 font-mono-tech text-xs uppercase tracking-[0.08em] text-accent">
+              {eyebrow}
+            </p>
           ) : null}
-          <h1 className="font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl">
+          <h1 className="max-w-3xl text-4xl font-semibold leading-[1.05] tracking-[-0.02em] text-balance sm:text-5xl lg:text-6xl">
             {title}
           </h1>
           {description ? (
-            <p className="mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
               {description}
             </p>
           ) : null}

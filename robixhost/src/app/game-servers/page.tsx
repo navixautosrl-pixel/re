@@ -5,33 +5,30 @@ import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { GameServers as GameServersGrid } from "@/components/sections/GameServers";
 import { FinalCTA } from "@/components/sections/FinalCTA";
-import { gameServerPlans, productCategories } from "@/lib/constants";
+import { gameServerPlans } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Game Server Hosting Romania",
-  description:
-    "Servere de joc cu instalare rapidă și rețea optimizată pentru latență mică. Planuri Starter, Pro și Business.",
+  description: "Servere de joc cu instalare rapidă și rețea optimizată pentru latență mică. De la 29 RON/lună.",
 };
 
 export default function GameServersPage() {
-  const product = productCategories.find((p) => p.slug === "game-servers")!;
-
   return (
     <>
       <PageHeader
-        eyebrow="GAME SERVERS"
+        eyebrow="Game Servers"
         title="Servere de joc, pregătite pentru comunitatea ta"
-        description={product.description}
+        description="Instalare rapidă, sloturi nelimitate și infrastructură optimizată pentru trafic în timp real."
       />
 
       <GameServersGrid />
 
-      <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="section-y">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
           <Reveal>
-            <SectionHeading eyebrow="PLANURI" title="Planuri Game Servers" align="center" />
+            <SectionHeading eyebrow="Prețuri" title="Planuri Game Servers" align="center" />
           </Reveal>
-          <div className="mt-10">
+          <div className="mt-12">
             <PlansGrid plans={gameServerPlans} />
           </div>
         </div>

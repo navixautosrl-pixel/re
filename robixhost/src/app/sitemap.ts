@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/constants";
 
+export const dynamic = "force-static";
+
 const routes = [
   "",
   "/hosting",
@@ -9,6 +11,9 @@ const routes = [
   "/dedicated-servers",
   "/domains",
   "/pricing",
+  "/web-design",
+  "/digital-marketing",
+  "/seo",
   "/about",
   "/contact",
   "/support",

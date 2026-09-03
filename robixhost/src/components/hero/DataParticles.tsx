@@ -39,9 +39,9 @@ export function DataParticles({ count = 260 }: { count?: number }) {
       </bufferGeometry>
       <pointsMaterial
         size={0.035}
-        color="#3b93ff"
+        color="#3557d6"
         transparent
-        opacity={0.55}
+        opacity={0.4}
         sizeAttenuation
         depthWrite={false}
       />

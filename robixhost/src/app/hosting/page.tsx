@@ -8,8 +8,7 @@ import { hostingPlans, productCategories } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Web Hosting Romania",
-  description:
-    "Web hosting pe infrastructură NVMe, cu protecție DDoS inclusă. Planuri Starter, Pro și Business pentru site-uri și aplicații web.",
+  description: "Web hosting pe infrastructură NVMe, cu protecție DDoS inclusă. Planuri Starter, Pro și Business, de la 24 RON/lună.",
 };
 
 export default function HostingPage() {
@@ -17,23 +16,16 @@ export default function HostingPage() {
 
   return (
     <>
-      <PageHeader
-        eyebrow="WEB HOSTING"
-        title="Găzduire web rapidă, sigură, gata de scalat"
-        description={product.description}
-      />
+      <PageHeader eyebrow="Web Hosting" title="Găzduire web rapidă, sigură, gata de scalat" description={product.description} />
 
-      <section className="border-b border-border py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <section className="section-y border-b border-border">
+        <div className="mx-auto max-w-5xl px-6 lg:px-10">
           <Reveal>
             <SectionHeading title="Ce include hostingul RobixHost" align="center" />
           </Reveal>
-          <Reveal delay={0.1} className="mt-8 grid gap-4 sm:grid-cols-3">
+          <Reveal delay={0.1} className="mt-10 grid gap-px overflow-hidden rounded-lg border border-border sm:grid-cols-3">
             {product.benefits.map((b) => (
-              <div
-                key={b}
-                className="rounded-lg border border-border bg-surface p-5 text-sm text-foreground/90"
-              >
+              <div key={b} className="bg-background p-6 text-sm text-foreground/90">
                 {b}
               </div>
             ))}
@@ -41,12 +33,12 @@ export default function HostingPage() {
         </div>
       </section>
 
-      <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="section-y">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
           <Reveal>
-            <SectionHeading eyebrow="PLANURI" title="Planuri Web Hosting" align="center" />
+            <SectionHeading eyebrow="Prețuri" title="Planuri Web Hosting" align="center" />
           </Reveal>
-          <div className="mt-10">
+          <div className="mt-12">
             <PlansGrid plans={hostingPlans} />
           </div>
         </div>

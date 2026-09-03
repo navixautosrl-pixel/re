@@ -8,8 +8,7 @@ import { dedicatedServerPlans, productCategories } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Dedicated Servers Romania",
-  description:
-    "Servere fizice dedicate, resurse hardware exclusive și control complet la nivel de sistem.",
+  description: "Servere fizice dedicate, resurse hardware exclusive și control complet la nivel de sistem. De la 449 RON/lună.",
 };
 
 export default function DedicatedServersPage() {
@@ -17,20 +16,16 @@ export default function DedicatedServersPage() {
 
   return (
     <>
-      <PageHeader
-        eyebrow="DEDICATED SERVERS"
-        title="Hardware dedicat, control complet"
-        description={product.description}
-      />
+      <PageHeader eyebrow="Dedicated Servers" title="Hardware dedicat, control complet" description={product.description} />
 
-      <section className="border-b border-border py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <section className="section-y border-b border-border">
+        <div className="mx-auto max-w-5xl px-6 lg:px-10">
           <Reveal>
             <SectionHeading title="Pentru cine sunt serverele dedicate" align="center" />
           </Reveal>
-          <Reveal delay={0.1} className="mt-8 grid gap-4 sm:grid-cols-3">
+          <Reveal delay={0.1} className="mt-10 grid gap-px overflow-hidden rounded-lg border border-border sm:grid-cols-3">
             {product.benefits.map((b) => (
-              <div key={b} className="rounded-lg border border-border bg-surface p-5 text-sm text-foreground/90">
+              <div key={b} className="bg-background p-6 text-sm text-foreground/90">
                 {b}
               </div>
             ))}
@@ -38,12 +33,12 @@ export default function DedicatedServersPage() {
         </div>
       </section>
 
-      <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="section-y">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
           <Reveal>
-            <SectionHeading eyebrow="PLANURI" title="Planuri Dedicated Servers" align="center" />
+            <SectionHeading eyebrow="Prețuri" title="Planuri Dedicated Servers" align="center" />
           </Reveal>
-          <div className="mt-10">
+          <div className="mt-12">
             <PlansGrid plans={dedicatedServerPlans} />
           </div>
         </div>

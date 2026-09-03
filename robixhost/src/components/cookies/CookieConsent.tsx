@@ -46,7 +46,7 @@ export function CookieConsent() {
         >
           <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div className="flex items-start gap-3">
-              <Shield className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+              <Shield className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
               <p className="text-sm text-muted-foreground">
                 Folosim cookie-uri strict necesare pentru funcționarea site-ului. Cu acordul tău,
                 folosim și cookie-uri de analytics/marketing — vezi{" "}
@@ -64,17 +64,10 @@ export function CookieConsent() {
               >
                 Preferințe
               </Button>
-              <Button
-                variant="outline"
-                className="border-border bg-transparent hover:bg-surface-elevated"
-                onClick={rejectOptional}
-              >
+              <Button variant="outline" onClick={rejectOptional}>
                 Respinge opționalele
               </Button>
-              <Button
-                className="bg-primary text-primary-foreground hover:bg-primary/90"
-                onClick={acceptAll}
-              >
+              <Button variant="primary" onClick={acceptAll}>
                 Acceptă toate
               </Button>
             </div>
@@ -85,7 +78,7 @@ export function CookieConsent() {
       <Dialog open={preferencesOpen} onOpenChange={setPreferencesOpen}>
         <DialogContent className="border-border bg-surface text-foreground">
           <DialogHeader>
-            <DialogTitle className="font-display">Preferințe cookie</DialogTitle>
+            <DialogTitle>Preferințe cookie</DialogTitle>
             <DialogDescription className="text-muted-foreground">
               Alege ce categorii de cookie-uri sunt active. Cookie-urile necesare nu pot fi
               dezactivate — sunt cerute pentru funcționarea de bază a site-ului.
@@ -116,7 +109,6 @@ export function CookieConsent() {
           <DialogFooter className="gap-2 sm:gap-2">
             <Button
               variant="outline"
-              className="border-border bg-transparent hover:bg-surface-elevated"
               onClick={() => {
                 rejectOptional();
                 setPreferencesOpen(false);
@@ -125,7 +117,7 @@ export function CookieConsent() {
               Respinge opționalele
             </Button>
             <Button
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
+              variant="primary"
               onClick={() => {
                 savePreferences(draft);
                 setPreferencesOpen(false);

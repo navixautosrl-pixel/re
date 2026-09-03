@@ -11,10 +11,10 @@ export default function PrivacyPage() {
       sections={[
         { heading: "1. Operatorul de date", note: "Identitatea legală completă a RobixHost ca operator de date (vezi și footer)." },
         {
-          heading: "2. Ce date colectăm",
-          note: "Inclusiv adresa IP afișată în secvența de introducere a site-ului (citită per-sesiune din request, nu este stocată în bază de date și nu este trimisă către analytics) — precum și datele din formulare (contact, cont, comandă).",
+          heading: "2. Ce date colectăm pe acest site",
+          note: "Acest site (robixhost.ro) este static și nu are cont propriu sau formulare — nu colectează și nu stochează date de identificare. Adresa IP afișată în secvența de introducere este obținută direct de browser-ul tău de la un serviciu public (ipify.org), doar pentru afișare, și nu este trimisă către sau păstrată de RobixHost. Contul de client, comenzile și tichetele de suport sunt gestionate separat, în platforma de facturare de la clienti.robixhost.ro, care are propriile măsuri de confidențialitate.",
         },
-        { heading: "3. Scopul procesării", note: "De ce sunt colectate datele — livrarea serviciului, securitate (protecție DDoS), comunicare cu clientul." },
+        { heading: "3. Scopul procesării", note: "De ce sunt colectate datele — livrarea serviciului, securitate (protecție DDoS), comunicare cu clientul, în contul de client." },
         { heading: "4. Temeiul legal", note: "Temeiul GDPR pentru fiecare tip de procesare (executarea contractului, interes legitim, consimțământ)." },
         { heading: "5. Destinatari și împuterniciți", note: "Procesatori terți implicați (ex: procesator de plăți, furnizor de infrastructură) — de listat după confirmare." },
         { heading: "6. Durata stocării", note: "Cât timp sunt păstrate diferitele categorii de date." },

@@ -22,7 +22,7 @@ export default function CookiesPage() {
         ]}
       />
       <div className="border-t border-border pb-16 pt-2 text-center">
-        <CookiePreferencesTrigger className="text-sm text-primary underline underline-offset-2" />
+        <CookiePreferencesTrigger className="text-sm text-accent underline underline-offset-2" />
       </div>
     </>
   );

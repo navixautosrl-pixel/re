@@ -1,42 +1,51 @@
 @import "tailwindcss";
 
-/* Self-hosted fonts (no external font CDN at build or runtime) */
-@import "@fontsource/space-grotesk/500.css";
-@import "@fontsource/space-grotesk/600.css";
-@import "@fontsource/space-grotesk/700.css";
-@import "@fontsource/manrope/400.css";
-@import "@fontsource/manrope/500.css";
-@import "@fontsource/manrope/600.css";
-@import "@fontsource/manrope/700.css";
-@import "@fontsource/jetbrains-mono/400.css";
-@import "@fontsource/jetbrains-mono/500.css";
+/*
+  ROBIXHOST design system
+  ————————————————————————
+  Direction: precision infrastructure. European, engineering-first,
+  confident — not "cyber/gaming". A true neutral near-black canvas
+  (not navy), one restrained accent (the existing brand blue, deepened
+  rather than brightened), hairline borders instead of glow, and a tight
+  radius scale instead of bubbly rounded-2xl everywhere. Geist — Vercel's
+  own typeface — for both display and body, because the brief's own
+  quality bar names Vercel; Geist Mono only where content is genuinely
+  technical/tabular (the intro's status lines, prices, plan specs).
+*/
 
 :root {
-  /* RobixHost design tokens — dark data-center palette.
-     Signal teal = fiber/data activity. Alert red = threat/blocked traffic only. */
-  --background: #05070b;
-  --surface: #0b0f17;
-  --surface-elevated: #131a26;
-  --border: #1c2430;
-  --border-strong: #2a3444;
-  --foreground: #e7ecf2;
-  --muted-foreground: #8a97ab;
+  --background: #08090a;
+  --surface: #0e0f11;
+  --surface-elevated: #151619;
+  --border: #232427;
+  --border-strong: #35373c;
+  --foreground: #f4f4f3;
+  --muted-foreground: #93949a;
 
-  /* Anchored to the existing RobixHost logo mark's blue, not invented fresh */
-  --primary: #3b93ff;
-  --primary-foreground: #04101f;
-  --primary-dim: #1d5fb0;
+  /* Brand accent — deepened from the logo's bright azure (#3b93ff) into
+     a more confident, less "SaaS-default" cobalt. Used sparingly:
+     links, focus rings, the primary CTA's underline/active states,
+     small precise data highlights — never as an ambient glow. */
+  --accent: #3557d6;
+  --accent-foreground: #f4f4f3;
+  --accent-soft: #1a2440;
 
-  --alert: #ff5252;
-  --alert-foreground: #1a0505;
+  --alert: #e5484d;
+  --success: #2fae6b;
 
-  --warning: #f5a623;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 
-  --radius: 0.625rem;
+  /* Spacing rhythm — deliberate, generous. Section vertical padding
+     scales through this instead of ad hoc py-* per component. */
+  --space-section-y: 6rem;
+  --space-section-y-lg: 10rem;
 
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-data: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+  /* Tight radius system — engineering precision, not soft/bubbly. */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
 }
 
 @theme inline {
@@ -47,19 +56,19 @@
   --color-border-strong: var(--border-strong);
   --color-foreground: var(--foreground);
   --color-muted-foreground: var(--muted-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary-dim: var(--primary-dim);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
   --color-alert: var(--alert);
-  --color-alert-foreground: var(--alert-foreground);
-  --color-warning: var(--warning);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 6px);
-  --font-sans: var(--font-body);
-  --font-display: var(--font-display);
-  --font-data: var(--font-data);
+  --color-success: var(--success);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 * {
@@ -68,42 +77,60 @@
 
 html {
   color-scheme: dark;
-  scroll-behavior: smooth;
 }
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
-  font-family: var(--font-body);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-primary) 35%, transparent);
-  color: var(--color-foreground);
+  background: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  color: white;
 }
 
-/* Visible, on-brand focus ring — never remove focus outlines */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
-/* Subtle structural grid — used behind hero/section backgrounds, never full-bleed neon */
+/* Hairline structural grid — restrained, low-opacity, never the star */
 .bg-grid {
   background-image:
-    linear-gradient(to right, color-mix(in srgb, var(--color-border) 70%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in srgb, var(--color-border) 70%, transparent) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(to right, color-mix(in srgb, var(--color-border) 65%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-border) 65%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
 }
 
-.text-glow {
-  text-shadow: 0 0 24px color-mix(in srgb, var(--color-primary) 45%, transparent);
+.font-mono-tech {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1, "zero" 1;
 }
 
-.font-data {
-  font-family: var(--font-data);
+/* Section rhythm helpers — deliberate, not identical everywhere */
+.section-y {
+  padding-top: var(--space-section-y);
+  padding-bottom: var(--space-section-y);
+}
+.section-y-lg {
+  padding-top: var(--space-section-y-lg);
+  padding-bottom: var(--space-section-y-lg);
+}
+@media (max-width: 767px) {
+  .section-y,
+  .section-y-lg {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+}
+
+@keyframes fade-wipe-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @keyframes packet-pass {
@@ -118,11 +145,6 @@ body {
   46% { left: 47%; opacity: 1; }
   54% { left: 49%; opacity: 0; }
   100% { left: 49%; opacity: 0; }
-}
-
-@keyframes shield-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 45%, transparent); }
-  50% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--color-primary) 0%, transparent); }
 }
 
 @media (prefers-reduced-motion: reduce) {

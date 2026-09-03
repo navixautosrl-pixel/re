@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 type Status = "operational" | "degraded" | "outage";
 
 const statusMeta: Record<Status, { label: string; dot: string; text: string }> = {
-  operational: { label: "Operational", dot: "bg-primary", text: "text-primary" },
-  degraded: { label: "Degradat", dot: "bg-warning", text: "text-warning" },
+  operational: { label: "Operațional", dot: "bg-success", text: "text-success" },
+  degraded: { label: "Degradat", dot: "bg-amber-500", text: "text-amber-500" },
   outage: { label: "Indisponibil", dot: "bg-alert", text: "text-alert" },
 };
 
@@ -19,21 +19,10 @@ export function StatusIndicator({
 }) {
   const meta = statusMeta[status];
   return (
-    <div
-      className={cn(
-        "flex items-center justify-between rounded-md border border-border bg-surface px-4 py-3",
-        className
-      )}
-    >
+    <div className={cn("flex items-center justify-between border-t border-border py-4", className)}>
       <span className="text-sm text-foreground/90">{name}</span>
-      <span className={cn("flex items-center gap-2 font-data text-xs", meta.text)}>
-        <span className="relative flex h-2 w-2">
-          <span
-            className={cn("absolute inline-flex h-full w-full animate-ping rounded-full opacity-60", meta.dot)}
-            aria-hidden="true"
-          />
-          <span className={cn("relative inline-flex h-2 w-2 rounded-full", meta.dot)} aria-hidden="true" />
-        </span>
+      <span className={cn("flex items-center gap-2 font-mono-tech text-xs", meta.text)}>
+        <span className={cn("h-1.5 w-1.5 rounded-full", meta.dot)} aria-hidden="true" />
         {meta.label}
       </span>
     </div>

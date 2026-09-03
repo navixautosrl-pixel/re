@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { HeroFallback2D } from "@/components/hero/HeroFallback2D";
+import { TextReveal } from "@/components/shared/TextReveal";
+import { MagneticButton } from "@/components/shared/MagneticButton";
 import { isLowPowerDevice, supportsWebGL } from "@/lib/device";
 
 const HeroCanvas3D = dynamic(
@@ -15,12 +17,8 @@ const HeroCanvas3D = dynamic(
 
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
-  const [capability, setCapability] = useState<"checking" | "3d" | "3d-reduced" | "2d">(
-    "checking"
-  );
+  const [capability, setCapability] = useState<"checking" | "3d" | "3d-reduced" | "2d">("checking");
 
-  // Reads prefers-reduced-motion / WebGL support / device capability
-  // (external systems) to decide how to render the hero visual.
   useEffect(() => {
     let next: "3d" | "3d-reduced" | "2d";
     if (prefersReducedMotion || !supportsWebGL()) {
@@ -33,44 +31,43 @@ export function Hero() {
   }, [prefersReducedMotion]);
 
   return (
-    <section className="relative overflow-hidden border-b border-border">
-      <div className="absolute inset-0 bg-grid opacity-[0.08]" aria-hidden="true" />
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:gap-8 lg:py-28 lg:px-8">
-        <div className="relative z-10">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 font-data text-xs text-primary">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            INFRASTRUCTURĂ ACTIVĂ
-          </span>
-          <h1 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance sm:text-5xl lg:text-6xl">
-            Hosting built for what&apos;s next.
-          </h1>
-          <p className="mt-6 max-w-lg text-base text-muted-foreground sm:text-lg">
-            Hosting rapid, infrastructură performantă, protecție DDoS și suport real — pentru
-            afaceri care nu-și permit downtime.
+    <section className="relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid opacity-[0.05]" aria-hidden="true" />
+      <div className="relative mx-auto grid max-w-[1400px] gap-8 px-6 pb-10 pt-16 sm:gap-12 sm:pb-20 sm:pt-20 lg:grid-cols-12 lg:gap-8 lg:px-10 lg:pb-32 lg:pt-24">
+        <div className="lg:col-span-5">
+          <p className="font-mono-tech text-xs uppercase tracking-[0.1em] text-muted-foreground">
+            Hosting pentru infrastructură reală
           </p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-              <Link href="/pricing">Vezi planurile</Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-border bg-transparent hover:bg-surface-elevated"
-            >
-              <Link href="#infrastructure">Descoperă infrastructura</Link>
+          <TextReveal
+            as="h1"
+            delayStart={0.1}
+            lines={["Infrastructure", "built for", "performance."]}
+            className="mt-5 text-[2.75rem] font-semibold leading-[0.98] tracking-[-0.03em] sm:text-6xl lg:text-[4.25rem]"
+          />
+          <p className="mt-7 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Hosting, VPS și servere dedicate pe NVMe, cu protecție DDoS inclusă din prima zi —
+            plus creare de website-uri, marketing și SEO, dacă vrei totul dintr-un singur loc.
+          </p>
+          <div className="mt-9 flex flex-wrap items-center gap-4">
+            <MagneticButton>
+              <Button asChild size="lg" variant="primary">
+                <Link href="/pricing">Vezi planurile</Link>
+              </Button>
+            </MagneticButton>
+            <Button asChild size="lg" variant="ghost">
+              <Link href="#infrastructure">Explorează infrastructura</Link>
             </Button>
           </div>
         </div>
 
-        <div className="relative h-[340px] sm:h-[420px] lg:h-[480px]">
-          {capability === "checking" ? (
-            <HeroFallback2D />
-          ) : capability === "2d" ? (
-            <HeroFallback2D />
-          ) : (
-            <HeroCanvas3D reduced={capability === "3d-reduced"} />
-          )}
+        <div className="lg:col-span-7 lg:pt-8">
+          <div className="h-[280px] sm:h-[440px] lg:h-[560px]">
+            {capability === "checking" || capability === "2d" ? (
+              <HeroFallback2D />
+            ) : (
+              <HeroCanvas3D reduced={capability === "3d-reduced"} />
+            )}
+          </div>
         </div>
       </div>
     </section>

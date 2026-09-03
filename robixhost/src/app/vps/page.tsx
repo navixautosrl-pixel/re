@@ -8,8 +8,7 @@ import { vpsPlans, productCategories } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "VPS Romania — Servere Virtuale Private",
-  description:
-    "VPS cu resurse dedicate, acces root complet și scalare fără migrare de date. Planuri Starter, Pro și Business.",
+  description: "VPS cu resurse dedicate, acces root complet și scalare fără migrare de date. Planuri de la 59 RON/lună.",
 };
 
 export default function VpsPage() {
@@ -19,14 +18,14 @@ export default function VpsPage() {
     <>
       <PageHeader eyebrow="VPS" title="Servere virtuale, resurse dedicate" description={product.description} />
 
-      <section className="border-b border-border py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <section className="section-y border-b border-border">
+        <div className="mx-auto max-w-5xl px-6 lg:px-10">
           <Reveal>
             <SectionHeading title="De ce VPS RobixHost" align="center" />
           </Reveal>
-          <Reveal delay={0.1} className="mt-8 grid gap-4 sm:grid-cols-3">
+          <Reveal delay={0.1} className="mt-10 grid gap-px overflow-hidden rounded-lg border border-border sm:grid-cols-3">
             {product.benefits.map((b) => (
-              <div key={b} className="rounded-lg border border-border bg-surface p-5 text-sm text-foreground/90">
+              <div key={b} className="bg-background p-6 text-sm text-foreground/90">
                 {b}
               </div>
             ))}
@@ -34,12 +33,12 @@ export default function VpsPage() {
         </div>
       </section>
 
-      <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="section-y">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
           <Reveal>
-            <SectionHeading eyebrow="PLANURI" title="Planuri VPS" align="center" />
+            <SectionHeading eyebrow="Prețuri" title="Planuri VPS" align="center" />
           </Reveal>
-          <div className="mt-10">
+          <div className="mt-12">
             <PlansGrid plans={vpsPlans} />
           </div>
         </div>

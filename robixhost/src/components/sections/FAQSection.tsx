@@ -8,26 +8,20 @@ import {
 } from "@/components/ui/accordion";
 import { faqItems } from "@/lib/constants";
 
-export function FAQSection() {
+export function FAQSection({ index }: { index?: string } = {}) {
   return (
-    <section className="border-b border-border bg-surface/30 py-20 sm:py-28">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <Reveal>
-          <SectionHeading align="center" eyebrow="ÎNTREBĂRI FRECVENTE" title="FAQ" />
-        </Reveal>
+    <section className="section-y border-b border-border">
+      <div className="mx-auto max-w-3xl px-6 lg:px-10">
+        <SectionHeading index={index} eyebrow="Întrebări frecvente" title="FAQ" align="center" />
 
-        <Reveal delay={0.1} className="mt-10">
+        <Reveal delay={0.1} className="mt-14">
           <Accordion type="single" collapsible className="w-full">
             {faqItems.map((item, i) => (
-              <AccordionItem
-                key={item.question}
-                value={`item-${i}`}
-                className="border-border"
-              >
-                <AccordionTrigger className="text-left font-display text-base hover:no-underline">
+              <AccordionItem key={item.question} value={`item-${i}`} className="border-border">
+                <AccordionTrigger className="text-left text-base font-medium hover:no-underline">
                   {item.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm text-muted-foreground">
+                <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
                   {item.answer}
                 </AccordionContent>
               </AccordionItem>

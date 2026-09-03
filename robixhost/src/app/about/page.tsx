@@ -8,62 +8,50 @@ import { Shield, Zap, Headset } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Despre noi",
-  description: "Despre RobixHost — infrastructură de hosting pentru afaceri din România.",
+  description: "Despre RobixHost — infrastructură de hosting și servicii digitale pentru afaceri din România.",
 };
 
 const values = [
-  {
-    icon: Shield,
-    title: "Infrastructură dintâi",
-    description: "Deciziile tehnice pornesc de la stabilitate și securitate, nu de la ce e mai ieftin.",
-  },
-  {
-    icon: Zap,
-    title: "Performanță reală",
-    description: "Măsurăm ce contează pentru un site sau o aplicație reală, nu doar cifre de marketing.",
-  },
-  {
-    icon: Headset,
-    title: "Suport care răspunde",
-    description: "Un client cu o problemă vrea un răspuns, nu un formular. Construim suportul în jurul asta.",
-  },
+  { icon: Shield, title: "Infrastructură dintâi", description: "Deciziile tehnice pornesc de la stabilitate și securitate, nu de la ce e mai ieftin." },
+  { icon: Zap, title: "Performanță reală", description: "Măsurăm ce contează pentru un site sau o aplicație reală, nu doar cifre de marketing." },
+  { icon: Headset, title: "Suport care răspunde", description: "Un client cu o problemă vrea un răspuns urmăribil, prin tichet — nu un email pierdut." },
 ];
 
 export default function AboutPage() {
   return (
     <>
       <PageHeader
-        eyebrow="DESPRE NOI"
-        title="Infrastructură construită pentru afaceri reale"
-        description="RobixHost oferă hosting, VPS, game servers și domenii pentru afaceri și proiecte din România."
+        eyebrow="Despre noi"
+        title="Infrastructură și servicii digitale, construite pentru afaceri reale"
+        description="RobixHost oferă hosting, VPS, servere dedicate, game servers și domenii — plus creare de website-uri, digital marketing și SEO, pentru afaceri și proiecte din România."
       />
 
-      <section className="border-b border-border py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <section className="section-y border-b border-border">
+        <div className="mx-auto max-w-5xl px-6 lg:px-10">
           <Reveal>
             <SectionHeading title="Ce ne ghidează" align="center" />
           </Reveal>
-          <Reveal delay={0.1} className="mt-10 grid gap-4 sm:grid-cols-3">
+          <Reveal delay={0.1} className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border sm:grid-cols-3">
             {values.map((v) => (
-              <div key={v.title} className="rounded-lg border border-border bg-surface p-6">
-                <v.icon className="h-5 w-5 text-primary" aria-hidden="true" />
-                <h3 className="mt-4 font-display text-lg font-semibold">{v.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{v.description}</p>
+              <div key={v.title} className="h-full bg-background p-7">
+                <v.icon className="h-4 w-4 text-accent" aria-hidden="true" strokeWidth={1.5} />
+                <h3 className="mt-5 text-base font-medium">{v.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{v.description}</p>
               </div>
             ))}
           </Reveal>
         </div>
       </section>
 
-      <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+      <section className="section-y border-b border-border">
+        <div className="mx-auto max-w-2xl px-6 text-center lg:px-10">
           <Reveal>
             <SectionHeading title="Compania" align="center" />
             <div className="mt-6 flex flex-col items-center gap-3">
               <p className="text-sm text-muted-foreground">
                 Istoricul companiei, anul înființării și datele juridice complete vor fi adăugate aici.
               </p>
-              <ConfigBadge>Date companie: CONFIG HERE — vezi și footer/legal</ConfigBadge>
+              <ConfigBadge>Date companie — vezi și footer/legal</ConfigBadge>
             </div>
           </Reveal>
         </div>

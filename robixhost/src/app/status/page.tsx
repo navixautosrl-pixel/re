@@ -16,20 +16,20 @@ export default function StatusPage() {
 
   return (
     <>
-      <PageHeader eyebrow="STATUS" title="Status infrastructură" />
+      <PageHeader eyebrow="Status" title="Status infrastructură" />
 
-      <section className="py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <section className="section-y">
+        <div className="mx-auto max-w-2xl px-6 lg:px-10">
           <Reveal>
-            <div className="flex items-center gap-3 rounded-lg border border-primary/40 bg-surface p-5">
-              <CheckCircle2 className="h-5 w-5 text-primary" aria-hidden="true" />
-              <p className="font-display text-lg font-semibold">
+            <div className="flex items-center gap-3 rounded-md border border-success/30 p-5">
+              <CheckCircle2 className="h-5 w-5 text-success" aria-hidden="true" strokeWidth={1.5} />
+              <p className="text-lg font-medium">
                 {allOperational ? "All Systems Operational" : "Probleme raportate"}
               </p>
             </div>
           </Reveal>
 
-          <Reveal delay={0.1} className="mt-6 flex flex-col gap-3">
+          <Reveal delay={0.1} className="mt-6 flex flex-col">
             {statusServices.map((s) => (
               <StatusIndicator key={s.name} name={s.name} status={s.status} />
             ))}
@@ -37,8 +37,7 @@ export default function StatusPage() {
 
           <Reveal delay={0.15} className="mt-6">
             <ConfigBadge>
-              Această pagină este o interfață demonstrativă — nu este conectată la monitorizare
-              live. Statusul real va fi afișat după integrarea monitorizării.
+              Interfață demonstrativă — nu este conectată la monitorizare live încă.
             </ConfigBadge>
           </Reveal>
         </div>
