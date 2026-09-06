@@ -13,6 +13,12 @@
   --accent-foreground: #f3f1ec;
   --accent-soft: #3a1315;
 
+  /* Urban accent trio — each service/element gets one of these instead of
+     a single muted brand color, for the "colorat" street-detailing feel. */
+  --accent-cyan: #22d3ee;
+  --accent-orange: #fb923c;
+  --accent-pink: #f0399e;
+
   --chrome: #c9c4ba;
   --success: #34b26a;
 
@@ -37,6 +43,9 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-pink: var(--accent-pink);
   --color-chrome: var(--chrome);
   --color-success: var(--success);
   --radius-xs: var(--radius-xs);
@@ -69,6 +78,25 @@ body {
     linear-gradient(to right, color-mix(in srgb, var(--color-border) 65%, transparent) 1px, transparent 1px),
     linear-gradient(to bottom, color-mix(in srgb, var(--color-border) 65%, transparent) 1px, transparent 1px);
   background-size: 64px 64px;
+}
+
+/* Asphalt grain — a subtle noise texture instead of a flat color field,
+   the actual surface this business works on top of. */
+.bg-asphalt {
+  background-image: radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--color-chrome) 14%, transparent) 1px, transparent 0);
+  background-size: 4px 4px;
+}
+
+/* A single diagonal speed-stripe, three-tone (racing livery), used once
+   per composition — not tiled everywhere. */
+.stripe-livery {
+  background: repeating-linear-gradient(
+    115deg,
+    var(--color-accent) 0 3px,
+    var(--color-accent-orange) 3px 6px,
+    var(--color-accent-cyan) 6px 9px,
+    transparent 9px 9px
+  );
 }
 
 .section-y { padding-top: var(--space-section-y); padding-bottom: var(--space-section-y); }

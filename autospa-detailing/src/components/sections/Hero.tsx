@@ -30,6 +30,7 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-[3px] stripe-livery" aria-hidden="true" />
       <div className="absolute inset-0 bg-grid opacity-[0.05]" aria-hidden="true" />
       <div className="relative mx-auto grid max-w-[1300px] gap-8 px-6 pb-10 pt-16 sm:gap-12 sm:pb-20 sm:pt-20 lg:grid-cols-12 lg:px-10 lg:pb-32 lg:pt-24">
         <div className="lg:col-span-6">
