@@ -2,6 +2,7 @@
 
 import { Suspense, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Environment, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
 import { PaintSphere } from "./PaintSphere";
 
@@ -31,12 +32,12 @@ export function HeroCanvas3D({ reduced }: { reduced: boolean }) {
       shadows
     >
       {/*
-        No environment map (no external HDRI fetch) — a network hiccup on
-        that CDN previously took down this entire page. The glossy
-        clearcoat highlight instead comes purely from local lights: a
-        strong key light plus a few softer fills positioned to catch
-        the sphere from different angles, the way a detailing photo
-        shoot uses multiple softboxes rather than one giant light.
+        No preset/files on Environment — that would fetch an external HDRI,
+        and a network hiccup on that CDN previously took down this entire
+        page. Passing Lightformer children instead builds the reflection
+        map procedurally, on-device, with zero network calls: a bright
+        studio "window" above, a warm red rim card echoing the brand
+        accent, and a soft floor bounce — the same look, none of the risk.
       */}
       <color attach="background" args={["#0c0b0a"]} />
       <ambientLight intensity={0.3} />
@@ -44,6 +45,13 @@ export function HeroCanvas3D({ reduced }: { reduced: boolean }) {
       <pointLight position={[-3, 2, 3]} intensity={1.4} color="#ffffff" />
       <pointLight position={[-2, -1, 2.5]} intensity={1} color="#e11d2e" />
       <pointLight position={[3, -1.5, -2]} intensity={0.6} color="#ffffff" />
+
+      <Environment resolution={256} blur={0.7}>
+        <Lightformer form="rect" intensity={4} position={[0, 4, 2]} scale={[6, 3, 1]} color="#ffffff" />
+        <Lightformer form="rect" intensity={2.2} position={[-4, 1, 3]} scale={[3, 4, 1]} color="#fff5f0" />
+        <Lightformer form="rect" intensity={3} position={[3, 0, -2]} rotation={[0, Math.PI / 3, 0]} scale={[3, 3, 1]} color="#e11d2e" />
+        <Lightformer form="ring" intensity={1.4} position={[0, -3, 1]} scale={4} color="#ffffff" />
+      </Environment>
 
       <Suspense fallback={null}>
         <PaintSphere />

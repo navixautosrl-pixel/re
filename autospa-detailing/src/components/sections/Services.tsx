@@ -1,25 +1,41 @@
+import { Car, Wind, Armchair, Layers, ShieldCheck, Sun } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { services } from "@/lib/constants";
+
+const icons = [Car, Wind, Armchair, Layers, ShieldCheck, Sun];
 
 export function Services() {
   return (
     <section id="servicii" className="section-y border-b border-border">
       <div className="mx-auto max-w-[1300px] px-6 lg:px-10">
         <Reveal>
-          <p className="font-mono text-xs uppercase tracking-[0.08em] text-accent">Servicii</p>
+          <p className="font-mono text-xs uppercase tracking-[0.08em] text-accent">01 — Servicii</p>
           <h2 className="mt-4 max-w-2xl text-3xl font-semibold leading-[1.1] tracking-[-0.02em] sm:text-4xl">
             Tot ce are nevoie mașina ta, într-un singur loc
           </h2>
         </Reveal>
-        <div className="mt-14 grid gap-px overflow-hidden rounded-lg border border-border sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s, i) => (
-            <Reveal key={s.name} delay={i * 0.05}>
-              <div className="h-full bg-background p-7">
-                <h3 className="text-base font-medium">{s.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
-              </div>
-            </Reveal>
-          ))}
+
+        <div className="mt-14 border-t border-border">
+          {services.map((s, i) => {
+            const Icon = icons[i];
+            return (
+              <Reveal key={s.name} delay={i * 0.04}>
+                <div className="group grid grid-cols-[2.5rem_1fr] items-start gap-5 border-b border-border py-6 transition-colors hover:bg-surface sm:grid-cols-[3.5rem_auto_1fr] sm:items-center sm:gap-8 sm:px-4">
+                  <span className="font-mono text-sm text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border text-accent transition-colors group-hover:border-accent/40 sm:flex">
+                    <Icon className="h-4.5 w-4.5" aria-hidden="true" />
+                  </span>
+                  <div className="col-span-2 sm:col-span-1">
+                    <h3 className="flex items-center gap-2 text-base font-medium sm:text-lg">
+                      <Icon className="h-4 w-4 text-accent sm:hidden" aria-hidden="true" />
+                      {s.name}
+                    </h3>
+                    <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-muted-foreground">{s.description}</p>
+                  </div>
+                </div>
+              </Reveal>
+            );
+          })}
         </div>
         <p className="mt-6 text-sm text-muted-foreground">
           Prețul depinde de mărimea și starea mașinii — sună pentru o ofertă exactă.

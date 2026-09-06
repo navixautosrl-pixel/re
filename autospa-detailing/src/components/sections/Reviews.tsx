@@ -9,7 +9,7 @@ export function Reviews() {
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="font-mono text-xs uppercase tracking-[0.08em] text-accent">Recenzii</p>
+              <p className="font-mono text-xs uppercase tracking-[0.08em] text-accent">03 — Recenzii</p>
               <h2 className="mt-4 max-w-xl text-3xl font-semibold leading-[1.1] tracking-[-0.02em] sm:text-4xl">
                 Ce spun clienții, pe Google
               </h2>

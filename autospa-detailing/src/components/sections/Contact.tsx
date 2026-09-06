@@ -8,7 +8,7 @@ export function Contact() {
     <section id="contact" className="section-y">
       <div className="mx-auto max-w-[1300px] px-6 lg:px-10">
         <Reveal>
-          <p className="font-mono text-xs uppercase tracking-[0.08em] text-accent">Contact</p>
+          <p className="font-mono text-xs uppercase tracking-[0.08em] text-accent">04 — Contact</p>
           <h2 className="mt-4 max-w-xl text-3xl font-semibold leading-[1.1] tracking-[-0.02em] sm:text-4xl">
             Vino sau sună — te așteptăm
           </h2>
