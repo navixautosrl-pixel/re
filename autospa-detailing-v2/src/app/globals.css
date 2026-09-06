@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --surface: #131313;
+  --surface-elevated: #1a1a1a;
+  --border: #262626;
+  --border-strong: #3a3a3a;
+  --foreground: #f5f5f0;
+  --muted-foreground: #8f8b85;
+
+  /* One accent, used with intent — electric lime reads as premium
+     detailing (ceramic-coating brands lean this way) and as street. */
+  --accent: #c8ff3d;
+  --accent-foreground: #0a0a0a;
+  --accent-soft: #1f2b0a;
+
+  --chrome: #b8b4ac;
+  --success: #34b26a;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bebas Neue", ui-sans-serif, system-ui, sans-serif;
+
+  --space-section-y: 7rem;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-chrome: var(--chrome);
+  --color-success: var(--success);
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+}
+
+* { border-color: var(--color-border); }
+html { color-scheme: dark; }
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: color-mix(in srgb, var(--color-accent) 55%, transparent); color: #0a0a0a; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 2px; }
+
+.font-display-caps {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-border) 65%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-border) 65%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.section-y { padding-top: var(--space-section-y); padding-bottom: var(--space-section-y); }
+@media (max-width: 767px) {
+  .section-y { padding-top: 4.5rem; padding-bottom: 4.5rem; }
+}
+
+/* Photo placeholder — a deliberately art-directed "slot", not a broken
+   image. Client's real photos (Instagram / Google Business) drop in here;
+   the small corner tag makes it obvious this is a stand-in, the same way
+   pricing placeholders are tagged elsewhere on this site. */
+.photo-slot {
+  background:
+    repeating-linear-gradient(135deg, color-mix(in srgb, var(--color-chrome) 16%, transparent) 0 1.5px, transparent 1.5px 12px),
+    radial-gradient(circle at 30% 28%, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 55%),
+    linear-gradient(155deg, var(--color-surface-elevated), var(--color-background) 75%);
+}
+.photo-slot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='%23b8b4ac' stroke-opacity='0.28' stroke-width='1.4'%3E%3Cpath d='M8 26l3-9a4 4 0 0 1 3.8-2.8h18.4A4 4 0 0 1 37 17l3 9'/%3E%3Crect x='6' y='26' width='36' height='10' rx='3'/%3E%3Ccircle cx='14' cy='36' r='3'/%3E%3Ccircle cx='34' cy='36' r='3'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 56px 56px;
+}
+.photo-slot::after {
+  content: "FOTO CLIENT";
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--color-chrome) 70%, transparent);
+  background: color-mix(in srgb, var(--color-background) 70%, transparent);
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-xs);
+  pointer-events: none;
+}
+
+.ken-burns {
+  animation: kenburns 14s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  from { transform: scale(1.06) translate(0, 0); }
+  to { transform: scale(1.14) translate(-1%, -1%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 22s linear infinite;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
