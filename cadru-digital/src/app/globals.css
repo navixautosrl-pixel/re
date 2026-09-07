@@ -2,21 +2,26 @@
 @import "tw-animate-css";
 
 :root {
-  --background: #0b0a09;
-  --surface: #141210;
-  --surface-elevated: #1c1915;
-  --border: #2a2620;
-  --border-strong: #423b2e;
-  --foreground: #f4eee1;
-  --muted-foreground: #a89d89;
+  --background: #0a0710;
+  --surface: #150f22;
+  --surface-elevated: #1e1530;
+  --border: #2c2140;
+  --border-strong: #443263;
+  --foreground: #f6f1ff;
+  --muted-foreground: #ab9fc9;
 
-  /* One accent, used with intent: a muted brass/gold — the "premium
-     studio" cue, never an ambient glow, only on CTAs and active states. */
-  --accent: #c9a24a;
-  --accent-foreground: #0b0a09;
-  --accent-soft: #2a2311;
+  /* A vivid three-stop brand gradient (violet → pink → orange) instead of
+     one muted accent — used deliberately: gradient text on the biggest
+     headline, the aurora field, blob fills, and CTAs. --accent stays the
+     single flat color for things that need one (focus rings, borders). */
+  --accent: #b855f7;
+  --accent-foreground: #0a0710;
+  --accent-soft: #2a1740;
+  --accent-2: #22d3ee;
+  --accent-3: #fb7a3c;
+  --gradient-brand: linear-gradient(120deg, #b855f7 0%, #ec4899 48%, #fb7a3c 100%);
 
-  --success: #5fae72;
+  --success: #34e0a1;
 
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
@@ -42,6 +47,8 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
   --color-success: var(--success);
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
@@ -129,6 +136,58 @@ body {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
+
+/* Animated gradient-fill text — the "wow" headline treatment. Wide
+   background + slow position shift reads as a living gradient, not a
+   static one. */
+.gradient-text {
+  background: var(--gradient-brand);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 8s ease-in-out infinite;
+}
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Aurora field — a slow-drifting multi-color mesh, GPU-cheap (only
+   transform animates). Absolutely positioned by the caller, fixed size,
+   heavily blurred so it reads as atmosphere, not distinct shapes. */
+.aurora-field {
+  position: absolute;
+  inset: -20%;
+  filter: blur(90px) saturate(1.3);
+  opacity: 0.55;
+  background:
+    radial-gradient(38% 38% at 22% 28%, color-mix(in srgb, var(--color-accent) 75%, transparent), transparent 70%),
+    radial-gradient(34% 34% at 78% 32%, color-mix(in srgb, var(--color-accent-2) 65%, transparent), transparent 70%),
+    radial-gradient(42% 42% at 50% 82%, color-mix(in srgb, var(--color-accent-3) 65%, transparent), transparent 70%);
+  animation: aurora-drift 22s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes aurora-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  33% { transform: translate3d(-3%, 2%, 0) scale(1.08) rotate(4deg); }
+  66% { transform: translate3d(2%, -3%, 0) scale(0.96) rotate(-3deg); }
+}
+
+/* Fine grain overlay — cheap CSS-only "film" texture so flat gradient
+   fields don't look like a flat digital wash. */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Diagonal section transition — used sparingly, once or twice, to break
+   the "section / section / section" rhythm the brief explicitly flagged. */
+.clip-diagonal-ribbon { clip-path: polygon(0 4vw, 100% 0, 100% calc(100% - 4vw), 0 100%); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

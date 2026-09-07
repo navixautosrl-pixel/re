@@ -2,14 +2,16 @@ import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 import { Reveal } from "@/components/shared/Reveal";
+import { AuroraBackground } from "@/components/shared/AuroraBackground";
 
 export function FinalCTA() {
   return (
-    <section className="section-y border-b border-border">
-      <div className="container-max px-6 text-center lg:px-10">
+    <section className="clip-diagonal-ribbon relative -my-16 overflow-hidden bg-surface py-32 sm:py-44">
+      <AuroraBackground className="opacity-80" />
+      <div className="container-max relative px-6 text-center lg:px-10">
         <Reveal>
           <h2 className="font-display mx-auto max-w-2xl text-4xl leading-[1.05] text-foreground sm:text-5xl lg:text-6xl">
-            Ai un proiect în minte?
+            Ai un proiect <span className="gradient-text">în minte?</span>
           </h2>
           <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
             Spune-ne ce vrei să construiești. Îți vom arăta cum îl putem transforma într-o

@@ -16,14 +16,14 @@ const projects = [
     category: "Landing Page",
     objective: "O singură ofertă, un singur formular, un singur drum către conversie.",
     tech: "Next.js · Framer Motion",
-    accent: "#8fb3a3",
+    accent: "var(--color-accent-2)",
   },
   {
     name: "Catalog — magazin online",
     category: "E-commerce",
     objective: "Structură de catalog și checkout simplificat pentru un magazin mic-mediu.",
     tech: "Next.js · Stripe",
-    accent: "#b08a6a",
+    accent: "var(--color-accent-3)",
   },
 ];
 

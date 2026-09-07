@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { Spotlight } from "@/components/shared/Spotlight";
+import { AuroraBackground } from "@/components/shared/AuroraBackground";
 import { siteConfig } from "@/lib/constants";
 
 const chain = ["Design", "Dezvoltare", "Hosting", "Performanță", "Mentenanță"];
@@ -9,7 +10,8 @@ export function RobixHostPartnership() {
   return (
     <section className="section-y border-b border-border">
       <div className="container-max px-6 lg:px-10">
-        <Spotlight className="rounded-lg border border-border-strong bg-surface p-8 sm:p-12 lg:p-16">
+        <Spotlight className="overflow-hidden rounded-lg border border-border-strong bg-surface p-8 sm:p-12 lg:p-16">
+          <AuroraBackground className="opacity-30" />
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">Parteneriat</p>
             <h2 className="font-display mt-4 max-w-xl text-3xl leading-[1.1] text-foreground sm:text-4xl">

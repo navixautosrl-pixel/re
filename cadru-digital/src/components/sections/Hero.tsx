@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { TextReveal } from "@/components/shared/TextReveal";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 import { Reveal } from "@/components/shared/Reveal";
+import { AuroraBackground } from "@/components/shared/AuroraBackground";
+import { MorphBlob } from "@/components/shared/MorphBlob";
 import { BrowserMockup } from "@/components/hero/BrowserMockup";
 
 const trustIndicators = ["Design personalizat", "Performanță ridicată", "SEO-ready", "Mobile-first"];
@@ -10,7 +12,8 @@ const trustIndicators = ["Design personalizat", "Performanță ridicată", "SEO-
 export function Hero() {
   return (
     <section id="top" className="relative overflow-hidden border-b border-border">
-      <div className="bg-grid absolute inset-0 opacity-[0.04]" aria-hidden="true" />
+      <AuroraBackground />
+      <div className="bg-grid absolute inset-0 opacity-[0.05]" aria-hidden="true" />
       <div className="container-max relative grid gap-16 px-6 pb-20 pt-16 lg:grid-cols-12 lg:gap-8 lg:px-10 lg:pb-32 lg:pt-24">
         <div className="lg:col-span-6 lg:pt-6">
           <Reveal>
@@ -20,7 +23,7 @@ export function Hero() {
           <TextReveal
             as="h1"
             delayStart={0.1}
-            lines={["Website-uri care", "transformă atenția", "în rezultate."]}
+            lines={["Website-uri care", <span key="g" className="gradient-text">transformă atenția</span>, "în rezultate."]}
             className="font-display mt-5 text-[2.75rem] leading-[1.03] tracking-[-0.02em] text-foreground sm:text-6xl lg:text-[3.75rem]"
           />
 
@@ -61,7 +64,11 @@ export function Hero() {
           </Reveal>
         </div>
 
-        <div className="lg:col-span-6 lg:pt-4">
+        <div className="relative lg:col-span-6 lg:pt-4">
+          <MorphBlob
+            size={460}
+            className="pointer-events-none absolute -right-16 -top-24 opacity-40 mix-blend-screen sm:opacity-55"
+          />
           <BrowserMockup />
         </div>
       </div>
