@@ -9,6 +9,9 @@ import "@fontsource/instrument-sans/700.css";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { SmoothScroll } from "@/components/shared/SmoothScroll";
+import { ScrollProgress } from "@/components/shared/ScrollProgress";
+import { CustomCursor } from "@/components/shared/CustomCursor";
 import { siteConfig } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -63,6 +66,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body className="flex min-h-screen flex-col font-sans antialiased">
+        <SmoothScroll />
+        <ScrollProgress />
+        <CustomCursor />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

@@ -1,4 +1,5 @@
 import { Hero } from "@/components/sections/Hero";
+import { MarqueeStrip } from "@/components/shared/MarqueeStrip";
 import { Services } from "@/components/sections/Services";
 import { WebsiteDevelopment } from "@/components/sections/WebsiteDevelopment";
 import { Performance } from "@/components/sections/Performance";
@@ -12,10 +13,20 @@ import { FAQSection } from "@/components/sections/FAQSection";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { Contact } from "@/components/sections/Contact";
 
+const tickerItems = [
+  "Website-uri",
+  "Landing Page",
+  "Magazine online",
+  "SEO",
+  "Marketing digital",
+  "Performanță",
+];
+
 export default function Home() {
   return (
     <>
       <Hero />
+      <MarqueeStrip items={tickerItems} />
       <Services />
       <WebsiteDevelopment />
       <Performance />

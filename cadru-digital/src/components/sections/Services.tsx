@@ -29,24 +29,31 @@ export function Services() {
                 <div className="border-b border-border">
                   <button
                     onClick={() => setOpenIndex(isOpen ? -1 : i)}
+                    onMouseMove={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      e.currentTarget.style.setProperty("--spot-x", `${e.clientX - rect.left}px`);
+                      e.currentTarget.style.setProperty("--spot-y", `${e.clientY - rect.top}px`);
+                    }}
                     aria-expanded={isOpen}
-                    className="flex w-full items-center gap-5 py-6 text-left transition-colors hover:bg-surface sm:gap-8 sm:px-2"
+                    className="spotlight w-full py-6 text-left transition-colors hover:bg-surface sm:px-2"
                   >
-                    <span className="font-mono text-sm text-muted-foreground">{service.index}</span>
-                    <span
-                      className={`font-display flex-1 text-2xl transition-colors sm:text-3xl ${
-                        isOpen ? "text-accent" : "text-foreground"
-                      }`}
-                    >
-                      {service.name}
+                    <span className="relative z-[1] flex w-full items-center gap-5 sm:gap-8">
+                      <span className="font-mono text-sm text-muted-foreground">{service.index}</span>
+                      <span
+                        className={`font-display flex-1 text-2xl transition-colors sm:text-3xl ${
+                          isOpen ? "text-accent" : "text-foreground"
+                        }`}
+                      >
+                        {service.name}
+                      </span>
+                      <span className="hidden max-w-xs text-sm text-muted-foreground md:block">{service.summary}</span>
+                      <Plus
+                        className={`h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-300 ease-[var(--ease-premium)] ${
+                          isOpen ? "rotate-45 text-accent" : ""
+                        }`}
+                        aria-hidden="true"
+                      />
                     </span>
-                    <span className="hidden max-w-xs text-sm text-muted-foreground md:block">{service.summary}</span>
-                    <Plus
-                      className={`h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-300 ease-[var(--ease-premium)] ${
-                        isOpen ? "rotate-45 text-accent" : ""
-                      }`}
-                      aria-hidden="true"
-                    />
                   </button>
 
                   <AnimatePresence initial={false}>

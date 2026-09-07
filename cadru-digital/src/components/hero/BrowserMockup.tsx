@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, useMotionValue, useSpring, type Variants } from "framer-motion";
+import type { MouseEvent } from "react";
 
 const EASE_PREMIUM = [0.16, 1, 0.3, 1] as const;
 
@@ -12,6 +13,27 @@ const EASE_PREMIUM = [0.16, 1, 0.3, 1] as const;
  */
 export function BrowserMockup() {
   const prefersReducedMotion = useReducedMotion();
+
+  // Subtle cursor-tilt on the whole card — desktop only in practice
+  // (mousemove doesn't meaningfully fire on touch), disabled outright
+  // under reduced-motion.
+  const rotateXRaw = useMotionValue(0);
+  const rotateYRaw = useMotionValue(0);
+  const rotateX = useSpring(rotateXRaw, { stiffness: 150, damping: 20, mass: 0.5 });
+  const rotateY = useSpring(rotateYRaw, { stiffness: 150, damping: 20, mass: 0.5 });
+
+  const handleTiltMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (prefersReducedMotion) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    rotateYRaw.set(px * 8);
+    rotateXRaw.set(py * -8);
+  };
+  const handleTiltLeave = () => {
+    rotateXRaw.set(0);
+    rotateYRaw.set(0);
+  };
 
   // Always the same variant labels/structure on server and client (never
   // branch to `undefined` based on prefersReducedMotion, which is null
@@ -39,61 +61,69 @@ export function BrowserMockup() {
         aria-hidden="true"
       />
 
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={stagger}
-        className="overflow-hidden rounded-lg border border-border-strong bg-surface shadow-2xl"
-      >
-        <div className="flex items-center gap-2 border-b border-border bg-surface-elevated px-4 py-3">
-          <span className="h-2.5 w-2.5 rounded-full bg-border-strong" />
-          <span className="h-2.5 w-2.5 rounded-full bg-border-strong" />
-          <span className="h-2.5 w-2.5 rounded-full bg-border-strong" />
-          <div className="ml-3 flex-1 rounded-xs bg-background px-3 py-1.5 font-mono text-[0.7rem] text-muted-foreground">
-            cadrudigital.ro
-          </div>
-        </div>
+      <div style={{ perspective: 1400 }}>
+        <motion.div
+          onMouseMove={handleTiltMove}
+          onMouseLeave={handleTiltLeave}
+          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        >
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={stagger}
+            className="overflow-hidden rounded-lg border border-border-strong bg-surface shadow-2xl"
+          >
+            <div className="flex items-center gap-2 border-b border-border bg-surface-elevated px-4 py-3">
+              <span className="h-2.5 w-2.5 rounded-full bg-border-strong" />
+              <span className="h-2.5 w-2.5 rounded-full bg-border-strong" />
+              <span className="h-2.5 w-2.5 rounded-full bg-border-strong" />
+              <div className="ml-3 flex-1 rounded-xs bg-background px-3 py-1.5 font-mono text-[0.7rem] text-muted-foreground">
+                cadrudigital.ro
+              </div>
+            </div>
 
-        <div className="space-y-6 p-7 sm:p-9">
-          <motion.div variants={fade} className="flex items-center justify-between">
-            <div className="h-2 w-16 rounded-full bg-border-strong" />
-            <div className="flex gap-2">
-              <div className="h-2 w-8 rounded-full bg-border" />
-              <div className="h-2 w-8 rounded-full bg-border" />
-              <div className="h-2 w-8 rounded-full bg-border" />
+            <div className="space-y-6 p-7 sm:p-9">
+              <motion.div variants={fade} className="flex items-center justify-between">
+                <div className="h-2 w-16 rounded-full bg-border-strong" />
+                <div className="flex gap-2">
+                  <div className="h-2 w-8 rounded-full bg-border" />
+                  <div className="h-2 w-8 rounded-full bg-border" />
+                  <div className="h-2 w-8 rounded-full bg-border" />
+                </div>
+              </motion.div>
+
+              <div className="space-y-3 pt-4">
+                <motion.div variants={bar} className="h-4 w-[85%] origin-left rounded-full bg-foreground/90" />
+                <motion.div variants={bar} className="h-4 w-[55%] origin-left rounded-full bg-foreground/90" />
+              </div>
+
+              <motion.div variants={fade} className="space-y-2 pt-1">
+                <div className="h-2 w-full rounded-full bg-border" />
+                <div className="h-2 w-[80%] rounded-full bg-border" />
+              </motion.div>
+
+              <motion.div variants={fade} className="flex gap-3 pt-2">
+                <div className="h-9 w-32 rounded-sm bg-accent" />
+                <div className="h-9 w-28 rounded-sm border border-border-strong" />
+              </motion.div>
+
+              <div className="grid grid-cols-3 gap-3 pt-5">
+                {[0, 1, 2].map((i) => (
+                  <motion.div
+                    key={i}
+                    variants={fade}
+                    className="aspect-[4/3] rounded-sm border border-border bg-surface-elevated p-3"
+                  >
+                    <div className="h-1.5 w-1/2 rounded-full bg-border-strong" />
+                    <div className="mt-2 h-1.5 w-3/4 rounded-full bg-border" />
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
-
-          <div className="space-y-3 pt-4">
-            <motion.div variants={bar} className="h-4 w-[85%] origin-left rounded-full bg-foreground/90" />
-            <motion.div variants={bar} className="h-4 w-[55%] origin-left rounded-full bg-foreground/90" />
-          </div>
-
-          <motion.div variants={fade} className="space-y-2 pt-1">
-            <div className="h-2 w-full rounded-full bg-border" />
-            <div className="h-2 w-[80%] rounded-full bg-border" />
-          </motion.div>
-
-          <motion.div variants={fade} className="flex gap-3 pt-2">
-            <div className="h-9 w-32 rounded-sm bg-accent" />
-            <div className="h-9 w-28 rounded-sm border border-border-strong" />
-          </motion.div>
-
-          <div className="grid grid-cols-3 gap-3 pt-5">
-            {[0, 1, 2].map((i) => (
-              <motion.div
-                key={i}
-                variants={fade}
-                className="aspect-[4/3] rounded-sm border border-border bg-surface-elevated p-3"
-              >
-                <div className="h-1.5 w-1/2 rounded-full bg-border-strong" />
-                <div className="mt-2 h-1.5 w-3/4 rounded-full bg-border" />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 12 }}

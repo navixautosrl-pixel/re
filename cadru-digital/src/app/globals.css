@@ -93,6 +93,43 @@ body {
   padding: 0.2rem 0.55rem;
 }
 
+/* Custom cursor active: hide the native cursor everywhere except real
+   text-entry fields, where a caret is still expected. */
+.custom-cursor-active { cursor: none; }
+.custom-cursor-active input,
+.custom-cursor-active textarea { cursor: text; }
+
+/* Cursor-follow spotlight — a radial highlight tracking the pointer,
+   positioned via --spot-x/--spot-y set on mousemove. Used on rows/cards
+   that want a premium "lit from the cursor" hover, never everywhere. */
+.spotlight {
+  position: relative;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-premium);
+  background: radial-gradient(
+    320px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    color-mix(in srgb, var(--color-accent) 10%, transparent),
+    transparent 70%
+  );
+}
+.spotlight:hover::before { opacity: 1; }
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 26s linear infinite;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

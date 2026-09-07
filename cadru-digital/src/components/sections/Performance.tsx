@@ -1,6 +1,7 @@
 import { Gauge, Image as ImageIcon, Code2, Smartphone } from "lucide-react";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
+import { Spotlight } from "@/components/shared/Spotlight";
 
 const points = [
   {
@@ -41,11 +42,11 @@ export function Performance() {
             const Icon = point.icon;
             return (
               <Reveal key={point.name} delay={i * 0.06}>
-                <div className="h-full bg-surface p-8">
+                <Spotlight className="h-full bg-surface p-8 transition-colors">
                   <Icon className="h-5 w-5 text-accent" aria-hidden="true" strokeWidth={1.5} />
                   <h3 className="mt-4 font-display text-xl text-foreground">{point.name}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{point.description}</p>
-                </div>
+                </Spotlight>
               </Reveal>
             );
           })}
