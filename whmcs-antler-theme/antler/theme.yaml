@@ -1,0 +1,11 @@
+# RobixHost Theme Configuration File (based on Antler template, WHMCS Six engine)
+
+name: "RobixHost"
+description: "Tema personalizata RobixHost.ro (bazata pe Antler, motor WHMCS Six)"
+author: "RobixHost"
+properties:
+  serverSidePagination: false # Defines client side will handle pagination
+provides:
+  bootstrap: 3.4.1
+  jquery: 1.12.4
+  fontawesome: 5.10.1

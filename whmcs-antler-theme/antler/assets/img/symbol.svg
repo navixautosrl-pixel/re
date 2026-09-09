@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- RobixHost - simbol decorativ folosit ca watermark discret in footer -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+	 viewBox="0 0 121.9 121.9" style="enable-background:new 0 0 121.9 121.9;" xml:space="preserve">
+<g fill="#2B2B33">
+	<circle cx="61" cy="61" r="60"/>
+</g>
+<g fill="#FFFFFF">
+	<circle cx="40" cy="45" r="9"/>
+	<circle cx="61" cy="45" r="9"/>
+	<circle cx="82" cy="45" r="9"/>
+	<rect x="31" y="70" width="60" height="10" rx="5" ry="5"/>
+	<rect x="31" y="86" width="40" height="10" rx="5" ry="5"/>
+</g>
+</svg>
