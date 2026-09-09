@@ -55,6 +55,7 @@
             </div>
             <div class="col-md-12 col-lg-3" data-aos="fade-up" data-aos-duration="800">
               <div class="service-section bg-seccolorstyle bg-white noshadow">
+                <div class="plans badge feat bg-pink">{$LANG.navtickets}</div>
                 <img class="svg" src="templates/{$template}/assets/fonts/svg/ticket.svg" alt="Tickets">
                 <div class="title mergecolor">{$clientsstats.numactivetickets} {$LANG.navtickets}</div>
                 <p class="subtitle seccolor">{$LANG.ticketsyourhistory}</p>
@@ -63,6 +64,7 @@
             </div>
             <div class="col-md-12 col-lg-3" data-aos="fade-up" data-aos-duration="1000">
               <div class="service-section bg-seccolorstyle bg-white noshadow">
+                <div class="plans badge feat bg-pink">{$LANG.navinvoices}</div>
                 <img class="svg" src="templates/{$template}/assets/fonts/svg/document.svg" alt="Tickets">
                 <div class="title mergecolor">{$clientsstats.numunpaidinvoices} {$LANG.navinvoices}</div>
                 <p class="subtitle seccolor">{$LANG.subaccountpermsinvoices}</p>
@@ -71,6 +73,68 @@
             </div>
         </div>
     </div>
+</section>
+
+<!-- ***** Acces rapid la produse — link-uri reale, aceleași folosite în meniul principal ***** -->
+<section class="services overview-services p-80 clientarea-products-quick">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <h2 class="section-heading mergecolor">Produsele noastre</h2>
+        <p class="section-subheading seccolor">Comandă rapid un serviciu nou, direct din contul tău.</p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-xs-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-duration="500">
+        <div class="service-section bg-seccolorstyle bg-white noshadow product-quick-card">
+          <img class="svg" src="templates/{$template}/assets/fonts/svg/cloudfiber.svg" alt="Găzduire Web">
+          <div class="title mergecolor">Găzduire Web</div>
+          <p class="subtitle seccolor">Stocare SSD, cPanel sau Plesk</p>
+          <a href="{$WEB_ROOT}/cart.php?gid=1" class="btn btn-default-yellow-fill">Comandă</a>
+        </div>
+      </div>
+      <div class="col-xs-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-duration="600">
+        <div class="service-section bg-seccolorstyle bg-white noshadow product-quick-card">
+          <img class="svg" src="templates/{$template}/assets/fonts/svg/reseller.svg" alt="Reseller Hosting">
+          <div class="title mergecolor">Reseller Hosting</div>
+          <p class="subtitle seccolor">Pentru agenții și găzduire multi-site</p>
+          <a href="{$WEB_ROOT}/cart.php?gid=2" class="btn btn-default-yellow-fill">Comandă</a>
+        </div>
+      </div>
+      <div class="col-xs-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-duration="700">
+        <div class="service-section bg-seccolorstyle bg-white noshadow product-quick-card">
+          <img class="svg" src="templates/{$template}/assets/fonts/svg/dedicated.svg" alt="Server Dedicat">
+          <div class="title mergecolor">Server Dedicat</div>
+          <p class="subtitle seccolor">Hardware performant, control complet</p>
+          <a href="{$WEB_ROOT}/cart.php?gid=3" class="btn btn-default-yellow-fill">Comandă</a>
+        </div>
+      </div>
+      <div class="col-xs-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-duration="800">
+        <div class="service-section bg-seccolorstyle bg-white noshadow product-quick-card">
+          <img class="svg" src="templates/{$template}/assets/fonts/svg/vps.svg" alt="VPS Cloud">
+          <div class="title mergecolor">VPS Cloud</div>
+          <p class="subtitle seccolor">Resurse dedicate, performanță ridicată</p>
+          <a href="{$WEB_ROOT}/cart.php?gid=4" class="btn btn-default-yellow-fill">Comandă</a>
+        </div>
+      </div>
+      <div class="col-xs-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-duration="900">
+        <div class="service-section bg-seccolorstyle bg-white noshadow product-quick-card">
+          <img class="svg" src="templates/{$template}/assets/fonts/svg/wordpress.svg" alt="Găzduire WordPress">
+          <div class="title mergecolor">Găzduire WordPress</div>
+          <p class="subtitle seccolor">Planuri optimizate pentru WordPress</p>
+          <a href="{$WEB_ROOT}/cart.php?gid=5" class="btn btn-default-yellow-fill">Comandă</a>
+        </div>
+      </div>
+      <div class="col-xs-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-duration="1000">
+        <div class="service-section bg-seccolorstyle bg-white noshadow product-quick-card">
+          <img class="svg" src="templates/{$template}/assets/fonts/svg/domains.svg" alt="Domenii">
+          <div class="title mergecolor">Domenii</div>
+          <p class="subtitle seccolor">Sute de extensii disponibile, inclusiv .ro</p>
+          <a href="{$WEB_ROOT}/cart.php?a=add&domain=register" class="btn btn-default-yellow-fill">Comandă</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="services overview-services p-80 bg-yellow br-12 clientarea-limited-chracters">

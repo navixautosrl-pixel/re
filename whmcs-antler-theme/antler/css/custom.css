@@ -102,3 +102,54 @@ html, body { overflow-x: hidden; max-width: 100%; }
 }
 
 [data-aos] { transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important; }
+
+/* ---------- Dashboard: badge chips on every stat card (was only on 2 of 4) ---------- */
+
+.overview-services .service-section .plans.badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+/* ---------- Dashboard: "Produsele noastre" quick-order cards ---------- */
+/* Same .service-section component as the stat cards above, just narrower
+   (6 per row instead of 4) so it needs its own compact spacing. */
+
+.clientarea-products-quick .product-quick-card {
+  padding: 24px 18px;
+  margin-top: 24px;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.clientarea-products-quick .product-quick-card .svg {
+  height: 40px;
+  width: 40px;
+}
+.clientarea-products-quick .product-quick-card .title {
+  font-size: 15px;
+  margin-top: 14px;
+  margin-bottom: 8px;
+}
+.clientarea-products-quick .product-quick-card .subtitle {
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin-bottom: 0;
+  flex-grow: 1;
+}
+.clientarea-products-quick .product-quick-card .btn {
+  margin-top: 16px !important;
+  padding: 6px 20px;
+  font-size: 13px;
+}
+
+/* ---------- Dashboard: real service/action list (WHMCS panels) readability ---------- */
+
+.rockbox .list-group-item {
+  transition: background-color 0.2s ease, padding-left 0.2s ease;
+}
+.rockbox .list-group-item:hover {
+  padding-left: 6px;
+}
