@@ -26,7 +26,12 @@ const items: GalleryItem[] = [
     caption: "Meci de padel",
     ratio: "aspect-square",
   },
-  { type: "placeholder", variant: "general", caption: "Atmosferă de seară", ratio: "aspect-[4/5]" },
+  {
+    type: "photo",
+    src: "/images/riviera-court-wide.webp",
+    caption: "Terenurile Riviera",
+    ratio: "aspect-[4/5]",
+  },
   {
     type: "photo",
     src: "/images/riviera-biliard-pingpong.webp",
@@ -34,8 +39,19 @@ const items: GalleryItem[] = [
     caption: "Zona de biliard și ping-pong",
     ratio: "aspect-[4/3]",
   },
-  { type: "placeholder", variant: "padel", caption: "Detaliu teren", ratio: "aspect-square" },
-  { type: "placeholder", variant: "lounge", caption: "Comunitate Riviera", ratio: "aspect-[4/5]" },
+  {
+    type: "photo",
+    src: "/images/riviera-bar-2.webp",
+    caption: "Barul Riviera",
+    ratio: "aspect-square",
+  },
+  {
+    type: "photo",
+    src: "/images/riviera-bar-1.webp",
+    objectPosition: "center 25%",
+    caption: "Colțul de bar",
+    ratio: "aspect-[4/5]",
+  },
 ];
 
 export function Gallery() {

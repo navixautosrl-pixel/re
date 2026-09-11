@@ -1,5 +1,5 @@
 import { Reveal } from "@/components/shared/Reveal";
-import { MediaPlaceholder } from "@/components/shared/MediaPlaceholder";
+import { SiteImage } from "@/components/shared/SiteImage";
 
 export function SocialCommunity() {
   return (
@@ -25,13 +25,19 @@ export function SocialCommunity() {
           <div className="lg:col-span-7 lg:order-1">
             <Reveal delay={0.1}>
               <div className="grid grid-cols-2 gap-4">
-                <MediaPlaceholder
-                  variant="general"
-                  tag="Comunitate — în curând"
+                <SiteImage
+                  src="/images/riviera-court-wide.webp"
+                  alt="Terenurile de padel Riviera, în lumina zilei"
                   className="col-span-2 aspect-[16/9] rounded-sm"
+                  objectPosition="center 40%"
                 />
-                <MediaPlaceholder variant="padel" tag="Riviera — în curând" className="aspect-square rounded-sm" />
-                <MediaPlaceholder variant="lounge" tag="Riviera — în curând" className="aspect-square rounded-sm" />
+                <SiteImage src="/images/riviera-bar-2.webp" alt="Barul Riviera" className="aspect-square rounded-sm" />
+                <SiteImage
+                  src="/images/riviera-bar-1.webp"
+                  alt="Zona de bar din lounge-ul Riviera"
+                  className="aspect-square rounded-sm"
+                  objectPosition="center 30%"
+                />
               </div>
             </Reveal>
           </div>
