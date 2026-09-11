@@ -4,8 +4,8 @@ import { motion, useReducedMotion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 
 const variants: Variants = {
-  hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 34, scale: 0.98 },
+  visible: { opacity: 1, y: 0, scale: 1 },
 };
 
 export function Reveal({

@@ -9,13 +9,19 @@
   --foreground: #f5f4ef;
   --muted-foreground: #9c9c93;
 
-  /* Electric court-light lime — the one accent color, used sparingly:
-     CTAs, focus rings, small marks. Everything else stays near-monochrome
-     so the lime actually reads as an accent instead of noise. */
+  /* Electric court-light lime is the primary accent (CTAs, focus rings).
+     Two more court-light colors — cyan and coral — give the "after dark"
+     palette actual range: used for glows, number marks, and per-activity
+     tags, never flooding the whole page at once. */
   --accent: #c9ff4e;
   --accent-foreground: #0a0a09;
   --accent-dim: #96cc2e;
   --accent-soft: #1c2610;
+
+  --accent-2: #3fd8ff;
+  --accent-2-foreground: #0a0a09;
+  --accent-3: #ff5a3c;
+  --accent-3-foreground: #0a0a09;
 
   --font-display: "Saira Extra Condensed", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -42,6 +48,10 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-dim: var(--accent-dim);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-2: var(--accent-2);
+  --color-accent-2-foreground: var(--accent-2-foreground);
+  --color-accent-3: var(--accent-3);
+  --color-accent-3-foreground: var(--accent-3-foreground);
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
@@ -90,16 +100,34 @@ body {
   );
 }
 
-/* Single restrained "court light" glow — used once per section at most. */
+/* Court-light glow — used once per section at most. Two colors instead of
+   one flat wash: lime + cyan, like two floodlights catching different
+   corners of the frame. Slow drift, transform-only so it's cheap even
+   with the blur, and visible (not a whisper) on mobile too. */
 .court-glow {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(
-    60% 50% at 50% 0%,
-    color-mix(in srgb, var(--color-accent) 14%, transparent),
-    transparent 70%
-  );
+  background:
+    radial-gradient(46% 40% at 22% 0%, color-mix(in srgb, var(--color-accent) 26%, transparent), transparent 72%),
+    radial-gradient(40% 36% at 82% 8%, color-mix(in srgb, var(--color-accent-2) 20%, transparent), transparent 72%);
+  animation: court-glow-drift 14s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes court-glow-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-1.5%, 2%, 0) scale(1.06); }
+}
+
+/* Glow shadow for hover/focus — swap the color via --glow to accent-2/3. */
+.glow-on-hover {
+  --glow: var(--color-accent);
+  transition: box-shadow 0.3s var(--ease-premium), transform 0.3s var(--ease-premium);
+}
+.glow-on-hover:hover,
+.glow-on-hover:focus-visible {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--glow) 50%, transparent),
+    0 8px 32px -8px color-mix(in srgb, var(--glow) 65%, transparent);
 }
 
 /* Fine grain — keeps flat dark fields from reading as a plain digital wash. */

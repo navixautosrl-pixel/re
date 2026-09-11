@@ -15,8 +15,9 @@ export function GoogleRating() {
   const reviews = useCountUp(siteConfig.reviewCount, 0, inView, !!prefersReducedMotion);
 
   return (
-    <section className="border-y border-border bg-surface">
-      <div className="container-max px-5 py-20 text-center sm:px-8 lg:px-10 lg:py-28" ref={ref}>
+    <section className="relative overflow-hidden border-y border-border bg-surface">
+      <div className="court-glow opacity-45" />
+      <div className="container-max relative px-5 py-20 text-center sm:px-8 lg:px-10 lg:py-28" ref={ref}>
         <Reveal>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
             Recomandat pe Google

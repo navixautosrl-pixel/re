@@ -52,9 +52,10 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium uppercase tracking-[0.06em] text-foreground/80 transition-colors hover:text-accent"
+                className="group relative py-1 text-sm font-medium uppercase tracking-[0.06em] text-foreground/80 transition-colors hover:text-accent"
               >
                 {link.label}
+                <span className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-accent transition-transform duration-300 ease-[var(--ease-premium)] group-hover:scale-x-100" />
               </Link>
             ))}
           </nav>
@@ -110,7 +111,7 @@ export function Navbar() {
                   <Link
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="font-display block border-b border-border py-4 text-4xl uppercase leading-none text-foreground transition-colors hover:text-accent"
+                    className="font-display block border-b border-border py-4 text-4xl uppercase leading-none text-foreground transition-colors hover:text-accent active:text-accent"
                   >
                     {link.label}
                   </Link>

@@ -17,10 +17,13 @@ const base =
   "group relative inline-flex items-center justify-center gap-2.5 whitespace-nowrap font-sans font-semibold uppercase tracking-[0.06em] transition-all duration-300 ease-[var(--ease-premium)] focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2";
 
 const variants = {
+  // Always carries a soft glow (not just on :hover) so it reads as "alive"
+  // on touch devices too, where hover never fires — hover/active just
+  // intensify it.
   primary:
-    "bg-accent text-accent-foreground hover:bg-foreground active:scale-[0.98]",
+    "bg-accent text-accent-foreground shadow-[0_4px_24px_-6px_color-mix(in_srgb,var(--color-accent)_55%,transparent)] hover:bg-foreground hover:shadow-[0_8px_36px_-6px_color-mix(in_srgb,var(--color-accent)_75%,transparent)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] active:shadow-[0_2px_12px_-4px_color-mix(in_srgb,var(--color-accent)_60%,transparent)]",
   outline:
-    "border border-border-strong text-foreground hover:border-accent hover:text-accent active:scale-[0.98]",
+    "border border-border-strong text-foreground hover:border-accent hover:text-accent hover:shadow-[0_0_0_1px_color-mix(in_srgb,var(--color-accent)_40%,transparent)] active:scale-[0.97]",
   ghost: "text-foreground hover:text-accent",
 };
 

@@ -69,6 +69,16 @@ const iconMap: Record<Variant, () => ReactNode> = {
   general: GeneralIcon,
 };
 
+// Each activity gets its own court-light tint — small, deliberate color
+// variety instead of one flat color repeated on every placeholder.
+const variantColor: Record<Variant, string> = {
+  padel: "var(--color-accent)",
+  "ping-pong": "var(--color-accent-2)",
+  biliard: "var(--color-accent-3)",
+  lounge: "var(--color-accent)",
+  general: "var(--color-accent-2)",
+};
+
 /**
  * Elegant stand-in for real photography. No stock photo pretends to be
  * Riviera here — a textured dark field, a hand-drawn line icon, and an
@@ -87,6 +97,7 @@ export function MediaPlaceholder({
   tag?: string;
 }) {
   const Icon = iconMap[variant];
+  const color = variantColor[variant];
 
   return (
     <div
@@ -100,11 +111,11 @@ export function MediaPlaceholder({
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background:
-            "radial-gradient(120% 90% at 15% 0%, color-mix(in srgb, var(--color-accent) 8%, transparent), transparent 55%)",
+          background: `radial-gradient(120% 90% at 15% 0%, color-mix(in srgb, ${color} 22%, transparent), transparent 55%),
+            radial-gradient(80% 70% at 100% 100%, color-mix(in srgb, var(--color-accent-2) 10%, transparent), transparent 60%)`,
         }}
       />
-      <div className="relative z-10 flex flex-col items-center gap-3 text-border-strong">
+      <div className="relative z-10 flex flex-col items-center gap-3" style={{ color }}>
         <Icon />
         {label ? (
           <span className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">

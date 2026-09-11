@@ -193,8 +193,9 @@ export function Contact() {
 
 function SectionShell({ children }: { children: React.ReactNode }) {
   return (
-    <section id="contact" className="bg-background section-y">
-      <div className="container-max px-5 sm:px-8 lg:px-10">{children}</div>
+    <section id="contact" className="relative overflow-hidden bg-background section-y">
+      <div className="court-glow opacity-60" />
+      <div className="container-max relative px-5 sm:px-8 lg:px-10">{children}</div>
     </section>
   );
 }
