@@ -19,8 +19,8 @@ export function Hero() {
           src="/images/riviera-lounge-court.webp"
           alt="Terenul de padel Riviera, văzut din zona de lounge"
           className="h-full w-full"
-          priority
           objectPosition="center 62%"
+          priority
         />
         <motion.div
           className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20"

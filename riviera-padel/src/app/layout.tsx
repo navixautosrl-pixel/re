@@ -12,6 +12,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { StickyMobileCTA } from "@/components/shared/StickyMobileCTA";
 import { siteConfig } from "@/lib/constants";
+import { withBasePath } from "@/lib/basePath";
 
 export const metadata: Metadata = {
   metadataBase: new URL(`https://${siteConfig.domain}`),
@@ -76,6 +77,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="ro">
       <head>
+        {/* Static file + manual basePath prefix — next/image's `fill` and the
+            icon.tsx metadata convention both leave their client-side src
+            unprefixed under a non-root basePath in this Next.js build. */}
+        <link rel="icon" href={withBasePath("/favicon.png")} type="image/png" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body className="flex min-h-screen flex-col font-sans antialiased">
