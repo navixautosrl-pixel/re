@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/shared/Reveal";
-import { MediaPlaceholder } from "@/components/shared/MediaPlaceholder";
+import { SiteImage } from "@/components/shared/SiteImage";
 
 export function TheLounge() {
   const ref = useRef<HTMLDivElement>(null);
@@ -14,7 +14,12 @@ export function TheLounge() {
   return (
     <section id="lounge" ref={ref} className="relative isolate min-h-[85vh] overflow-hidden bg-background">
       <motion.div style={{ y }} className="absolute inset-0 scale-[1.15]">
-        <MediaPlaceholder variant="lounge" className="h-full w-full" tag="Lounge Riviera — în curând" />
+        <SiteImage
+          src="/images/riviera-lounge-court.webp"
+          alt="Zona de lounge Riviera, cu mese și scaune cu vedere spre teren"
+          className="h-full w-full"
+          objectPosition="center 92%"
+        />
       </motion.div>
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/30" />
       <div className="court-glow" />

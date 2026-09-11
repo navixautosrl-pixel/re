@@ -1,5 +1,5 @@
 import { Reveal } from "@/components/shared/Reveal";
-import { MediaPlaceholder } from "@/components/shared/MediaPlaceholder";
+import { SiteImage } from "@/components/shared/SiteImage";
 import { Button } from "@/components/ui/Button";
 import { siteConfig } from "@/lib/constants";
 
@@ -42,9 +42,9 @@ export function PadelExperience() {
 
         <div className="lg:col-span-7">
           <Reveal delay={0.1} className="relative">
-            <MediaPlaceholder
-              variant="padel"
-              tag="Fotografie teren — în curând"
+            <SiteImage
+              src="/images/riviera-padel-action.webp"
+              alt="Meci de padel pe unul dintre terenurile Riviera"
               className="aspect-[4/5] w-full rounded-sm sm:aspect-[16/11]"
             />
             <div className="absolute -bottom-6 -left-4 hidden rounded-sm border border-border-strong bg-background px-6 py-4 sm:left-8 sm:block">

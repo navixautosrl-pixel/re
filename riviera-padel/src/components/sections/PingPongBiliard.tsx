@@ -3,9 +3,11 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
-import { MediaPlaceholder } from "@/components/shared/MediaPlaceholder";
+import { SiteImage } from "@/components/shared/SiteImage";
 import { siteConfig } from "@/lib/constants";
 
+// Same real photo for both — it shows the ping-pong tables and the pool
+// table in one frame — cropped toward whichever is relevant per card.
 const items = [
   {
     key: "ping-pong" as const,
@@ -13,6 +15,7 @@ const items = [
     headline: "Schimbă ritmul.",
     copy: "Un joc rapid pentru orice pauză — perfect între două seturi de padel sau ca meci de sine stătător.",
     color: "var(--color-accent-2)",
+    objectPosition: "15% 45%",
   },
   {
     key: "biliard" as const,
@@ -20,6 +23,7 @@ const items = [
     headline: "Joacă după propriile reguli.",
     copy: "Ritm mai lent, aceeași miză socială — biliardul e locul unde meciul continuă la o băutură.",
     color: "var(--color-accent-3)",
+    objectPosition: "95% 90%",
   },
 ];
 
@@ -39,7 +43,12 @@ export function PingPongBiliard() {
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <MediaPlaceholder variant={item.key} className="h-full w-full" tag={`${item.name} — în curând`} />
+                  <SiteImage
+                    src="/images/riviera-biliard-pingpong.webp"
+                    alt={`Zona de ${item.name.toLowerCase()} din lounge-ul Riviera`}
+                    className="h-full w-full"
+                    objectPosition={item.objectPosition}
+                  />
                 </motion.div>
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
                 <div

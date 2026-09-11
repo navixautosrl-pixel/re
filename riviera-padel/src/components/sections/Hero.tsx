@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { MediaPlaceholder } from "@/components/shared/MediaPlaceholder";
+import { SiteImage } from "@/components/shared/SiteImage";
 import { RatingBadge } from "@/components/shared/RatingBadge";
 import { TextReveal } from "@/components/shared/TextReveal";
 import { activities, siteConfig } from "@/lib/constants";
@@ -15,7 +15,13 @@ export function Hero() {
   return (
     <section id="acasa" className="relative flex min-h-[100svh] flex-col overflow-hidden bg-background">
       <div className="absolute inset-0">
-        <MediaPlaceholder variant="padel" className="h-full w-full" tag="Vizual Riviera — în curând" />
+        <SiteImage
+          src="/images/riviera-lounge-court.webp"
+          alt="Terenul de padel Riviera, văzut din zona de lounge"
+          className="h-full w-full"
+          priority
+          objectPosition="center 62%"
+        />
         <motion.div
           className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20"
           initial={{ opacity: prefersReducedMotion ? 1 : 0.4 }}

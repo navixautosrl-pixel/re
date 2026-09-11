@@ -6,15 +6,36 @@ import { X } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { MediaPlaceholder } from "@/components/shared/MediaPlaceholder";
+import { SiteImage } from "@/components/shared/SiteImage";
 
-const items = [
-  { key: "padel" as const, caption: "Teren de padel", ratio: "aspect-[4/5]" },
-  { key: "lounge" as const, caption: "Lounge-ul Riviera", ratio: "aspect-[4/3]" },
-  { key: "ping-pong" as const, caption: "Ping-Pong", ratio: "aspect-square" },
-  { key: "general" as const, caption: "Atmosferă de seară", ratio: "aspect-[4/5]" },
-  { key: "biliard" as const, caption: "Biliard", ratio: "aspect-[4/3]" },
-  { key: "padel" as const, caption: "Detaliu teren", ratio: "aspect-square" },
-  { key: "lounge" as const, caption: "Comunitate Riviera", ratio: "aspect-[4/5]" },
+type GalleryItem =
+  | { type: "photo"; src: string; objectPosition?: string; caption: string; ratio: string }
+  | { type: "placeholder"; variant: "padel" | "ping-pong" | "biliard" | "lounge" | "general"; caption: string; ratio: string };
+
+const items: GalleryItem[] = [
+  { type: "photo", src: "/images/riviera-exterior.webp", caption: "Intrarea Riviera", ratio: "aspect-[4/5]" },
+  {
+    type: "photo",
+    src: "/images/riviera-lounge-court.webp",
+    caption: "Lounge cu vedere spre teren",
+    ratio: "aspect-[4/3]",
+  },
+  {
+    type: "photo",
+    src: "/images/riviera-padel-action.webp",
+    caption: "Meci de padel",
+    ratio: "aspect-square",
+  },
+  { type: "placeholder", variant: "general", caption: "Atmosferă de seară", ratio: "aspect-[4/5]" },
+  {
+    type: "photo",
+    src: "/images/riviera-biliard-pingpong.webp",
+    objectPosition: "70% 65%",
+    caption: "Zona de biliard și ping-pong",
+    ratio: "aspect-[4/3]",
+  },
+  { type: "placeholder", variant: "padel", caption: "Detaliu teren", ratio: "aspect-square" },
+  { type: "placeholder", variant: "lounge", caption: "Comunitate Riviera", ratio: "aspect-[4/5]" },
 ];
 
 export function Gallery() {
@@ -28,7 +49,7 @@ export function Gallery() {
 
         <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4">
           {items.map((item, i) => (
-            <Reveal key={`${item.key}-${i}`} delay={(i % 3) * 0.06} className="break-inside-avoid">
+            <Reveal key={`${item.caption}-${i}`} delay={(i % 3) * 0.06} className="break-inside-avoid">
               <button
                 type="button"
                 onClick={() => setOpenIndex(i)}
@@ -37,7 +58,16 @@ export function Gallery() {
               >
                 <div className={`relative overflow-hidden ${item.ratio}`}>
                   <div className="h-full w-full transition-transform duration-500 ease-[var(--ease-premium)] group-hover:scale-[1.05]">
-                    <MediaPlaceholder variant={item.key} className="h-full w-full" tag="" />
+                    {item.type === "photo" ? (
+                      <SiteImage
+                        src={item.src}
+                        alt={item.caption}
+                        className="h-full w-full"
+                        objectPosition={item.objectPosition}
+                      />
+                    ) : (
+                      <MediaPlaceholder variant={item.variant} className="h-full w-full" tag="" />
+                    )}
                   </div>
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/90 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-foreground">
@@ -61,7 +91,16 @@ export function Gallery() {
             <Dialog.Title className="sr-only">{active?.caption ?? "Imagine galerie"}</Dialog.Title>
             {active ? (
               <div className="w-full max-w-3xl">
-                <MediaPlaceholder variant={active.key} tag="" className="aspect-[4/3] w-full rounded-sm" />
+                {active.type === "photo" ? (
+                  <SiteImage
+                    src={active.src}
+                    alt={active.caption}
+                    objectPosition={active.objectPosition}
+                    className="aspect-[4/3] w-full rounded-sm"
+                  />
+                ) : (
+                  <MediaPlaceholder variant={active.variant} tag="" className="aspect-[4/3] w-full rounded-sm" />
+                )}
                 <p className="font-mono mt-4 text-center text-xs uppercase tracking-[0.2em] text-muted-foreground">
                   {active.caption}
                 </p>

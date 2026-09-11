@@ -1,5 +1,6 @@
 import { MapPin, Phone, Clock } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
+import { SiteImage } from "@/components/shared/SiteImage";
 import { Button } from "@/components/ui/Button";
 import { siteConfig } from "@/lib/constants";
 
@@ -57,8 +58,13 @@ export function Location() {
           </div>
         </Reveal>
 
-        <Reveal delay={0.1}>
-          <div className="aspect-[4/3] overflow-hidden rounded-sm border border-border sm:aspect-square lg:aspect-[4/5]">
+        <Reveal delay={0.1} className="flex flex-col gap-4">
+          <SiteImage
+            src="/images/riviera-exterior.webp"
+            alt="Intrarea Riviera Padel Lounge and Sports"
+            className="aspect-[16/10] w-full rounded-sm border border-border"
+          />
+          <div className="aspect-[4/3] overflow-hidden rounded-sm border border-border sm:aspect-[16/9] lg:aspect-[16/10]">
             <iframe
               src={siteConfig.mapsEmbedUrl}
               title={`Hartă — ${siteConfig.fullName}, ${siteConfig.addressLine1}`}
