@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a09;
+  --surface: #141412;
+  --surface-elevated: #1d1d1a;
+  --border: #2a2a26;
+  --border-strong: #3d3d37;
+  --foreground: #f5f4ef;
+  --muted-foreground: #9c9c93;
+
+  /* Electric court-light lime — the one accent color, used sparingly:
+     CTAs, focus rings, small marks. Everything else stays near-monochrome
+     so the lime actually reads as an accent instead of noise. */
+  --accent: #c9ff4e;
+  --accent-foreground: #0a0a09;
+  --accent-dim: #96cc2e;
+  --accent-soft: #1c2610;
+
+  --font-display: "Saira Extra Condensed", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --space-section-y: 9rem;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --container-max: 1400px;
+
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-dim: var(--accent-dim);
+  --color-accent-soft: var(--accent-soft);
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+* { border-color: var(--color-border); }
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  /* Fixed header is ~76-77px tall — without this, anchor navigation
+     (nav links, scroll-into-view) lands section content under the header. */
+  scroll-padding-top: 96px;
+}
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: color-mix(in srgb, var(--color-accent) 55%, transparent); color: var(--color-accent-foreground); }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 2px; }
+
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }
+
+.container-max { max-width: var(--container-max); margin-inline: auto; }
+
+.section-y { padding-top: var(--space-section-y); padding-bottom: var(--space-section-y); }
+@media (max-width: 767px) {
+  .section-y { padding-top: 5.5rem; padding-bottom: 5.5rem; }
+}
+
+/* Court-line field — thin diagonal hairlines evoking court markings /
+   glass-wall reflections. Brand signature in place of a generic dot grid,
+   always faint, never the focal element. */
+.court-lines {
+  background-image: repeating-linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--color-border-strong) 55%, transparent) 0px,
+    color-mix(in srgb, var(--color-border-strong) 55%, transparent) 1px,
+    transparent 1px,
+    transparent 96px
+  );
+}
+
+/* Single restrained "court light" glow — used once per section at most. */
+.court-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    60% 50% at 50% 0%,
+    color-mix(in srgb, var(--color-accent) 14%, transparent),
+    transparent 70%
+  );
+}
+
+/* Fine grain — keeps flat dark fields from reading as a plain digital wash. */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Diagonal section clip — used once (Lounge → Why Riviera) to break the
+   flat stack-of-sections rhythm. */
+.clip-diagonal { clip-path: polygon(0 3.5vw, 100% 0, 100% 100%, 0 calc(100% - 3.5vw)); }
+
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+.accordion-content[data-state="open"] { animation: accordion-down 0.3s var(--ease-premium); }
+.accordion-content[data-state="closed"] { animation: accordion-up 0.3s var(--ease-premium); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
