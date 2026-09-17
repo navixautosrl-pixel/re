@@ -16,6 +16,10 @@
     "vercel": {
       "type": "http",
       "url": "https://mcp.vercel.com"
+    },
+    "playwright-local": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest", "--browser=chromium"]
     }
   }
 }

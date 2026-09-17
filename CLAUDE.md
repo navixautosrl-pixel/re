@@ -65,20 +65,17 @@ When building or improving a site or app, act simultaneously as:
 | `supabase` | Bundles the official Supabase MCP (`https://mcp.supabase.com/mcp`) — database ops, auth, storage, realtime, once authorized (OAuth) |
 | `stripe` | Bundles the official Stripe MCP (`https://mcp.stripe.com`) — payments/products/webhooks, once authorized (OAuth); also adds a `test-cards` command and a company-researcher agent |
 | `vercel` | Bundles the official Vercel MCP (`https://mcp.vercel.com`) — deployments, build status, logs, domains, once authorized (OAuth); read-only in its initial release |
-
-**Not installed — vendor-official, ready to add the moment a project actually needs it** (installing it now with no real use case would just be inert clutter, and it needs the human's own credentials regardless):
-```
-claude plugin install figma@claude-plugins-official       # Figma → code, needs a Figma token
-```
+| `figma` | Design-to-code: `figma-design-to-code`, `figma-implement-motion`/`figma-use-motion`, `figma-shaders`, `figma-generate-design`, `figma-code-connect`, and more. The skills work as reference the moment the plugin is installed; actually pulling a real Figma file needs the user's own Figma OAuth on the bundled `figma` MCP server first — ask for a file link/access when a task needs it, don't fabricate design details in the meantime. |
 
 **MCP servers** (`.mcp.json`, project-scoped — travels with the repo so anyone opening it gets these, independent of what's installed on a given machine's user-scoped plugins):
 - `21st` — 21st.dev component search/generation. Needs `API_KEY_21ST` env var (get a free key at 21st.dev/mcp) — currently unset, server shows "pending approval" until it's provided.
 - `supabase` — official Supabase MCP, `https://mcp.supabase.com/mcp`. OAuth on first use, no env var.
 - `stripe` — official Stripe MCP, `https://mcp.stripe.com`. OAuth on first use, no env var.
 - `vercel` — official Vercel MCP, `https://mcp.vercel.com`. OAuth on first use, no env var.
+- `playwright-local` — same `@playwright/mcp` server the `playwright` plugin bundles, but launched with `--browser=chromium` instead of the plugin's default (which targets the `chrome` channel — not installed in this sandbox, so the plugin's own `mcp__playwright__*` tools fail with "Chromium distribution 'chrome' is not found"). This one resolves via `PLAYWRIGHT_BROWSERS_PATH` to the pre-installed Chromium instead, so its tools actually work here. New MCP servers only load at session start, so a session already running when this was added needs a fresh session before `mcp__playwright-local__*` tools appear — until then, fall back to driving `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` directly via the Python `playwright` package (already present) from Bash, exactly as this repo's history already does.
 - GitHub is already available through the session's own tool set in this environment — no separate MCP install needed here.
 
-All four are HTTP MCP servers using OAuth, not API keys — see "What you need to authorize manually" below for exactly what that means in practice.
+All four HTTP servers (21st, supabase, stripe, vercel) use OAuth, not API keys — see "What you need to authorize manually" below for exactly what that means in practice. `playwright-local` is a local process, no auth needed.
 
 ## App Builder Pipeline
 
@@ -137,6 +134,24 @@ Either way:
 - mobile-first, responsive
 - real loading / error / empty states, not just the happy path
 - no dependency added without a reason
+
+## Premium site build stack (site workflow)
+
+Default recipe for a premium, animated, production-ready marketing site — proven end-to-end on `riviera-padel/` (Next.js App Router, static export, deployed under a hosting subpath). Reach for this before reaching for a plain HTML file whenever the project can carry a build step.
+
+**Core**: Next.js (App Router) + React + TypeScript + Tailwind CSS v4 (`@theme inline` tokens in `globals.css`, not a JS config file) + `framer-motion` (imported as `motion`) for animation + Radix UI primitives (`@radix-ui/react-accordion`, `-dialog`, etc.) for accessible interactive components + `lucide-react` for icons + `@fontsource/*` for self-hosted variable fonts (no external Google Fonts request — faster, no CSP/CDN dependency) + `next/image` for real photography.
+
+**Only add when the project genuinely calls for it** — these are real, well-supported libraries but not default weight on every build:
+- `gsap` + `ScrollTrigger` — complex scroll-driven choreography beyond what `framer-motion`'s `whileInView`/`useScroll` covers cleanly (pinning, scrubbing, timelines).
+- `lenis` — smooth-scroll, when the brief specifically wants that inertia feel. Costs some accessibility/perf attention (respect `prefers-reduced-motion`, don't fight native scroll on mobile).
+- `three` + `@react-three/fiber` (+ `@react-three/drei`) — genuine 3D scenes, shaders, particles. Justify it against the brand first; a 3D hero that doesn't serve the subject is exactly the "AI slop" the Design standard above warns against. No plugin installs these — they're per-project `npm install` like any other dependency.
+- `class-variance-authority` + `tailwind-merge` (`cn()` helper) — once a project has enough component variants to need it; `riviera-padel` only needed `clsx` + `tailwind-merge`.
+
+**Static export + subpath deployment gotcha** (found and fixed building `riviera-padel`): with `output: "export"` and a non-root `basePath` (e.g. a demo hosted at `robixhost.ro/some/subpath/`, set via `BASE_PATH` env at build time — see `next.config.ts`'s pattern already in this repo), `next/image`'s client-side `priority`-preload path and the `icon.tsx` metadata-icon convention both emit an **unprefixed** URL and 404 once actually served from that subpath, even though the plain `<img src>` in the SSR HTML is correctly prefixed. Verified by literally serving the static export from an identical subpath directory locally, not just `next dev` at root. Fix: don't use `priority` on `next/image` under a subpath build — use `loading="eager"` instead (skips the lazy-load defer without the broken preload path), and reference local images/icons through a small `withBasePath()` helper (`${process.env.BASE_PATH}${path}`) rather than relying on `next/image` to infer the prefix. Root-relative asset URLs in general are the thing to double check first whenever a build is destined for a subpath instead of a domain root.
+
+**Design-to-code**: no separate tool needed for "turn this screenshot/reference image into a component" — read the image directly (native vision) and describe/build from what's actually visible, not assumed. For an actual Figma file specifically, use the `figma` plugin's skills once the user shares access.
+
+**Browser QA**: use `mcp__playwright-local__*` (see MCP servers above) once available in a fresh session; until then, drive `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` directly via the Python `playwright` package from Bash — launch headless, hit every breakpoint from 320px to 1920px, assert `window.scrollX` after `scrollTo(9999,0)` is `0` (real overflow check, not just a visual guess), capture full-page and per-section screenshots, and check `console` + failed/4xx network requests. This is how the subpath bug above was actually caught — a mid-build screenshot at the wrong breakpoint or without simulating the real deployment path would have missed it.
 
 ## UX
 
