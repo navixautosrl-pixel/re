@@ -38,14 +38,21 @@ export function Process() {
 
   return (
     <section id="proces" className="section-y relative">
-      <div className="container-max px-5 sm:px-8 lg:px-10">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-            De la idee <span className="gradient-text">la lansare.</span>
-          </h2>
+      {/* The heading holds its position while the steps move past it — the
+          section's own rhythm, distinct from the stacked blocks around it. */}
+      <div className="container-max grid gap-12 px-5 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-10">
+        <Reveal className="lg:col-span-4">
+          <div className="lg:sticky lg:top-32">
+            <h2 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+              De la idee la lansare.
+            </h2>
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
+              {processSteps.length} pași, fără surprize. Știi în fiecare moment la ce lucrăm și ce urmează.
+            </p>
+          </div>
         </Reveal>
 
-        <div ref={containerRef} className="relative mx-auto mt-16 max-w-2xl">
+        <div ref={containerRef} className="relative lg:col-span-7 lg:col-start-6">
           <div className="absolute left-[15px] top-2 bottom-2 w-px bg-border sm:left-[19px]" aria-hidden="true" />
           <div
             ref={lineRef}
@@ -53,7 +60,7 @@ export function Process() {
             aria-hidden="true"
           />
 
-          <ol className="space-y-10">
+          <ol className="space-y-10 sm:space-y-12">
             {processSteps.map((step, i) => (
               <Reveal key={step.index} delay={i * 0.05} as="li">
                 <div className="relative flex gap-6 pl-10 sm:gap-8 sm:pl-14">
@@ -61,7 +68,7 @@ export function Process() {
                     {step.index}
                   </span>
                   <div>
-                    <h3 className="font-display text-xl font-semibold text-foreground">{step.title}</h3>
+                    <h3 className="font-display text-xl font-semibold text-foreground sm:text-2xl">{step.title}</h3>
                     <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
                   </div>
                 </div>

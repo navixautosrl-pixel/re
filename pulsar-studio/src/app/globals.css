@@ -269,6 +269,15 @@ body {
   border: 1px solid var(--color-border);
 }
 
+/* The header spans the full width and sits over large display type, where
+   .glass's 62% lets headlines read straight through the logo. It needs to be
+   near-opaque; the small glass chips stay as they are. */
+.glass-header {
+  background: color-mix(in srgb, var(--background) 96%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
 /* Glow border for hover/focus — swap the color via --glow. */
 .glow-border {
   --glow: var(--color-accent);
@@ -312,6 +321,100 @@ body {
   }
   to {
     transform: translateX(-50%);
+  }
+}
+
+/* --- Pulsar motif (hero signature visual) ------------------------------- */
+
+.pulsar-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
+.pulsar-ring,
+.pulsar-core,
+.pulsar-halo,
+.pulsar-sweep {
+  position: absolute;
+  border-radius: 9999px;
+  grid-area: 1 / 1;
+}
+
+.pulsar-ring {
+  inset: 0;
+  border: 1px solid color-mix(in srgb, var(--accent-2) 55%, transparent);
+  opacity: 0;
+  transform: scale(0.2);
+  animation: pulsar-emit 8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+}
+
+.pulsar-ring--static {
+  animation: none;
+}
+
+.pulsar-core {
+  width: 14%;
+  height: 14%;
+  background: radial-gradient(circle, #ffffff 0%, var(--accent-2) 45%, var(--accent) 100%);
+  box-shadow:
+    0 0 40px 6px color-mix(in srgb, var(--accent-2) 55%, transparent),
+    0 0 120px 30px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.pulsar-halo {
+  width: 62%;
+  height: 62%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--accent) 30%, transparent) 0%,
+    color-mix(in srgb, var(--accent-3) 14%, transparent) 45%,
+    transparent 70%
+  );
+  filter: blur(12px);
+}
+
+/* The sweep arm: a conic wedge rotating once every 12s, like a lighthouse
+   beam. Masked to a ring so it reads as a sweep, not a filled pie. */
+.pulsar-sweep {
+  inset: 12%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    color-mix(in srgb, var(--accent-2) 30%, transparent) 18deg,
+    transparent 46deg
+  );
+  mask-image: radial-gradient(circle, transparent 38%, black 40%, black 98%, transparent 100%);
+  animation: pulsar-sweep 12s linear infinite;
+}
+
+@keyframes pulsar-emit {
+  0% {
+    transform: scale(0.16);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes pulsar-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulsar-ring,
+  .pulsar-sweep {
+    animation: none;
   }
 }
 

@@ -59,7 +59,7 @@ export function Contact() {
           <div className="lg:col-span-5">
             <Reveal>
               <h2 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-                Hai să <span className="gradient-text">pornim proiectul.</span>
+                Hai să pornim proiectul.
               </h2>
               <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
                 Completează formularul cu câteva detalii despre proiect — revenim cu următorul pas.

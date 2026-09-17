@@ -12,7 +12,7 @@ export function FAQ() {
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
           <Reveal className="lg:col-span-4">
             <h2 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-              Întrebări <span className="gradient-text">frecvente.</span>
+              Întrebări frecvente.
             </h2>
           </Reveal>
 

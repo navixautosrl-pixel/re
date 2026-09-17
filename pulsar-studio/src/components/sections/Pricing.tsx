@@ -13,7 +13,7 @@ export function Pricing() {
       <div className="container-max relative px-5 sm:px-8 lg:px-10">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-            Pachete simple. <span className="gradient-text">Prețuri transparente.</span>
+            Pachete simple. Prețuri transparente.
           </h2>
         </Reveal>
 

@@ -1,102 +1,114 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useReducedMotion } from "@/lib/useReducedMotion";
-import { ChevronDown, Gauge, Search, Smartphone } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { TextReveal } from "@/components/shared/TextReveal";
 import { MagneticButton } from "@/components/shared/MagneticButton";
+import { PulsarField } from "@/components/shared/PulsarField";
+import { useReducedMotion } from "@/lib/useReducedMotion";
+
+const HEADLINE = ["Construim", "site-uri care", "îți cresc"];
 
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Desktop-only mouse parallax on the mockup + its glow orbs. Motion
-  // values update outside React's render cycle, so this never triggers a
-  // re-render on every mousemove.
-  const px = useMotionValue(0);
-  const py = useMotionValue(0);
-  const mockupX = useSpring(px, { stiffness: 60, damping: 18, mass: 0.6 });
-  const mockupY = useSpring(py, { stiffness: 60, damping: 18, mass: 0.6 });
-  const orbX = useSpring(px, { stiffness: 40, damping: 20, mass: 0.8 });
-  const orbY = useSpring(py, { stiffness: 40, damping: 20, mass: 0.8 });
-  const orbXInverse = useTransform(orbX, (v) => -v);
-  const orbYInverse = useTransform(orbY, (v) => -v);
+  // The hero recedes as the next section arrives rather than just scrolling
+  // away — the page's one scroll-linked moment above the fold.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  // Neutralise the ranges under reduced motion rather than dropping the style
+  // binding: if framer stops managing an element mid-flight it keeps whatever
+  // inline value it last wrote.
+  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", prefersReducedMotion ? "0%" : "18%"]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, prefersReducedMotion ? 1 : 0]);
+  const fieldScale = useTransform(scrollYProgress, [0, 1], [1, prefersReducedMotion ? 1 : 1.35]);
 
-  function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
-    if (prefersReducedMotion || !sectionRef.current) return;
-    if (!window.matchMedia("(pointer: fine)").matches) return;
-    const rect = sectionRef.current.getBoundingClientRect();
-    px.set(((e.clientX - rect.left) / rect.width - 0.5) * 24);
-    py.set(((e.clientY - rect.top) / rect.height - 0.5) * 24);
-  }
-
-  function resetParallax() {
-    px.set(0);
-    py.set(0);
-  }
+  const ease = [0.16, 1, 0.3, 1] as const;
 
   return (
     <section
       id="acasa"
       ref={sectionRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={resetParallax}
-      className="relative flex min-h-[100svh] flex-col overflow-hidden bg-background pt-28 sm:pt-32"
+      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-background pb-8 pt-28 sm:pb-10 sm:pt-32"
     >
-      <div className="gradient-mesh" aria-hidden="true" />
-      <div className="grid-field absolute inset-0 opacity-60" aria-hidden="true" />
+      <div className="grid-field absolute inset-0 opacity-40" aria-hidden="true" />
+
+      {/* Signature visual: bleeds off the right edge on desktop, sits behind
+          the type on mobile so the headline always wins. */}
+      <motion.div
+        style={{ scale: fieldScale }}
+        className="pointer-events-none absolute -right-[38%] top-1/2 w-[125vw] -translate-y-1/2 opacity-70 sm:-right-[26%] sm:w-[85vw] lg:-right-[8%] lg:w-[58vw] lg:opacity-100"
+        aria-hidden="true"
+      >
+        <PulsarField />
+      </motion.div>
+
       <div className="noise-overlay" aria-hidden="true" />
 
-      <div className="container-max relative z-10 grid flex-1 items-center gap-14 px-5 pb-16 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 lg:px-10 lg:pb-24">
-        <div>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="glass mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium uppercase tracking-[0.14em] text-accent-2"
-          >
-            <span className="relative flex size-1.5">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent-2 opacity-75" />
-              <span className="relative inline-flex size-1.5 rounded-full bg-accent-2" />
-            </span>
-            Agenție digitală premium
-          </motion.div>
-
-          <h1 className="font-display text-[13vw] font-semibold leading-[1.02] tracking-[-0.02em] text-foreground sm:text-6xl lg:text-7xl">
-            <TextReveal
-              lines={["Construim site-uri", "care îți cresc"]}
-              delay={0.15}
-            />
-            <span className="-mt-[0.22em] block overflow-hidden pt-[0.22em]">
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="container-max relative z-10 px-5 sm:px-8 lg:px-10"
+      >
+        {/* Type as the hero. Scales from phone to ultrawide on one curve. */}
+        {/* Uppercase Romanian needs real headroom: Î/Â carry a circumflex
+            above cap height and Ș/Ț a comma below the baseline, so the
+            reveal masks get generous padding with matching negative margins
+            — the clip box grows, the layout doesn't. */}
+        <h1
+          className="font-display font-semibold uppercase leading-[0.95] tracking-[-0.04em] text-foreground"
+          style={{ fontSize: "clamp(2.6rem, min(9.4vw, 12vh), 8.5rem)" }}
+        >
+          {HEADLINE.map((line, i) => (
+            <span key={line} className="-my-[0.16em] block overflow-hidden py-[0.16em]">
               <motion.span
+                className="block"
                 initial={{ y: "110%" }}
                 animate={{ y: "0%" }}
-                transition={{ duration: 0.9, delay: 0.15 + 0.16, ease: [0.16, 1, 0.3, 1] }}
-                className="gradient-text block"
+                transition={{
+                  duration: prefersReducedMotion ? 0 : 0.78,
+                  delay: prefersReducedMotion ? 0 : 0.04 + i * 0.06,
+                  ease,
+                }}
               >
-                afacerea.
+                {line}
               </motion.span>
             </span>
-          </h1>
+          ))}
+          <span className="-my-[0.16em] block overflow-hidden py-[0.16em]">
+            <motion.span
+              className="gradient-text block"
+              initial={{ y: "110%" }}
+              animate={{ y: "0%" }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.78, delay: prefersReducedMotion ? 0 : 0.22, ease }}
+            >
+              afacerea.
+            </motion.span>
+          </span>
+        </h1>
 
+        {/* Supporting cluster sits under the type, offset right on desktop so
+            the composition is asymmetric rather than a centered stack. */}
+        <div className="mt-8 grid gap-6 sm:mt-10 lg:grid-cols-12 lg:items-end lg:gap-10">
           <motion.p
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-7 max-w-lg text-lg leading-relaxed text-muted-foreground"
+            transition={{ duration: prefersReducedMotion ? 0 : 0.8, delay: prefersReducedMotion ? 0 : 0.46, ease }}
+            className="max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg lg:col-span-5 lg:col-start-1"
           >
             Website-uri la cheie, <span className="text-foreground">SEO</span> și{" "}
-            <span className="text-foreground">marketing digital</span> — tot ce ai nevoie pentru o prezență online care
-            contează.
+            <span className="text-foreground">marketing digital</span> — tot ce ai nevoie pentru o prezență online
+            care contează.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-10 flex flex-wrap items-center gap-4"
+            transition={{ duration: prefersReducedMotion ? 0 : 0.8, delay: prefersReducedMotion ? 0 : 0.54, ease }}
+            className="flex flex-wrap items-center gap-3 sm:gap-4 lg:col-span-5 lg:col-start-8 lg:justify-end"
           >
             <MagneticButton>
               <Button href="#contact" variant="primary" size="lg">
@@ -109,83 +121,26 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Browser-window mockup — an abstract, illustrative preview of "a
-            premium website," not a screenshot of a real client project. */}
         <motion.div
-          initial={{ opacity: 0, y: 24, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="relative mx-auto w-full max-w-md lg:max-w-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.7, delay: prefersReducedMotion ? 0 : 0.66 }}
+          className="mt-8 flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground sm:mt-10 sm:text-sm"
         >
-          <motion.div className="glow-spot -right-10 -top-10 size-56 bg-accent-2" style={{ x: orbX, y: orbY }} aria-hidden="true" />
-          <motion.div
-            className="glow-spot -bottom-10 -left-10 size-56 bg-accent-3"
-            style={{ x: orbXInverse, y: orbYInverse }}
-            aria-hidden="true"
-          />
-
-          <motion.div
-            style={{ x: mockupX, y: mockupY }}
-            className="glass relative overflow-hidden rounded-lg shadow-[0_30px_80px_-24px_rgba(0,0,0,0.6)]"
+          <span>Agenție digitală premium</span>
+          <a
+            href="#servicii"
+            className="group inline-flex items-center gap-2 py-1 transition-colors hover:text-foreground"
           >
-            <div className="flex items-center gap-1.5 border-b border-border px-4 py-3">
-              <span className="size-2.5 rounded-full bg-destructive/70" />
-              <span className="size-2.5 rounded-full bg-accent-4/60" />
-              <span className="size-2.5 rounded-full bg-accent-2/60" />
-              <span className="ml-3 flex-1 truncate rounded-full bg-white/5 px-3 py-1 text-[0.65rem] text-muted-foreground">
-                pulsarstudio.ro
-              </span>
-            </div>
-
-            <div className="space-y-4 p-5">
-              <div className="h-28 rounded-md bg-[image:var(--gradient-blue-purple)] opacity-90" />
-              <div className="space-y-2">
-                <div className="h-2.5 w-3/4 rounded-full bg-white/12" />
-                <div className="h-2.5 w-1/2 rounded-full bg-white/8" />
-              </div>
-              <div className="grid grid-cols-3 gap-3 pt-1">
-                {[Search, Smartphone, Gauge].map((Icon, i) => (
-                  <div key={i} className="glow-border rounded-md border border-border bg-white/[0.03] p-3">
-                    <Icon className="size-4 text-accent-2" aria-hidden="true" />
-                    <div className="mt-3 h-1.5 w-3/4 rounded-full bg-white/10" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {!prefersReducedMotion ? (
-            <>
-              <motion.div
-                className="glass floating absolute -left-6 top-10 hidden rounded-md px-3.5 py-2.5 text-xs font-medium text-foreground sm:block"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.1, duration: 0.6 }}
-              >
-                <span className="text-accent-2">●</span> SEO ready
-              </motion.div>
-              <motion.div
-                className="glass floating-delayed absolute -right-4 bottom-16 hidden rounded-md px-3.5 py-2.5 text-xs font-medium text-foreground sm:block"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.3, duration: 0.6 }}
-              >
-                <span className="text-accent-3">●</span> Design custom
-              </motion.div>
-            </>
-          ) : null}
-        </motion.div>
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7, delay: 1.4 }}
-        className="relative z-10 hidden justify-center pb-8 sm:flex"
-        aria-hidden="true"
-      >
-        <motion.div animate={prefersReducedMotion ? {} : { y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}>
-          <ChevronDown className="size-5 text-muted-foreground" />
+            Derulează
+            <motion.span
+              animate={{ y: prefersReducedMotion ? 0 : [0, 5, 0] }}
+              transition={{ duration: 1.9, repeat: Infinity, ease: "easeInOut" }}
+              className="inline-flex"
+            >
+              <ArrowDown className="size-4" aria-hidden="true" />
+            </motion.span>
+          </a>
         </motion.div>
       </motion.div>
     </section>

@@ -50,7 +50,7 @@ export function Navbar() {
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-[var(--ease-premium)]",
-          scrolled || open ? "glass border-b" : "border-b border-transparent bg-transparent"
+          scrolled || open ? "glass-header border-b border-border" : "border-b border-transparent bg-transparent"
         )}
       >
         <div className="container-max flex items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
