@@ -18,8 +18,12 @@
       "url": "https://mcp.vercel.com"
     },
     "playwright-local": {
-      "command": "npx",
-      "args": ["@playwright/mcp@latest", "--browser=chromium"]
+      "command": "./node_modules/.bin/playwright-mcp",
+      "args": [
+        "--browser=chromium",
+        "--isolated",
+        "--blocked-origins=http://169.254.169.254;https://169.254.169.254;http://metadata.google.internal;https://metadata.google.internal;http://metadata.azure.com;https://metadata.azure.com;http://100.100.100.200;http://[fd00:ec2::254]"
+      ]
     }
   }
 }

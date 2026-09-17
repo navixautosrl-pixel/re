@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "motion": "^13.1.1"
+  },
+  "devDependencies": {
+    "@playwright/mcp": "0.0.81"
   }
 }
