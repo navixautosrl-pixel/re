@@ -20,7 +20,7 @@ export function DemoBadge({ dark = true, topClassName = "top-20" }: { dark?: boo
     <Link
       href="/#portofoliu"
       className={cn(
-        "group fixed right-4 z-[90] flex items-center gap-2 rounded-full border py-2 pl-2.5 pr-2.5 text-xs font-semibold shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all hover:-translate-y-0.5 sm:pr-4",
+        "group fixed right-4 z-[90] flex min-h-10 min-w-10 items-center justify-center gap-2 rounded-full border py-2 pl-2.5 pr-2.5 text-xs font-semibold shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all hover:-translate-y-0.5 sm:pr-4",
         topClassName,
         dark ? "border-white/15 bg-black/60 text-white" : "border-black/10 bg-white/80 text-black"
       )}

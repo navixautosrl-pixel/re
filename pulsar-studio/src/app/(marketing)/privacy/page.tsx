@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { ogImages } from "@/lib/basePath";
 import Link from "next/link";
 import { siteConfig } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Politica de confidențialitate",
+  description: "Cum tratăm datele trimise prin formularul de contact Pulsar Studio.",
+  alternates: { canonical: "/privacy" },
+  openGraph: { title: "Politica de confidențialitate — Pulsar Studio", description: "Cum tratăm datele trimise prin formularul de contact Pulsar Studio.", url: "/privacy" , images: ogImages },
   robots: { index: false, follow: true },
 };
 
@@ -27,7 +31,7 @@ export default function PrivacyPage() {
           </p>
         </div>
 
-        <Link href="/" className="mt-8 inline-block text-sm font-medium text-foreground hover:text-accent-2">
+        <Link href="/" className="mt-8 inline-block py-2 text-sm font-medium text-foreground hover:text-accent-2">
           ← Înapoi la pagina principală
         </Link>
       </div>

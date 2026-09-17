@@ -147,6 +147,10 @@ body {
   .fitness-hero-skew {
     clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
     margin-left: -8%;
+    /* The cut eats up to 12% of the panel's width at its top edge, so the
+       stats need more than the default gutter or the first one gets sliced
+       in half. */
+    padding-left: 20%;
   }
 }
 
@@ -158,6 +162,10 @@ body {
   --s-fg: #1c1a16;
   --s-muted: #726b5c;
   --s-accent: #b5673e;
+  /* Small text in --s-accent lands at 4.04:1 on --s-bg, just under AA's 4.5.
+     The darker "ink" variant is for labels and body-size accent text; the
+     lighter one stays for large text, borders and fills. */
+  --s-accent-ink: #a55832;
   --s-accent-2: #2f5d4e;
   color-scheme: light;
 }
@@ -168,6 +176,9 @@ body {
   --a-fg: #0d0d0d;
   --a-muted: #5c5a54;
   --a-accent: #ff4d1c;
+  /* Same split as the shop: the vivid orange clears AA only at display
+     sizes (3.01:1 on --a-bg), so small labels use the darker ink. */
+  --a-accent-ink: #c8350a;
   --a-border: #dedad0;
   color-scheme: light;
 }

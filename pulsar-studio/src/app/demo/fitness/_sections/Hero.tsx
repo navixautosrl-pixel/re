@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 import Link from "next/link";
 import { useCountUp } from "@/lib/useCountUp";
 import { gym } from "../data";

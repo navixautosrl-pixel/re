@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ogImages } from "@/lib/basePath";
 import { DemoBadge } from "@/components/shared/DemoBadge";
 import { CartProvider } from "./_lib/CartContext";
 import { ShopNavbar } from "./_sections/Navbar";
@@ -11,6 +12,8 @@ export const metadata: Metadata = {
   title: { absolute: "Haven — Demo magazin online · Pulsar Studio" },
   description: "Demo concept: magazin online funcțional, construit de Pulsar Studio. Nu este o afacere reală.",
   robots: { index: false, follow: false },
+  alternates: { canonical: "/demo/shop" },
+  openGraph: { title: "Haven — Demo magazin online · Pulsar Studio", description: "Demo concept: magazin online funcțional, construit de Pulsar Studio. Nu este o afacere reală.", url: "/demo/shop" , images: ogImages },
 };
 
 export default function ShopDemoPage() {

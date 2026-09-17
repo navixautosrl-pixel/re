@@ -6,7 +6,7 @@ import { shop } from "../data";
 
 export function ShopHero() {
   return (
-    <section className="relative overflow-hidden px-5 pb-16 pt-32 sm:px-8 sm:pb-24 sm:pt-40" style={{ background: "var(--s-bg)" }}>
+    <section id="acasa" className="relative overflow-hidden px-5 pb-16 pt-32 sm:px-8 sm:pb-24 sm:pt-40" style={{ background: "var(--s-bg)" }}>
       <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <div>
           <motion.p
@@ -14,7 +14,7 @@ export function ShopHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-xs font-semibold uppercase tracking-[0.2em]"
-            style={{ color: "var(--s-accent)" }}
+            style={{ color: "var(--s-accent-ink)" }}
           >
             Colecția curentă
           </motion.p>

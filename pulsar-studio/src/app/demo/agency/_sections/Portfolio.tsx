@@ -1,17 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 import { Reveal } from "@/components/shared/Reveal";
 import { Lightbox } from "@/components/shared/Lightbox";
+import { useLazyGsap, type Gsap } from "@/lib/useLazyGsap";
 import { caseStudies, type CaseStudy } from "../data";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 /**
  * Desktop: a GSAP-pinned horizontal-scroll gallery — vertical scroll
@@ -28,41 +22,40 @@ export function AgencyPortfolio() {
   const pinRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
-        const track = trackRef.current;
-        const pin = pinRef.current;
-        if (!track || !pin) return;
+  const setup = useCallback((gsap: Gsap) => {
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
+      const track = trackRef.current;
+      const pin = pinRef.current;
+      if (!track || !pin) return;
 
-        const distance = track.scrollWidth - pin.clientWidth;
-        if (distance <= 0) return;
+      const distance = track.scrollWidth - pin.clientWidth;
+      if (distance <= 0) return;
 
-        gsap.to(track, {
-          x: -distance,
-          ease: "none",
-          scrollTrigger: {
-            trigger: pin,
-            start: "top top",
-            end: () => `+=${distance}`,
-            scrub: 0.6,
-            pin: true,
-            invalidateOnRefresh: true,
-          },
-        });
+      gsap.to(track, {
+        x: -distance,
+        ease: "none",
+        scrollTrigger: {
+          trigger: pin,
+          start: "top top",
+          end: () => `+=${distance}`,
+          scrub: 0.6,
+          pin: true,
+          invalidateOnRefresh: true,
+        },
       });
+    });
 
-      return () => mm.revert();
-    },
-    { scope: pinRef }
-  );
+    return () => mm.revert();
+  }, []);
+
+  useLazyGsap(setup);
 
   return (
     <section id="proiecte" style={{ background: "var(--a-bg)" }}>
       <div className="mx-auto max-w-6xl px-5 pt-24 sm:px-8">
         <Reveal className="max-w-xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "var(--a-accent)" }}>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "var(--a-accent-ink)" }}>
             Proiecte
           </p>
           <h2 className="font-agency mt-4 text-4xl uppercase text-[var(--a-fg)] sm:text-5xl">Case studies demo</h2>
@@ -111,7 +104,7 @@ export function AgencyPortfolio() {
               >
                 <div className="flex items-start justify-between gap-6">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--a-accent)" }}>
+                    <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--a-accent-ink)" }}>
                       {cs.category}
                     </p>
                     <h3 className="font-agency mt-3 max-w-md text-xl uppercase leading-snug text-[var(--a-fg)] transition-colors group-hover:opacity-70 sm:text-2xl">
@@ -139,7 +132,7 @@ export function AgencyPortfolio() {
           <div>
             <div className="aspect-[21/9]" style={{ background: active.color }} />
             <div className="p-6 sm:p-9" style={{ background: "white" }}>
-              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--a-accent)" }}>
+              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--a-accent-ink)" }}>
                 {active.category} · Demo
               </p>
               <h3 className="font-agency mt-3 text-2xl uppercase text-black sm:text-3xl">{active.title}</h3>

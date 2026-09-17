@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { ogImages } from "@/lib/basePath";
 import Link from "next/link";
 import { siteConfig } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Termeni și condiții",
+  description: "Termenii în care Pulsar Studio livrează servicii de web design și marketing digital.",
+  alternates: { canonical: "/terms" },
+  openGraph: { title: "Termeni și condiții — Pulsar Studio", description: "Termenii în care Pulsar Studio livrează servicii de web design și marketing digital.", url: "/terms" , images: ogImages },
   robots: { index: false, follow: true },
 };
 
@@ -26,7 +30,7 @@ export default function TermsPage() {
           </p>
         </div>
 
-        <Link href="/" className="mt-8 inline-block text-sm font-medium text-foreground hover:text-accent-2">
+        <Link href="/" className="mt-8 inline-block py-2 text-sm font-medium text-foreground hover:text-accent-2">
           ← Înapoi la pagina principală
         </Link>
       </div>

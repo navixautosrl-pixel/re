@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
-import "@fontsource/unbounded/600.css";
-import "@fontsource/unbounded/700.css";
-import "@fontsource/unbounded/800.css";
+import { ogImages } from "@/lib/basePath";
+import "@fontsource/unbounded/latin-600.css";
+import "@fontsource/unbounded/latin-ext-600.css";
+import "@fontsource/unbounded/latin-700.css";
+import "@fontsource/unbounded/latin-ext-700.css";
+import "@fontsource/unbounded/latin-800.css";
+import "@fontsource/unbounded/latin-ext-800.css";
 import { DemoBadge } from "@/components/shared/DemoBadge";
 import { AgencyNavbar } from "./_sections/Navbar";
 import { AgencyHero } from "./_sections/Hero";
@@ -14,6 +18,8 @@ export const metadata: Metadata = {
   title: { absolute: "FIELD — Demo agenție creativă · Pulsar Studio" },
   description: "Demo concept: website de agenție creativă, construit de Pulsar Studio. Nu este o afacere reală.",
   robots: { index: false, follow: false },
+  alternates: { canonical: "/demo/agency" },
+  openGraph: { title: "FIELD — Demo agenție creativă · Pulsar Studio", description: "Demo concept: website de agenție creativă, construit de Pulsar Studio. Nu este o afacere reală.", url: "/demo/agency" , images: ogImages },
 };
 
 export default function AgencyDemoPage() {

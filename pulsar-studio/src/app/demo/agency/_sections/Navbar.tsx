@@ -35,7 +35,7 @@ export function AgencyNavbar() {
         }}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
-          <Link href="#" className="font-agency text-xl text-[var(--a-fg)]" onClick={() => setOpen(false)}>
+          <Link href="#acasa" className="font-agency -my-2 py-2 text-xl text-[var(--a-fg)]" onClick={() => setOpen(false)}>
             {agency.name}
           </Link>
 

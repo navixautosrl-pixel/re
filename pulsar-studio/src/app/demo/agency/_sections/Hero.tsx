@@ -10,7 +10,7 @@ const wordTexture = ["Brand", "Digital", "Strategie", "Design", "Conținut", "Ca
 
 export function AgencyHero() {
   return (
-    <section className="relative overflow-hidden px-5 pb-20 pt-36 sm:px-8 sm:pb-28 sm:pt-44" style={{ background: "var(--a-bg)" }}>
+    <section id="acasa" className="relative overflow-hidden px-5 pb-20 pt-36 sm:px-8 sm:pb-28 sm:pt-44" style={{ background: "var(--a-bg)" }}>
       {/* Ghost word-texture behind the headline — agency's signature
           background motif, distinct from the other demos' orb/grid/ticker
           treatments. */}
@@ -30,7 +30,7 @@ export function AgencyHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-xs font-semibold uppercase tracking-[0.25em]"
-          style={{ color: "var(--a-accent)" }}
+          style={{ color: "var(--a-accent-ink)" }}
         >
           Studio de brand & digital
         </motion.p>

@@ -1,47 +1,40 @@
 "use client";
 
-import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { useCallback, useRef } from "react";
 import { Reveal } from "@/components/shared/Reveal";
+import { useLazyGsap, type Gsap } from "@/lib/useLazyGsap";
 import { processSteps } from "@/lib/constants";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export function Process() {
   const containerRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
+  const setup = useCallback((gsap: Gsap) => {
+    const mm = gsap.matchMedia();
 
-      // Scroll-scrubbed timeline fill — not pinned, so it stays light on
-      // mobile and never fights native scroll. Just one animated GSAP
-      // element on the page, per the "don't overdo pinning/scrubbing"
-      // guidance.
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        if (!lineRef.current || !containerRef.current) return;
-        gsap.set(lineRef.current, { scaleY: 0, transformOrigin: "top center" });
-        gsap.to(lineRef.current, {
-          scaleY: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 70%",
-            end: "bottom 60%",
-            scrub: 0.6,
-          },
-        });
+    // Scroll-scrubbed timeline fill — not pinned, so it stays light on
+    // mobile and never fights native scroll. Just one animated GSAP
+    // element on the page, per the "don't overdo pinning/scrubbing"
+    // guidance.
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      if (!lineRef.current || !containerRef.current) return;
+      gsap.set(lineRef.current, { scaleY: 0, transformOrigin: "top center" });
+      gsap.to(lineRef.current, {
+        scaleY: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 70%",
+          end: "bottom 60%",
+          scrub: 0.6,
+        },
       });
+    });
 
-      return () => mm.revert();
-    },
-    { scope: containerRef }
-  );
+    return () => mm.revert();
+  }, []);
+
+  useLazyGsap(setup);
 
   return (
     <section id="proces" className="section-y relative">

@@ -19,7 +19,13 @@ export function FitnessTrainers() {
                 <div
                   className="flex aspect-square items-center justify-center text-5xl font-black transition-transform duration-500 group-hover:scale-105"
                   style={{
-                    background: i % 2 === 0 ? "linear-gradient(135deg, var(--f-accent), transparent)" : "linear-gradient(135deg, var(--f-accent-2), transparent)",
+                    // Both stops stay opaque and bright: fading to transparent
+                    // let the dark surface show through behind the dark
+                    // initials, which dropped them to a 1.16:1 contrast ratio.
+                    background:
+                      i % 2 === 0
+                        ? "linear-gradient(135deg, var(--f-accent), #b4db28)"
+                        : "linear-gradient(135deg, var(--f-accent-2), #e04510)",
                     color: "#0a0a0a",
                   }}
                 >

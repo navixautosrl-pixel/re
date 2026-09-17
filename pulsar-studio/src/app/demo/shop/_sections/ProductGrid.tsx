@@ -67,6 +67,7 @@ export function ShopProductGrid() {
   return (
     <section id="produse" className="py-20" style={{ background: "var(--s-bg)" }}>
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
+        <h2 className="sr-only">Produse</h2>
         <div className="flex items-center gap-3 lg:hidden">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2" style={{ color: "var(--s-muted)" }} aria-hidden="true" />
@@ -208,7 +209,7 @@ export function ShopProductGrid() {
           <div className="grid sm:grid-cols-2">
             <div className="aspect-square sm:aspect-auto" style={{ background: quickView.color }} />
             <div className="p-6 sm:p-8" style={{ background: "white" }}>
-              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--s-accent)" }}>
+              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--s-accent-ink)" }}>
                 {quickView.category}
               </p>
               <h3 className="mt-2 text-2xl font-semibold text-black">{quickView.name}</h3>

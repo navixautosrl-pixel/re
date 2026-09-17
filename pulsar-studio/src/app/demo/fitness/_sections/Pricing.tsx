@@ -33,7 +33,7 @@ export function FitnessPricing() {
             aria-checked={annual}
             aria-label="Comută între facturare lunară și anuală"
             onClick={() => setAnnual((v) => !v)}
-            className="relative h-8 w-14 rounded-full border transition-colors"
+            className="relative h-8 w-14 rounded-full border transition-colors after:absolute after:-inset-2.5 after:content-['']"
             style={{ borderColor: "var(--f-border)", background: annual ? "var(--f-accent)" : "var(--f-surface-2)" }}
           >
             <motion.span

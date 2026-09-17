@@ -41,7 +41,7 @@ export function FitnessNavbar() {
         }}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
-          <Link href="#acasa" className="font-fitness text-2xl tracking-wide text-[var(--f-fg)]" onClick={() => setOpen(false)}>
+          <Link href="#acasa" className="font-fitness -my-1 py-1 text-2xl tracking-wide text-[var(--f-fg)]" onClick={() => setOpen(false)}>
             {gym.name}
           </Link>
 

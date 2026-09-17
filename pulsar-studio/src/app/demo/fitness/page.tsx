@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import "@fontsource/anton";
+import { ogImages } from "@/lib/basePath";
+import "@fontsource/anton/latin.css";
+import "@fontsource/anton/latin-ext.css";
 import { DemoBadge } from "@/components/shared/DemoBadge";
 import { FitnessNavbar } from "./_sections/Navbar";
 import { FitnessHero } from "./_sections/Hero";
@@ -13,6 +15,8 @@ export const metadata: Metadata = {
   title: { absolute: "FORGE — Demo sală de fitness · Pulsar Studio" },
   description: "Demo concept: website de sală de fitness, construit de Pulsar Studio. Nu este o afacere reală.",
   robots: { index: false, follow: false },
+  alternates: { canonical: "/demo/fitness" },
+  openGraph: { title: "FORGE — Demo sală de fitness · Pulsar Studio", description: "Demo concept: website de sală de fitness, construit de Pulsar Studio. Nu este o afacere reală.", url: "/demo/fitness" , images: ogImages },
 };
 
 export default function FitnessDemoPage() {

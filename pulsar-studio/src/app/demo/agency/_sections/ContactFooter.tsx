@@ -69,11 +69,11 @@ export function AgencyContactFooter() {
       <section id="contact" className="px-5 py-24 sm:px-8" style={{ background: "var(--a-surface)" }}>
         <div className="mx-auto grid max-w-4xl gap-10 lg:grid-cols-2">
           <Reveal>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "var(--a-accent)" }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "var(--a-accent-ink)" }}>
               Contact
             </p>
             <h2 className="font-agency mt-4 text-4xl uppercase text-[var(--a-fg)] sm:text-5xl">Hai să vorbim.</h2>
-            <a href={`mailto:${agency.email}`} className="mt-5 inline-block text-sm font-medium text-[var(--a-fg)] hover:underline">
+            <a href={`mailto:${agency.email}`} className="mt-4 inline-block py-2 text-sm font-medium text-[var(--a-fg)] hover:underline">
               {agency.email}
             </a>
           </Reveal>
@@ -121,7 +121,7 @@ export function AgencyContactFooter() {
                     <AlertCircle className="mt-0.5 size-4 shrink-0 text-red-500" aria-hidden="true" />
                     <p className="text-sm text-black/70">
                       Formularul demo nu este conectat la un sistem real. Scrie-ne direct la{" "}
-                      <span style={{ color: "var(--a-accent)" }}>{agency.email}</span>.
+                      <span style={{ color: "var(--a-accent-ink)" }}>{agency.email}</span>.
                     </p>
                   </div>
                 ) : null}

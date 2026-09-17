@@ -5,7 +5,7 @@ export function AgencyAbout() {
     <section id="despre" className="px-5 py-24 sm:px-8" style={{ background: "var(--a-bg)" }}>
       <div className="mx-auto max-w-3xl">
         <Reveal>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "var(--a-accent)" }}>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "var(--a-accent-ink)" }}>
             Despre FIELD
           </p>
           <p className="font-agency mt-5 text-2xl uppercase leading-snug text-[var(--a-fg)] sm:text-3xl">

@@ -64,7 +64,7 @@ export function Contact() {
               <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
                 Completează formularul cu câteva detalii despre proiect — revenim cu următorul pas.
               </p>
-              <a href={`mailto:${siteConfig.email}`} className="mt-6 inline-block text-sm font-medium text-foreground transition-colors hover:text-accent-2">
+              <a href={`mailto:${siteConfig.email}`} className="mt-5 inline-block py-2 text-sm font-medium text-foreground transition-colors hover:text-accent-2">
                 {siteConfig.email}
               </a>
             </Reveal>

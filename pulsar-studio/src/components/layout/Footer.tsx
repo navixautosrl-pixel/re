@@ -1,12 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import { footerLinks, siteConfig } from "@/lib/constants";
+import { useSectionHref } from "@/lib/useSectionHref";
 
 export function Footer() {
+  const sectionHref = useSectionHref();
+
   return (
     <footer className="relative border-t border-border bg-surface">
       <div className="container-max grid gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] lg:px-10 lg:py-20">
         <div>
-          <Link href="#acasa" className="flex items-center gap-2.5">
+          <Link href={sectionHref("#acasa")} className="-my-1 inline-flex items-center gap-2.5 py-1">
             <span className="flex size-8 items-center justify-center rounded-md bg-[image:var(--gradient-blue-purple)] font-display text-sm font-bold text-white">
               P
             </span>
@@ -17,18 +22,18 @@ export function Footer() {
             href={siteConfig.robixHostUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:border-accent-2 hover:text-accent-2"
+            className="mt-6 inline-flex items-center gap-2 rounded-full border border-border px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:border-accent-2 hover:text-accent-2"
           >
             Partener RobixHost.ro
           </a>
         </div>
 
         <div>
-          <h3 className="font-display text-sm font-semibold text-foreground">Servicii</h3>
-          <ul className="mt-4 space-y-3">
+          <h2 className="font-display text-sm font-semibold text-foreground">Servicii</h2>
+          <ul className="mt-2 space-y-1">
             {footerLinks.services.map((link) => (
               <li key={link.label}>
-                <Link href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                <Link href={sectionHref(link.href)} className="block py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
                   {link.label}
                 </Link>
               </li>
@@ -37,11 +42,11 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="font-display text-sm font-semibold text-foreground">Navigare</h3>
-          <ul className="mt-4 space-y-3">
+          <h2 className="font-display text-sm font-semibold text-foreground">Navigare</h2>
+          <ul className="mt-2 space-y-1">
             {footerLinks.nav.map((link) => (
               <li key={link.label}>
-                <Link href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                <Link href={sectionHref(link.href)} className="block py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
                   {link.label}
                 </Link>
               </li>
@@ -50,15 +55,15 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="font-display text-sm font-semibold text-foreground">Contact</h3>
-          <ul className="mt-4 space-y-3 text-sm">
+          <h2 className="font-display text-sm font-semibold text-foreground">Contact</h2>
+          <ul className="mt-2 space-y-1 text-sm">
             <li>
-              <a href={`mailto:${siteConfig.email}`} className="text-muted-foreground transition-colors hover:text-foreground">
+              <a href={`mailto:${siteConfig.email}`} className="block py-1.5 text-muted-foreground transition-colors hover:text-foreground">
                 {siteConfig.email}
               </a>
             </li>
             <li>
-              <Link href="#contact" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link href={sectionHref("#contact")} className="block py-1.5 text-muted-foreground transition-colors hover:text-foreground">
                 Trimite o solicitare
               </Link>
             </li>
@@ -70,9 +75,9 @@ export function Footer() {
         <span>
           © {new Date().getFullYear()} {siteConfig.legalName}. Toate drepturile rezervate.
         </span>
-        <div className="flex gap-6">
+        <div className="-my-1.5 flex gap-6">
           {footerLinks.legal.map((link) => (
-            <Link key={link.label} href={link.href} className="transition-colors hover:text-foreground">
+            <Link key={link.label} href={sectionHref(link.href)} className="block py-1.5 transition-colors hover:text-foreground">
               {link.label}
             </Link>
           ))}

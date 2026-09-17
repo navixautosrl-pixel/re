@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 import { ChevronDown, Gauge, Search, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { TextReveal } from "@/components/shared/TextReveal";

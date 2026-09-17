@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 import { Check, Minus } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { comparisonRows, pricingPlans } from "@/lib/constants";

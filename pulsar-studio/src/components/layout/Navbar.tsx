@@ -5,9 +5,11 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { navLinks, siteConfig } from "@/lib/constants";
+import { useSectionHref } from "@/lib/useSectionHref";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
+  const sectionHref = useSectionHref();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("");
@@ -52,7 +54,7 @@ export function Navbar() {
         )}
       >
         <div className="container-max flex items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
-          <Link href="#acasa" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
+          <Link href={sectionHref("#acasa")} className="-my-1 flex items-center gap-2.5 py-1" onClick={() => setOpen(false)}>
             <span className="flex size-8 items-center justify-center rounded-md bg-[image:var(--gradient-blue-purple)] font-display text-sm font-bold text-white">
               P
             </span>
@@ -65,7 +67,7 @@ export function Navbar() {
               return (
                 <Link
                   key={link.href}
-                  href={link.href}
+                  href={sectionHref(link.href)}
                   aria-current={isActive ? "true" : undefined}
                   className={cn(
                     "group relative py-1 text-sm font-medium transition-colors hover:text-foreground",
@@ -86,7 +88,7 @@ export function Navbar() {
 
           <div className="hidden lg:flex">
             <Link
-              href="#contact"
+              href={sectionHref("#contact")}
               className="inline-flex items-center rounded-full bg-[image:var(--gradient-blue-purple)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_24px_-6px_color-mix(in_srgb,var(--color-accent-3)_60%,transparent)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_32px_-6px_color-mix(in_srgb,var(--color-accent-3)_75%,transparent)]"
             >
               Cere o ofertă
@@ -138,7 +140,7 @@ export function Navbar() {
                   transition={{ delay: 0.05 * i, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <Link
-                    href={link.href}
+                    href={sectionHref(link.href)}
                     onClick={() => setOpen(false)}
                     className="font-display block border-b border-border py-4 text-4xl font-medium text-foreground transition-colors hover:text-accent-2 active:text-accent-2"
                   >
@@ -150,7 +152,7 @@ export function Navbar() {
 
             <div className="relative mt-8">
               <Link
-                href="#contact"
+                href={sectionHref("#contact")}
                 onClick={() => setOpen(false)}
                 className="flex items-center justify-center rounded-full bg-[image:var(--gradient-blue-purple)] px-6 py-4 text-sm font-semibold text-white"
               >
