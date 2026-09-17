@@ -137,7 +137,7 @@ Either way:
 
 ## Premium site build stack (site workflow)
 
-Default recipe for a premium, animated, production-ready marketing site — proven end-to-end on `riviera-padel/` (Next.js App Router, static export, deployed under a hosting subpath). Reach for this before reaching for a plain HTML file whenever the project can carry a build step.
+Default recipe for a premium, animated, production-ready marketing site — proven end-to-end on `riviera-padel/` (Next.js App Router, static export, deployed under a hosting subpath) and `pulsar-studio/` (same stack plus GSAP `ScrollTrigger` for one scroll-scrubbed timeline and Lenis for smooth scroll — a RobixHost-partner digital-agency site with a full pricing/comparison table and a multi-field contact form). Reach for this before reaching for a plain HTML file whenever the project can carry a build step.
 
 **Core**: Next.js (App Router) + React + TypeScript + Tailwind CSS v4 (`@theme inline` tokens in `globals.css`, not a JS config file) + `framer-motion` (imported as `motion`) for animation + Radix UI primitives (`@radix-ui/react-accordion`, `-dialog`, etc.) for accessible interactive components + `lucide-react` for icons + `@fontsource/*` for self-hosted variable fonts (no external Google Fonts request — faster, no CSP/CDN dependency) + `next/image` for real photography.
 

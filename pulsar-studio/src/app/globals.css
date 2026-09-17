@@ -1,0 +1,259 @@
+@import "tailwindcss";
+
+:root {
+  --background: #050816;
+  --surface: #0a0f28;
+  --surface-elevated: #10163a;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --foreground: #f4f6ff;
+  --muted-foreground: #99a3c4;
+
+  /* Electric blue is the primary accent (CTAs, focus rings, links). Cyan,
+     violet and magenta give the "dark neon" palette real range for glows,
+     gradients and per-section accents — never flooding the whole page at
+     once, one dominant hue per section. */
+  --accent: #3b6eff;
+  --accent-foreground: #050816;
+  --accent-dim: #2851d6;
+
+  --accent-2: #22d3ee;
+  --accent-2-foreground: #050816;
+  --accent-3: #8b5cf6;
+  --accent-3-foreground: #ffffff;
+  --accent-4: #e048ff;
+  --accent-4-foreground: #050816;
+
+  --destructive: #fb7185;
+
+  --gradient-blue-cyan: linear-gradient(135deg, var(--accent), var(--accent-2));
+  --gradient-blue-purple: linear-gradient(135deg, var(--accent), var(--accent-3));
+  --gradient-purple-pink: linear-gradient(135deg, var(--accent-3), var(--accent-4));
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --space-section-y: 8.5rem;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --container-max: 1360px;
+
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-dim: var(--accent-dim);
+  --color-accent-2: var(--accent-2);
+  --color-accent-2-foreground: var(--accent-2-foreground);
+  --color-accent-3: var(--accent-3);
+  --color-accent-3-foreground: var(--accent-3-foreground);
+  --color-accent-4: var(--accent-4);
+  --color-accent-4-foreground: var(--accent-4-foreground);
+  --color-destructive: var(--destructive);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+}
+
+* {
+  border-color: var(--color-border);
+}
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  /* Fixed header is ~76px tall — without this, anchor navigation lands
+     section content under the header. */
+  scroll-padding-top: 96px;
+}
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  color: #ffffff;
+}
+:focus-visible {
+  outline: 2px solid var(--color-accent-2);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.container-max {
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+.section-y {
+  padding-top: var(--space-section-y);
+  padding-bottom: var(--space-section-y);
+}
+@media (max-width: 767px) {
+  .section-y {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
+
+/* Animated gradient text — used sparingly, on a handful of key headline
+   words, not every heading on the page. */
+.gradient-text {
+  background: var(--gradient-blue-purple);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 6s ease-in-out infinite;
+}
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Gradient mesh — layered, slow-drifting radial glows. One per section at
+   most (hero, final CTA). Transform-only animation, cheap even blurred. */
+.gradient-mesh {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(38% 42% at 14% 8%, color-mix(in srgb, var(--color-accent) 32%, transparent), transparent 70%),
+    radial-gradient(34% 38% at 88% 18%, color-mix(in srgb, var(--color-accent-2) 24%, transparent), transparent 70%),
+    radial-gradient(44% 46% at 50% 92%, color-mix(in srgb, var(--color-accent-3) 26%, transparent), transparent 72%);
+  animation: mesh-drift 16s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes mesh-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-1.5%, 2%, 0) scale(1.07);
+  }
+}
+
+/* Futuristic grid — faint perspective-free line grid, brand signature in
+   place of a generic dot pattern. Always subtle, never the focal element. */
+.grid-field {
+  background-image: linear-gradient(color-mix(in srgb, var(--color-border-strong) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-border-strong) 60%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+
+/* Fine grain — keeps flat dark fields from reading as a plain digital wash. */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Glassmorphism card — used where it actually reads as an elevated surface
+   (nav on scroll, feature cards, form), not slapped on every box. */
+.glass {
+  background: color-mix(in srgb, var(--color-surface-elevated) 62%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-border);
+}
+
+/* Glow border for hover/focus — swap the color via --glow. */
+.glow-border {
+  --glow: var(--color-accent);
+  transition: box-shadow 0.35s var(--ease-premium), border-color 0.35s var(--ease-premium), transform 0.35s var(--ease-premium);
+}
+.glow-border:hover,
+.glow-border:focus-visible {
+  border-color: color-mix(in srgb, var(--glow) 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--glow) 35%, transparent), 0 16px 40px -12px color-mix(in srgb, var(--glow) 55%, transparent);
+}
+
+/* Soft ambient glow behind an element — orbs, icon tiles. */
+.glow-spot {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(60px);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.floating {
+  animation: floating 7s ease-in-out infinite;
+}
+.floating-delayed {
+  animation: floating 8.5s ease-in-out infinite;
+  animation-delay: -3s;
+}
+@keyframes floating {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+.accordion-content[data-state="open"] {
+  animation: accordion-down 0.3s var(--ease-premium);
+}
+.accordion-content[data-state="closed"] {
+  animation: accordion-up 0.3s var(--ease-premium);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
