@@ -12,11 +12,13 @@ export function Reveal({
   children,
   delay = 0,
   className,
+  style,
   as = "div",
 }: {
   children: ReactNode;
   delay?: number;
   className?: string;
+  style?: React.CSSProperties;
   as?: "div" | "li";
 }) {
   // useReducedMotion() resolves to null during SSR and only settles after
@@ -28,6 +30,7 @@ export function Reveal({
   return (
     <Component
       className={className}
+      style={style}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-80px" }}

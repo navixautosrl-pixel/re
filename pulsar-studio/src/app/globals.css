@@ -98,6 +98,68 @@ body {
   font-family: var(--font-display);
 }
 
+/* Demo-only display faces — each /demo/* route imports its own font CSS
+   and uses exactly one of these, giving it a typographic identity distinct
+   from Pulsar Studio's own Space Grotesk and from each other. */
+.font-restaurant {
+  font-family: "Playfair Display", ui-serif, Georgia, serif;
+}
+.font-fitness {
+  font-family: "Anton", ui-sans-serif, system-ui, sans-serif;
+}
+.font-agency {
+  font-family: "Unbounded", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Demo-only palettes, scoped to their own wrapper class so they never leak
+   into Pulsar Studio's own tokens above. Each demo references these via
+   Tailwind arbitrary-value utilities, e.g. bg-[var(--r-bg)]. */
+.demo-restaurant {
+  --r-bg: #120e0b;
+  --r-surface: #1c160f;
+  --r-surface-2: #241d14;
+  --r-border: rgba(201, 161, 90, 0.18);
+  --r-fg: #f3ece0;
+  --r-muted: #a89a86;
+  --r-accent: #c9a15a;
+  --r-accent-2: #8a5a3b;
+  color-scheme: dark;
+}
+
+.demo-fitness {
+  --f-bg: #0a0a0a;
+  --f-surface: #141414;
+  --f-surface-2: #1c1c1c;
+  --f-border: rgba(214, 255, 61, 0.16);
+  --f-fg: #f5f5f0;
+  --f-muted: #8f8f88;
+  --f-accent: #d6ff3d;
+  --f-accent-2: #ff5a1f;
+  color-scheme: dark;
+}
+
+.demo-shop {
+  --s-bg: #fafaf8;
+  --s-surface: #ffffff;
+  --s-surface-2: #f1efe9;
+  --s-border: #e6e2d8;
+  --s-fg: #1c1a16;
+  --s-muted: #726b5c;
+  --s-accent: #b5673e;
+  --s-accent-2: #2f5d4e;
+  color-scheme: light;
+}
+
+.demo-agency {
+  --a-bg: #f5f4f0;
+  --a-surface: #ffffff;
+  --a-fg: #0d0d0d;
+  --a-muted: #5c5a54;
+  --a-accent: #ff4d1c;
+  --a-border: #dedad0;
+  color-scheme: light;
+}
+
 .container-max {
   max-width: var(--container-max);
   margin-inline: auto;

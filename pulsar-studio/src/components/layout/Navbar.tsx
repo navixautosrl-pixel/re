@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState<string>("");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -24,6 +25,23 @@ export function Navbar() {
       document.documentElement.style.overflow = "";
     };
   }, [open]);
+
+  useEffect(() => {
+    const sections = navLinks
+      .map((link) => document.querySelector(link.href))
+      .filter((el): el is Element => el !== null);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible[0]) setActive(`#${visible[0].target.id}`);
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
@@ -42,16 +60,28 @@ export function Navbar() {
           </Link>
 
           <nav className="hidden items-center gap-8 lg:flex" aria-label="Navigare principală">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="group relative py-1 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
-              >
-                {link.label}
-                <span className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-[image:var(--gradient-blue-cyan)] transition-transform duration-300 ease-[var(--ease-premium)] group-hover:scale-x-100" />
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = active === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive ? "true" : undefined}
+                  className={cn(
+                    "group relative py-1 text-sm font-medium transition-colors hover:text-foreground",
+                    isActive ? "text-foreground" : "text-foreground/70"
+                  )}
+                >
+                  {link.label}
+                  <span
+                    className={cn(
+                      "absolute inset-x-0 -bottom-0.5 h-px origin-left bg-[image:var(--gradient-blue-cyan)] transition-transform duration-300 ease-[var(--ease-premium)] group-hover:scale-x-100",
+                      isActive ? "scale-x-100" : "scale-x-0"
+                    )}
+                  />
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="hidden lg:flex">
@@ -66,11 +96,22 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="glass flex size-11 items-center justify-center rounded-full text-foreground lg:hidden"
+            className="glass relative flex size-11 items-center justify-center overflow-hidden rounded-full text-foreground lg:hidden"
             aria-label={open ? "Închide meniul" : "Deschide meniul"}
             aria-expanded={open}
           >
-            {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={open ? "close" : "open"}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center justify-center"
+              >
+                {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
+              </motion.span>
+            </AnimatePresence>
           </button>
         </div>
       </header>

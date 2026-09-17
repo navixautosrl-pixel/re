@@ -25,7 +25,7 @@ export function Services() {
                 <TiltCard className="group flex h-full flex-col p-7" style={{ ["--glow" as string]: `var(--color-${glow})` }}>
                   <div className="flex items-center justify-between">
                     <div
-                      className="flex size-12 items-center justify-center rounded-md"
+                      className="flex size-12 items-center justify-center rounded-md transition-transform duration-300 ease-[var(--ease-premium)] group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:rotate-6"
                       style={{ background: `color-mix(in srgb, var(--color-${glow}) 18%, transparent)` }}
                     >
                       <Icon className="size-5" style={{ color: `var(--color-${glow})` }} aria-hidden="true" />

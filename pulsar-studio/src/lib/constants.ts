@@ -251,10 +251,34 @@ export const processSteps = [
 // PORTFOLIO — explicitly demo/concept work, not real client results.
 // ---------------------------------------------------------------------------
 export const portfolioItems = [
-  { id: "concept-01", category: "Website corporate", title: "Concept — firmă de consultanță", description: "Website instituțional, structură clară pe servicii și un formular de contact optimizat." },
-  { id: "concept-02", category: "Magazin online", title: "Concept — brand de produse", description: "Catalog și checkout optimizate pentru conversii, gândite mobile-first." },
-  { id: "concept-03", category: "Landing page", title: "Concept — lansare produs", description: "O singură pagină, un singur obiectiv: conversia vizitatorului în lead." },
-  { id: "concept-04", category: "Website + SEO", title: "Concept — cabinet profesional", description: "Prezență locală optimizată SEO, gândită pentru căutări din zona firmei." },
+  {
+    id: "restaurant",
+    href: "/demo/restaurant",
+    category: "Website restaurant",
+    title: "Concept — restaurant premium",
+    description: "Meniu, galerie și rezervare online, gândite pentru o experiență de fine dining.",
+  },
+  {
+    id: "fitness",
+    href: "/demo/fitness",
+    category: "Website fitness & sală",
+    title: "Concept — sală de fitness",
+    description: "Abonamente, antrenori și program clar — construit să convertească vizitatori în membri.",
+  },
+  {
+    id: "shop",
+    href: "/demo/shop",
+    category: "Magazin online",
+    title: "Concept — brand de produse",
+    description: "Catalog, filtre, coș funcțional și checkout demo, gândite mobile-first.",
+  },
+  {
+    id: "agency",
+    href: "/demo/agency",
+    category: "Portofoliu agenție creativă",
+    title: "Concept — agenție creativă",
+    description: "Studii de caz, proiecte și tranziții cinematice pentru un portofoliu editorial.",
+  },
 ] as const;
 
 // ---------------------------------------------------------------------------

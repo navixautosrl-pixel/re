@@ -6,10 +6,7 @@ import "@fontsource/dm-sans/400.css";
 import "@fontsource/dm-sans/500.css";
 import "@fontsource/dm-sans/700.css";
 import "./globals.css";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/shared/SmoothScroll";
-import { CursorGlow } from "@/components/shared/CursorGlow";
 import { siteConfig } from "@/lib/constants";
 import { withBasePath } from "@/lib/basePath";
 
@@ -70,12 +67,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Sari la conținut
         </a>
         <SmoothScroll />
-        <CursorGlow />
-        <Navbar />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

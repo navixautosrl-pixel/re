@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
 import { ChevronDown, Gauge, Search, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { TextReveal } from "@/components/shared/TextReveal";
@@ -8,9 +9,41 @@ import { MagneticButton } from "@/components/shared/MagneticButton";
 
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Desktop-only mouse parallax on the mockup + its glow orbs. Motion
+  // values update outside React's render cycle, so this never triggers a
+  // re-render on every mousemove.
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const mockupX = useSpring(px, { stiffness: 60, damping: 18, mass: 0.6 });
+  const mockupY = useSpring(py, { stiffness: 60, damping: 18, mass: 0.6 });
+  const orbX = useSpring(px, { stiffness: 40, damping: 20, mass: 0.8 });
+  const orbY = useSpring(py, { stiffness: 40, damping: 20, mass: 0.8 });
+  const orbXInverse = useTransform(orbX, (v) => -v);
+  const orbYInverse = useTransform(orbY, (v) => -v);
+
+  function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
+    if (prefersReducedMotion || !sectionRef.current) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    px.set(((e.clientX - rect.left) / rect.width - 0.5) * 24);
+    py.set(((e.clientY - rect.top) / rect.height - 0.5) * 24);
+  }
+
+  function resetParallax() {
+    px.set(0);
+    py.set(0);
+  }
 
   return (
-    <section id="acasa" className="relative flex min-h-[100svh] flex-col overflow-hidden bg-background pt-28 sm:pt-32">
+    <section
+      id="acasa"
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={resetParallax}
+      className="relative flex min-h-[100svh] flex-col overflow-hidden bg-background pt-28 sm:pt-32"
+    >
       <div className="gradient-mesh" aria-hidden="true" />
       <div className="grid-field absolute inset-0 opacity-60" aria-hidden="true" />
       <div className="noise-overlay" aria-hidden="true" />
@@ -83,10 +116,17 @@ export function Hero() {
           transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="relative mx-auto w-full max-w-md lg:max-w-none"
         >
-          <div className="glow-spot -right-10 -top-10 size-56 bg-accent-2" aria-hidden="true" />
-          <div className="glow-spot -bottom-10 -left-10 size-56 bg-accent-3" aria-hidden="true" />
+          <motion.div className="glow-spot -right-10 -top-10 size-56 bg-accent-2" style={{ x: orbX, y: orbY }} aria-hidden="true" />
+          <motion.div
+            className="glow-spot -bottom-10 -left-10 size-56 bg-accent-3"
+            style={{ x: orbXInverse, y: orbYInverse }}
+            aria-hidden="true"
+          />
 
-          <div className="glass relative overflow-hidden rounded-lg shadow-[0_30px_80px_-24px_rgba(0,0,0,0.6)]">
+          <motion.div
+            style={{ x: mockupX, y: mockupY }}
+            className="glass relative overflow-hidden rounded-lg shadow-[0_30px_80px_-24px_rgba(0,0,0,0.6)]"
+          >
             <div className="flex items-center gap-1.5 border-b border-border px-4 py-3">
               <span className="size-2.5 rounded-full bg-destructive/70" />
               <span className="size-2.5 rounded-full bg-accent-4/60" />
@@ -111,7 +151,7 @@ export function Hero() {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {!prefersReducedMotion ? (
             <>
