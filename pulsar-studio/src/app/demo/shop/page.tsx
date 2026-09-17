@@ -25,7 +25,7 @@ export default function ShopDemoPage() {
         </main>
         <ShopCartDrawer />
       </CartProvider>
-      <DemoBadge dark={false} />
+      <DemoBadge dark={false} topClassName="top-28" />
     </div>
   );
 }

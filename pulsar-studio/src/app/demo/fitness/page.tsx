@@ -27,7 +27,7 @@ export default function FitnessDemoPage() {
         <FitnessSchedule />
         <FitnessContactFooter />
       </main>
-      <DemoBadge dark />
+      <DemoBadge dark topClassName="top-28" />
     </div>
   );
 }

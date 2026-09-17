@@ -5,7 +5,10 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { navLinks, gym } from "../data";
+import { Marquee } from "@/components/shared/Marquee";
 import { cn } from "@/lib/utils";
+
+const tickerItems = ["Abonament anual −20%", "Clase noi de box", "Prima ședință e gratuită", "Deschis 7 zile din 7"];
 
 export function FitnessNavbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -75,6 +78,19 @@ export function FitnessNavbar() {
         </div>
       </header>
 
+      {/* Persistent ticker strip — a fixture none of the other demos have,
+          always visible (not just on scroll) to read as "always live". */}
+      <div className="fixed inset-x-0 top-[65px] z-40 border-b py-2 sm:top-[73px]" style={{ background: "var(--f-accent)", borderColor: "var(--f-accent)" }}>
+        <Marquee durationSeconds={18} itemClassName="flex shrink-0 items-center gap-10 pr-10">
+          {tickerItems.map((item) => (
+            <span key={item} className="flex items-center gap-10 text-xs font-bold uppercase tracking-wide" style={{ color: "#0a0a0a" }}>
+              {item}
+              <span aria-hidden="true">●</span>
+            </span>
+          ))}
+        </Marquee>
+      </div>
+
       <AnimatePresence>
         {open ? (
           <motion.div
@@ -82,7 +98,7 @@ export function FitnessNavbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-x-0 top-[72px] bottom-0 z-40 flex flex-col justify-between overflow-y-auto px-6 pb-8 pt-6 lg:hidden"
+            className="fixed inset-x-0 top-[105px] bottom-0 z-40 flex flex-col justify-between overflow-y-auto px-6 pb-8 pt-6 lg:hidden"
             style={{ background: "var(--f-bg)" }}
           >
             <nav className="flex flex-col gap-1" aria-label="Navigare mobilă">

@@ -6,7 +6,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { navLinks, shop } from "../data";
 import { useCart } from "../_lib/CartContext";
+import { Marquee } from "@/components/shared/Marquee";
 import { cn } from "@/lib/utils";
+
+const announcements = ["Livrare gratuită peste 300 lei", "Retur gratuit în 30 de zile", "Ambalaje reciclabile"];
 
 export function ShopNavbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -29,8 +32,21 @@ export function ShopNavbar() {
 
   return (
     <>
+      <div className="fixed inset-x-0 top-0 z-50 py-2" style={{ background: "var(--s-fg)" }}>
+        <Marquee durationSeconds={20} itemClassName="flex shrink-0 items-center gap-10 pr-10">
+          {announcements.map((item) => (
+            <span key={item} className="flex items-center gap-10 text-[0.7rem] font-medium uppercase tracking-wide" style={{ color: "var(--s-bg)" }}>
+              {item}
+              <span aria-hidden="true" style={{ color: "var(--s-accent-2)" }}>
+                ·
+              </span>
+            </span>
+          ))}
+        </Marquee>
+      </div>
+
       <header
-        className={cn("fixed inset-x-0 top-0 z-50 border-b transition-all duration-300", scrolled || open ? "backdrop-blur-md" : "border-transparent")}
+        className={cn("fixed inset-x-0 top-[33px] z-50 border-b transition-all duration-300", scrolled || open ? "backdrop-blur-md" : "border-transparent")}
         style={{
           borderColor: scrolled || open ? "var(--s-border)" : "transparent",
           background: scrolled || open ? "color-mix(in srgb, var(--s-bg) 92%, transparent)" : "var(--s-bg)",
@@ -92,7 +108,7 @@ export function ShopNavbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-x-0 top-[72px] bottom-0 z-40 flex flex-col overflow-y-auto px-6 pb-8 pt-6 lg:hidden"
+            className="fixed inset-x-0 top-[106px] bottom-0 z-40 flex flex-col overflow-y-auto px-6 pb-8 pt-6 lg:hidden"
             style={{ background: "var(--s-bg)" }}
           >
             <nav className="flex flex-col gap-1" aria-label="Navigare mobilă">

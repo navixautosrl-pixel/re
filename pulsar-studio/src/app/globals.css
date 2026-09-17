@@ -75,7 +75,10 @@ html {
   scroll-behavior: smooth;
   /* Fixed header is ~76px tall — without this, anchor navigation lands
      section content under the header. */
-  scroll-padding-top: 96px;
+  /* 96px covers the main site's ~76px header; the fitness demo's extra
+     ticker strip needs a little more, so this errs generous rather than
+     landing anchor targets under either. */
+  scroll-padding-top: 112px;
 }
 body {
   background: var(--color-background);
@@ -136,6 +139,15 @@ body {
   --f-accent: #d6ff3d;
   --f-accent-2: #ff5a1f;
   color-scheme: dark;
+}
+
+/* Diagonal-cut hero stat panel — only reads as a skew at real desktop
+   width; flat/stacked on mobile. */
+@media (min-width: 1024px) {
+  .fitness-hero-skew {
+    clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
+    margin-left: -8%;
+  }
 }
 
 .demo-shop {
@@ -280,6 +292,15 @@ body {
   }
   50% {
     transform: translate3d(0, -14px, 0);
+  }
+}
+
+@keyframes marquee-track {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }
 

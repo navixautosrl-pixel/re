@@ -3,12 +3,28 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { TextReveal } from "@/components/shared/TextReveal";
+import { Marquee } from "@/components/shared/Marquee";
 import { agency } from "../data";
+
+const wordTexture = ["Brand", "Digital", "Strategie", "Design", "Conținut", "Campanii"];
 
 export function AgencyHero() {
   return (
     <section className="relative overflow-hidden px-5 pb-20 pt-36 sm:px-8 sm:pb-28 sm:pt-44" style={{ background: "var(--a-bg)" }}>
-      <div className="mx-auto max-w-6xl">
+      {/* Ghost word-texture behind the headline — agency's signature
+          background motif, distinct from the other demos' orb/grid/ticker
+          treatments. */}
+      <div className="pointer-events-none absolute inset-x-0 top-16 select-none opacity-[0.05] sm:top-10" aria-hidden="true">
+        <Marquee durationSeconds={38} itemClassName="flex shrink-0 items-center gap-10 pr-10">
+          {wordTexture.map((word) => (
+            <span key={word} className="font-agency whitespace-nowrap text-[16vw] uppercase leading-none text-[var(--a-fg)] sm:text-[9vw]">
+              {word}
+            </span>
+          ))}
+        </Marquee>
+      </div>
+
+      <div className="relative mx-auto max-w-6xl">
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
