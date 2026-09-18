@@ -114,10 +114,16 @@ body {
   font-family: "Unbounded", ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Demo-only palettes, scoped to their own wrapper class so they never leak
-   into Pulsar Studio's own tokens above. Each demo references these via
-   Tailwind arbitrary-value utilities, e.g. bg-[var(--r-bg)]. */
-.demo-restaurant {
+/* Each demo's tokens are declared twice on purpose: once on the wrapper, and
+   once on :root whenever that wrapper exists anywhere in the page. Radix
+   portals (cart drawer, filter sheet, lightboxes, selects) can land in
+   document.body, outside the wrapper — there the scoped variables resolved to
+   nothing and the panel rendered fully transparent, which looked like the
+   cart was broken. Declaring them at :root as well means portalled content is
+   styled correctly wherever it ends up, instead of depending on a runtime
+   getElementById succeeding. */
+.demo-restaurant,
+:root:has(.demo-restaurant) {
   --r-bg: #120e0b;
   --r-surface: #1c160f;
   --r-surface-2: #241d14;
@@ -129,7 +135,8 @@ body {
   color-scheme: dark;
 }
 
-.demo-fitness {
+.demo-fitness,
+:root:has(.demo-fitness) {
   --f-bg: #0a0a0a;
   --f-surface: #141414;
   --f-surface-2: #1c1c1c;
@@ -154,7 +161,8 @@ body {
   }
 }
 
-.demo-shop {
+.demo-shop,
+:root:has(.demo-shop) {
   --s-bg: #fafaf8;
   --s-surface: #ffffff;
   --s-surface-2: #f1efe9;
@@ -170,7 +178,8 @@ body {
   color-scheme: light;
 }
 
-.demo-agency {
+.demo-agency,
+:root:has(.demo-agency) {
   --a-bg: #f5f4f0;
   --a-surface: #ffffff;
   --a-fg: #0d0d0d;
@@ -181,6 +190,26 @@ body {
   --a-accent-ink: #c8350a;
   --a-border: #dedad0;
   color-scheme: light;
+}
+
+/* And the page body takes the demo's own colours, so anything portalled to
+   body inherits the right text colour too — declaring the variables alone
+   fixed the background but left white-on-white text. */
+:root:has(.demo-restaurant) body {
+  background: var(--r-bg);
+  color: var(--r-fg);
+}
+:root:has(.demo-fitness) body {
+  background: var(--f-bg);
+  color: var(--f-fg);
+}
+:root:has(.demo-shop) body {
+  background: var(--s-bg);
+  color: var(--s-fg);
+}
+:root:has(.demo-agency) body {
+  background: var(--a-bg);
+  color: var(--a-fg);
 }
 
 .container-max {

@@ -148,9 +148,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body className="flex min-h-screen flex-col font-sans antialiased">
+        {/* Self-contained colours rather than theme tokens: this link is
+            rendered in the layout, so it also appears over the light demo
+            pages, where the dark-theme foreground left it white on white. */}
         <a
           href="#main"
-          className="glass fixed left-4 top-4 z-[100] -translate-y-20 rounded-md px-4 py-2 text-sm font-medium text-foreground transition-transform focus-visible:translate-y-0"
+          className="fixed left-4 top-4 z-[100] -translate-y-20 rounded-md border border-white/20 bg-[#050816] px-4 py-2 text-sm font-medium text-white shadow-lg transition-transform focus-visible:translate-y-0"
         >
           Sari la conținut
         </a>

@@ -7,6 +7,7 @@ import { Minus, Plus, X, ShoppingBag, Loader2, CheckCircle2, AlertCircle } from 
 import { useCart } from "../_lib/CartContext";
 import { submitDemoForm } from "@/lib/demoForm";
 import { useDemoPortalContainer } from "@/lib/useDemoPortalContainer";
+import { romanianValidation } from "@/lib/validationMessages";
 
 type Step = "cart" | "checkout" | "loading" | "success" | "error";
 
@@ -128,6 +129,7 @@ export function ShopCartDrawer() {
                         id="checkout-email"
                         type="email"
                         required
+                        {...romanianValidation}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="mt-2 w-full rounded-md border px-3 py-2.5 text-sm text-[var(--s-fg)] focus-visible:outline-none"

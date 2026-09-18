@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { submitDemoForm } from "@/lib/demoForm";
+import { romanianValidation } from "@/lib/validationMessages";
 import { shop } from "../data";
 
 export function ShopAboutContactFooter() {
@@ -50,6 +51,7 @@ export function ShopAboutContactFooter() {
               <input
                 type="email"
                 required
+                {...romanianValidation}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="adresa@email.ro"
