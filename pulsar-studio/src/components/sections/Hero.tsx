@@ -74,7 +74,9 @@ export function Hero() {
                   ease,
                 }}
               >
-                {line}
+                {/* Trailing space: the lines are separate block spans, so the
+                    h1's text content would otherwise run together. */}
+                {line}{" "}
               </motion.span>
             </span>
           ))}

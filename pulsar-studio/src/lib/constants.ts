@@ -106,11 +106,40 @@ export const siteConfig = {
   tagline: "Construim site-uri care îți cresc afacerea.",
   description:
     "Website-uri la cheie, SEO și marketing digital — tot ce ai nevoie pentru o prezență online care contează. Partener RobixHost.ro.",
+  // Search-facing copy is keyword-first; the brand name is what people find
+  // us by last, not first. Kept separate from the on-page tagline so the
+  // design copy and the SERP copy can differ without fighting each other.
+  seoTitle: "Creare Site Web și Magazine Online | SEO | Pulsar Studio",
+  seoDescription:
+    "Agenție de web design din România: creare site de prezentare, magazine online, optimizare SEO și marketing digital. Pachete de la 1.490 lei, termene clare. Cere o ofertă.",
   email: "contact@pulsarstudio.ro",
   domain: "pulsarstudio.ro",
   robixHostUrl: "https://robixhost.ro",
   locality: "România",
 };
+
+/**
+ * Terms this site should actually be findable by, in the words Romanian
+ * visitors type. Used for the keywords meta and, more usefully, as the
+ * schema.org knowsAbout list.
+ */
+export const seoKeywords = [
+  "creare site web",
+  "creare site de prezentare",
+  "firma creare site-uri",
+  "web design România",
+  "creare magazin online",
+  "magazin online preturi",
+  "optimizare SEO",
+  "servicii SEO România",
+  "agentie marketing digital",
+  "promovare online",
+  "website la cheie",
+  "mentenanta website",
+  "redesign site",
+  "site responsive",
+  "agentie web design",
+];
 
 export const navLinks = [
   { label: "Servicii", href: "#servicii" },

@@ -23,7 +23,8 @@ export function Services() {
             Ce putem face pentru tine?
           </h2>
           <p className="text-sm leading-relaxed text-muted-foreground lg:col-span-4 lg:col-start-9">
-            Cinci direcții, un singur partener. Alege una ca să vezi ce include.
+            Creare site-uri de prezentare, magazine online, optimizare SEO și marketing digital — cinci direcții,
+            un singur partener. Alege una ca să vezi ce include.
           </p>
         </Reveal>
 

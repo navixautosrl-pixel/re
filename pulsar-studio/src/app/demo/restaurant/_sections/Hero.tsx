@@ -22,11 +22,15 @@ export function RestaurantHero() {
         aria-hidden="true"
       />
       <motion.div
-        className="pointer-events-none absolute inset-0 opacity-[0.05]"
+        // Moved by transform, not background-position: the latter can't run on
+        // the compositor, so an infinite loop of it repainted the whole hero
+        // every frame. Oversized so the travel never exposes an edge, and the
+        // distance is a whole number of stripe periods so the loop is seamless.
+        className="pointer-events-none absolute -inset-[30%] opacity-[0.05] will-change-transform"
         style={{
           backgroundImage: "repeating-linear-gradient(45deg, var(--r-accent) 0px, var(--r-accent) 1px, transparent 1px, transparent 14px)",
         }}
-        animate={prefersReducedMotion ? {} : { backgroundPosition: ["0px 0px", "80px 80px"] }}
+        animate={prefersReducedMotion ? {} : { x: [0, 98.995], y: [0, -98.995] }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         aria-hidden="true"
       />
@@ -43,7 +47,7 @@ export function RestaurantHero() {
               animate={{ y: "0%" }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             >
-              O experiență culinară
+              O experiență culinară{" "}
             </motion.span>
           </span>
           <span className="block overflow-hidden">

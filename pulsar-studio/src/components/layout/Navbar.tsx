@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
 import { navLinks, siteConfig } from "@/lib/constants";
 import { useSectionHref } from "@/lib/useSectionHref";
 import { cn } from "@/lib/utils";
@@ -95,25 +94,29 @@ export function Navbar() {
             </Link>
           </div>
 
+          {/* Two bars that rotate into an X rather than swapping one icon for
+              another — the state change reads as one continuous movement. */}
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="glass relative flex size-11 items-center justify-center overflow-hidden rounded-full text-foreground lg:hidden"
+            className="glass relative flex size-11 items-center justify-center rounded-full text-foreground lg:hidden"
             aria-label={open ? "Închide meniul" : "Deschide meniul"}
             aria-expanded={open}
           >
-            <AnimatePresence mode="wait" initial={false}>
+            <span className="relative block h-4 w-[18px]" aria-hidden="true">
               <motion.span
-                key={open ? "close" : "open"}
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
-                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center justify-center"
-              >
-                {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
-              </motion.span>
-            </AnimatePresence>
+                className="absolute left-0 top-1/2 block h-[1.5px] w-full rounded-full bg-current"
+                animate={{ y: open ? 0 : -4, rotate: open ? 45 : 0 }}
+                transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+                style={{ translateY: "-50%" }}
+              />
+              <motion.span
+                className="absolute left-0 top-1/2 block h-[1.5px] w-full rounded-full bg-current"
+                animate={{ y: open ? 0 : 4, rotate: open ? -45 : 0 }}
+                transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+                style={{ translateY: "-50%" }}
+              />
+            </span>
           </button>
         </div>
       </header>
@@ -124,41 +127,80 @@ export function Navbar() {
       <AnimatePresence>
         {open ? (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-x-0 top-[72px] bottom-0 z-40 flex flex-col justify-between overflow-y-auto bg-background px-6 pb-8 pt-6 lg:hidden"
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            // Opaque, not glass: a full-screen panel that lets the hero headline
+            // read through it just looks like a rendering bug. The depth comes
+            // from the mesh and the motion instead.
+            className="fixed inset-x-0 top-[72px] bottom-0 z-40 flex flex-col justify-between overflow-y-auto bg-background px-6 pb-8 pt-7 lg:hidden"
           >
-            <div className="gradient-mesh opacity-40" aria-hidden="true" />
-            <nav className="relative flex flex-col gap-1" aria-label="Navigare mobilă">
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * i, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <Link
-                    href={sectionHref(link.href)}
-                    onClick={() => setOpen(false)}
-                    className="font-display block border-b border-border py-4 text-4xl font-medium text-foreground transition-colors hover:text-accent-2 active:text-accent-2"
-                  >
-                    {link.label}
-                  </Link>
-                </motion.div>
-              ))}
+            <div className="gradient-mesh opacity-25" aria-hidden="true" />
+
+            <nav className="relative flex flex-col" aria-label="Navigare mobilă">
+              {navLinks.map((link, i) => {
+                const isActive = active === link.href;
+                return (
+                  // Each row is masked so the label rises into place instead of
+                  // just fading — the stagger gives the panel a sense of order.
+                  <span key={link.href} className="block overflow-hidden border-b border-border">
+                    <motion.span
+                      className="block"
+                      initial={{ y: "115%", opacity: 0 }}
+                      animate={{ y: "0%", opacity: 1 }}
+                      transition={{ delay: 0.06 + i * 0.045, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <Link
+                        href={sectionHref(link.href)}
+                        onClick={() => setOpen(false)}
+                        className="group flex items-baseline gap-4 py-4 transition-colors active:text-accent-2"
+                      >
+                        <span className="font-display w-6 shrink-0 text-xs font-semibold tabular-nums text-muted-foreground transition-colors group-active:text-accent-2">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span
+                          className={cn(
+                            "font-display text-2xl font-medium transition-colors",
+                            isActive ? "text-accent-2" : "text-foreground"
+                          )}
+                        >
+                          {link.label}
+                        </span>
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            "ml-auto size-1.5 shrink-0 self-center rounded-full transition-opacity",
+                            isActive ? "bg-accent-2 opacity-100" : "opacity-0"
+                          )}
+                        />
+                      </Link>
+                    </motion.span>
+                  </span>
+                );
+              })}
             </nav>
 
-            <div className="relative mt-8">
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.06 + navLinks.length * 0.045, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="relative mt-10 space-y-4"
+            >
               <Link
                 href={sectionHref("#contact")}
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-center rounded-full bg-[image:var(--gradient-blue-purple)] px-6 py-4 text-sm font-semibold text-white"
+                className="flex items-center justify-center rounded-full bg-[image:var(--gradient-blue-purple)] px-6 py-4 text-sm font-semibold text-white shadow-[0_10px_34px_-10px_color-mix(in_srgb,var(--color-accent-3)_70%,transparent)]"
               >
                 Cere o ofertă
               </Link>
-            </div>
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="flex items-center justify-center gap-2 py-2 text-sm text-muted-foreground transition-colors active:text-foreground"
+              >
+                {siteConfig.email}
+              </a>
+            </motion.div>
           </motion.div>
         ) : null}
       </AnimatePresence>

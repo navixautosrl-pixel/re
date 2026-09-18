@@ -32,7 +32,7 @@ export function TextReveal({
       <span className={className}>
         {lines.map((text) => (
           <span key={text} className="block">
-            {text}
+            {text}{" "}
           </span>
         ))}
       </span>
@@ -47,7 +47,9 @@ export function TextReveal({
         // overflow-hidden under tight display line-heights.
         <span key={text} className="-mt-[0.22em] block overflow-hidden pt-[0.22em]">
           <motion.span className="block" variants={line} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}>
-            {text}
+            {/* Trailing space so the h1's text content reads as a sentence.
+                Without it the lines concatenate: "Ideicarearata...". */}
+            {text}{" "}
           </motion.span>
         </span>
       ))}

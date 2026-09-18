@@ -31,13 +31,15 @@ export function FitnessHero() {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section id="acasa" className="relative flex min-h-[100svh] flex-col pt-[105px] lg:flex-row" style={{ background: "var(--f-bg)" }}>
+    <section id="acasa" className="relative flex min-h-[100svh] flex-col overflow-hidden pt-[105px] lg:flex-row" style={{ background: "var(--f-bg)" }}>
       <motion.div
-        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+        // Same reason as the restaurant hero: transform instead of
+        // background-position, oversized, travelling a whole number of periods.
+        className="pointer-events-none absolute -inset-[30%] opacity-[0.06] will-change-transform"
         style={{
           backgroundImage: "repeating-linear-gradient(-45deg, var(--f-accent) 0px, var(--f-accent) 2px, transparent 2px, transparent 28px)",
         }}
-        animate={prefersReducedMotion ? {} : { backgroundPosition: ["0px 0px", "-160px 160px"] }}
+        animate={prefersReducedMotion ? {} : { x: [0, -98.995], y: [0, -98.995] }}
         transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
         aria-hidden="true"
       />
@@ -60,9 +62,11 @@ export function FitnessHero() {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="font-fitness mt-5 text-[15vw] uppercase leading-[0.92] text-[var(--f-fg)] sm:text-7xl lg:text-8xl"
         >
-          Forța se
+          {/* Explicit spaces around the breaks so the h1's text content reads
+              as a sentence rather than "Forța seconstruieșteaici." */}
+          Forța se{" "}
           <br />
-          <span style={{ color: "var(--f-accent)" }}>construiește</span>
+          <span style={{ color: "var(--f-accent)" }}>construiește</span>{" "}
           <br />
           aici.
         </motion.h1>

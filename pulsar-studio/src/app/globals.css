@@ -251,12 +251,16 @@ body {
 }
 
 /* Fine grain — keeps flat dark fields from reading as a plain digital wash. */
+/* No mix-blend-mode here on purpose: a blend mode over a full-bleed element
+   forces the browser to re-composite everything beneath it on every scroll
+   frame, which measured as a third of all frames dropped. Plain low opacity
+   is visually equivalent at 5% and composites for free. */
 .noise-overlay {
   position: absolute;
   inset: 0;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
+  opacity: 0.035;
   pointer-events: none;
+  contain: strict;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -333,10 +337,14 @@ body {
   display: grid;
   place-items: center;
   isolation: isolate;
+  /* Keeps the motif's repaints inside its own box instead of dirtying the
+     whole page on every animation frame. */
+  contain: layout paint style;
 }
 
 .pulsar-ring,
 .pulsar-core,
+.pulsar-glow,
 .pulsar-halo,
 .pulsar-sweep {
   position: absolute;
@@ -350,6 +358,9 @@ body {
   opacity: 0;
   transform: scale(0.2);
   animation: pulsar-emit 8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  /* transform+opacity only, on its own layer: the compositor can run these
+     without re-rasterising. */
+  will-change: transform, opacity;
 }
 
 .pulsar-ring--static {
@@ -360,21 +371,33 @@ body {
   width: 14%;
   height: 14%;
   background: radial-gradient(circle, #ffffff 0%, var(--accent-2) 45%, var(--accent) 100%);
-  box-shadow:
-    0 0 40px 6px color-mix(in srgb, var(--accent-2) 55%, transparent),
-    0 0 120px 30px color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: 0 0 40px 6px color-mix(in srgb, var(--accent-2) 45%, transparent);
+}
+
+/* The wide outer glow the core's second box-shadow used to draw. A gradient
+   rasterises once; a 120px shadow spread does not. */
+.pulsar-glow {
+  width: 46%;
+  height: 46%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--accent) 34%, transparent) 0%,
+    color-mix(in srgb, var(--accent) 12%, transparent) 42%,
+    transparent 68%
+  );
 }
 
 .pulsar-halo {
   width: 62%;
   height: 62%;
+  /* The gradient is already soft; the blur filter it used to carry cost a
+     full-element re-raster for no visible gain. */
   background: radial-gradient(
     circle,
-    color-mix(in srgb, var(--accent) 30%, transparent) 0%,
-    color-mix(in srgb, var(--accent-3) 14%, transparent) 45%,
-    transparent 70%
+    color-mix(in srgb, var(--accent) 26%, transparent) 0%,
+    color-mix(in srgb, var(--accent-3) 12%, transparent) 48%,
+    transparent 72%
   );
-  filter: blur(12px);
 }
 
 /* The sweep arm: a conic wedge rotating once every 12s, like a lighthouse
@@ -389,6 +412,7 @@ body {
   );
   mask-image: radial-gradient(circle, transparent 38%, black 40%, black 98%, transparent 100%);
   animation: pulsar-sweep 12s linear infinite;
+  will-change: transform;
 }
 
 @keyframes pulsar-emit {

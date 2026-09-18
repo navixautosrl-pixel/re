@@ -30,8 +30,9 @@ export function PulsarField({ className }: { className?: string }) {
 
         {!prefersReducedMotion ? <span className="pulsar-sweep" /> : null}
 
-        <span className="pulsar-core" />
+        <span className="pulsar-glow" />
         <span className="pulsar-halo" />
+        <span className="pulsar-core" />
       </div>
     </div>
   );

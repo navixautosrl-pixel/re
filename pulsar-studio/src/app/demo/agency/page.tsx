@@ -16,10 +16,10 @@ import { AgencyContactFooter } from "./_sections/ContactFooter";
 
 export const metadata: Metadata = {
   title: { absolute: "FIELD — Demo agenție creativă · Pulsar Studio" },
-  description: "Demo concept: website de agenție creativă, construit de Pulsar Studio. Nu este o afacere reală.",
+  description: "FIELD — demo de site pentru agenție creativă: portofoliu, servicii și contact. Exemplu construit de Pulsar Studio. Nu este o afacere reală.",
   robots: { index: false, follow: false },
   alternates: { canonical: "/demo/agency" },
-  openGraph: { title: "FIELD — Demo agenție creativă · Pulsar Studio", description: "Demo concept: website de agenție creativă, construit de Pulsar Studio. Nu este o afacere reală.", url: "/demo/agency" , images: ogImages },
+  openGraph: { title: "FIELD — Demo agenție creativă · Pulsar Studio", description: "FIELD — demo de site pentru agenție creativă: portofoliu, servicii și contact. Exemplu construit de Pulsar Studio. Nu este o afacere reală.", url: "/demo/agency" , images: ogImages },
 };
 
 export default function AgencyDemoPage() {
