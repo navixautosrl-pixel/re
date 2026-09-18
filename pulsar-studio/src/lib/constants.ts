@@ -283,6 +283,8 @@ export const portfolioItems = [
   {
     id: "restaurant",
     href: "/demo/restaurant",
+    preview: "/previews/restaurant.webp",
+    previewPosition: "50% 0%",
     category: "Website restaurant",
     title: "Concept — restaurant premium",
     description: "Meniu, galerie și rezervare online, gândite pentru o experiență de fine dining.",
@@ -290,6 +292,8 @@ export const portfolioItems = [
   {
     id: "fitness",
     href: "/demo/fitness",
+    preview: "/previews/fitness.webp",
+    previewPosition: "0% 0%",
     category: "Website fitness & sală",
     title: "Concept — sală de fitness",
     description: "Abonamente, antrenori și program clar — construit să convertească vizitatori în membri.",
@@ -297,6 +301,8 @@ export const portfolioItems = [
   {
     id: "shop",
     href: "/demo/shop",
+    preview: "/previews/shop.webp",
+    previewPosition: "0% 0%",
     category: "Magazin online",
     title: "Concept — brand de produse",
     description: "Catalog, filtre, coș funcțional și checkout demo, gândite mobile-first.",
@@ -304,6 +310,8 @@ export const portfolioItems = [
   {
     id: "agency",
     href: "/demo/agency",
+    preview: "/previews/agency.webp",
+    previewPosition: "0% 0%",
     category: "Portofoliu agenție creativă",
     title: "Concept — agenție creativă",
     description: "Studii de caz, proiecte și tranziții cinematice pentru un portofoliu editorial.",
