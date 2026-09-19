@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Zona de client si cosul sunt in WHMCS, pe alt subdomeniu — nu au ce
+# cauta in index, sunt pagini de cont, nu continut public.
+Disallow: /settings.html
+
+Sitemap: https://robixhost.ro/sitemap.xml

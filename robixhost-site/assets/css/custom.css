@@ -1,0 +1,606 @@
+/* *****************************************************
+
+    ** Custom Stylesheet **
+
+    Any custom styling you want to apply should be
+    defined here.
+
+***************************************************** */
+
+/* =====================================================
+   RobixHost 3D Effects
+   Depth shadows on hover, floating icons, 3D buttons
+   (a real-time per-pixel mousemove tilt used to live here too,
+   but it conflicted with overflow:hidden card corners and
+   popped-out badges — caused visible glitching on hover, so
+   it was removed in favor of this simpler, safe lift-on-hover)
+===================================================== */
+
+/* Depth layer for pricing / service / help cards */
+.wrapper.price-container,
+.service-section,
+.help-container,
+.card.upping,
+.h-plans-info .content-price {
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.wrapper.price-container:hover,
+.service-section:hover,
+.help-container:hover,
+.card.upping:hover,
+.h-plans-info .content-price:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 35px 70px -25px rgba(20,20,40,.45), 0 12px 24px -10px rgba(238,85,134,.3);
+}
+
+/* Floating animation for decorative icons/illustrations */
+.lazyload svg,
+.service-section > i,
+.icon-cpu, .icon-ram, .icon-drives, .icon-drivessd, .icon-speed,
+.icon-features, .icon-preferences, .icon-network, .icon-repair, .icon-helpdesk {
+  animation: rh-float 4.5s ease-in-out infinite;
+}
+
+@keyframes rh-float {
+  0%, 100% { transform: translateY(0) translateZ(0); }
+  50% { transform: translateY(-8px) translateZ(20px); }
+}
+
+/* 3D press effect for primary buttons */
+.btn.btn-default-yellow-fill,
+.btn.btn-default-grad-purple-fill,
+.btn.btn-default-fill {
+  transform-style: preserve-3d;
+  transition: transform .2s ease, box-shadow .2s ease;
+  box-shadow: 0 8px 0 -2px rgba(0,0,0,.18), 0 14px 24px -10px rgba(0,0,0,.35);
+}
+
+.btn.btn-default-yellow-fill:hover,
+.btn.btn-default-grad-purple-fill:hover,
+.btn.btn-default-fill:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 11px 0 -2px rgba(0,0,0,.18), 0 20px 30px -10px rgba(0,0,0,.4);
+}
+
+.btn.btn-default-yellow-fill:active,
+.btn.btn-default-grad-purple-fill:active,
+.btn.btn-default-fill:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 -1px rgba(0,0,0,.18), 0 6px 10px -6px rgba(0,0,0,.3);
+}
+
+/* Give page sections a sense of depth with layered background */
+.top-header, .top-header.overlay, .top-header.overlay-video {
+  perspective: 1200px;
+}
+
+.top-header .wrapper,
+.top-header.overlay .wrapper,
+.top-header.overlay-video .wrapper {
+  transform: translateZ(0);
+}
+
+/* Badges sit on top of their cards */
+.plans.badge.feat {
+  box-shadow: 0 10px 20px -8px rgba(0,0,0,.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper.price-container,
+  .service-section,
+  .help-container,
+  .card.upping,
+  .lazyload svg,
+  .btn.btn-default-yellow-fill,
+  .btn.btn-default-grad-purple-fill,
+  .btn.btn-default-fill {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =====================================================
+   RobixHost 3D v2 — full-site "big company" depth pass
+   Gradient-mesh banners, glass navbar, layered cards,
+   scroll-reveal, glowing accents, animated blobs
+===================================================== */
+
+/* ---- Glass navbar ----
+   No backdrop-filter here: it creates a new CSS containing block for any
+   position:fixed descendant. The mobile full-screen menu (.main-menu) is
+   NESTED inside .menu-wrap.fixed, so a blur here trapped it inside the
+   71px-tall header bar instead of the viewport (height:100% -> 71px,
+   its off-screen translate3d(0,200%,0) -> only 142px), leaving a small
+   phantom bar visible over page content on scroll. Plain translucent
+   background keeps the "glass" look without that side effect. */
+.menu-wrap.fixed {
+  background: rgba(15, 17, 26, 0.86) !important;
+  box-shadow: 0 12px 40px -14px rgba(0,0,0,.5);
+}
+
+/* ---- Gradient-mesh floating blobs behind every page banner ---- */
+/* Injected as real DOM nodes by robixhost-3d.js (not ::before/::after,
+   which .overlay / .overlay-video already use for the dark image tint) */
+.top-header {
+  isolation: isolate;
+}
+
+.rh-blob {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: .55;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.rh-blob-a {
+  width: 480px;
+  height: 480px;
+  top: -160px;
+  left: -120px;
+  background: radial-gradient(circle at 30% 30%, #ee5586, transparent 70%);
+  animation: rh-blob-drift-a 16s ease-in-out infinite;
+}
+
+.rh-blob-b {
+  width: 420px;
+  height: 420px;
+  bottom: -180px;
+  right: -100px;
+  background: radial-gradient(circle at 60% 60%, #7b5cff, transparent 70%);
+  animation: rh-blob-drift-b 18s ease-in-out infinite;
+}
+
+.top-header .wrapper,
+.top-header .banner-video,
+.top-header .row {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes rh-blob-drift-a {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(60px,40px,0) scale(1.15); }
+}
+
+@keyframes rh-blob-drift-b {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(-50px,-30px,0) scale(1.1); }
+}
+
+/* ---- Layered depth card system (price/service/help cards) ---- */
+.wrapper.price-container,
+.service-section,
+.help-container,
+.card.upping,
+.h-plans-info .content-price {
+  position: relative;
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.wrapper.price-container::before,
+.help-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(238,85,134,.15), rgba(123,92,255,.08) 60%, transparent);
+  opacity: 0;
+  transition: opacity .4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrapper.price-container:hover::before,
+.help-container:hover::before {
+  opacity: 1;
+}
+
+.wrapper.price-container:hover,
+.help-container:hover {
+  border-color: rgba(238,85,134,.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rh-blob {
+    animation: none !important;
+    display: none;
+  }
+}
+
+/* ---- Glowing primary CTA buttons ---- */
+.btn.btn-default-yellow-fill {
+  position: relative;
+}
+
+.btn.btn-default-yellow-fill::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(238,85,134,.45), transparent 70%);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity .3s ease;
+}
+
+.btn.btn-default-yellow-fill:hover::after {
+  opacity: 1;
+}
+
+/* ---- Section-heading floating depth accent ---- */
+.section-heading,
+h1.fw-bold {
+  text-shadow: 0 18px 40px rgba(0,0,0,.12);
+}
+
+/* =====================================================
+   RobixHost Design System v2 — major visual refresh
+   Away from the stock "bright template" look: unified
+   dark premium hero, muted navy accents instead of solid
+   saturated magenta blocks, gradient CTA pill buttons.
+   All overrides target existing theme hooks (data-color
+   variants, shared component classes) so they apply
+   site-wide with no HTML changes.
+===================================================== */
+
+:root {
+  --rh-ink: #0d0f1a;
+  --rh-ink-2: #151827;
+  --rh-navy: #1b1f33;
+  --rh-navy-soft: #232847;
+  --rh-pink: #ee5586;
+  --rh-purple: #7b5cff;
+  --rh-text-muted: #9aa0b4;
+}
+
+/* Hero banners: replace the diagonal pink/purple gradient with a
+   premium dark gradient. The floating blobs (.rh-blob) already
+   provide the pink/purple color accent on top of this. */
+[data-color="pink"] .total-grad,
+[data-color="pink"] .total-grad-inverse {
+  background: linear-gradient(135deg, var(--rh-ink) 0%, var(--rh-navy) 55%, var(--rh-navy-soft) 100%) !important;
+}
+
+[data-color="pink"] .total-grad-pink-blue-intense {
+  background: linear-gradient(135deg, var(--rh-ink) 0%, #1a1030 100%) !important;
+}
+
+/* .top-header without a total-grad child (uses .overlay/.overlay-video
+   dark tint instead) gets the same base tone for consistency */
+.top-header {
+  background-color: var(--rh-ink);
+}
+
+/* Pill-shaped gradient CTA instead of the flat yellow fill */
+.btn.btn-default-yellow-fill {
+  background: linear-gradient(135deg, var(--rh-pink) 0%, var(--rh-purple) 100%) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 999px !important;
+  font-weight: 700;
+}
+
+.btn.btn-default-yellow-fill::after {
+  background: radial-gradient(circle, rgba(238,85,134,.55), transparent 70%);
+}
+
+/* Secondary / outline buttons pick up matching rounded shape */
+.btn.btn-default-pink-fill,
+.btn.btn-default-purple-fill,
+.btn.btn-default-fill,
+.btn.btn-default-grad-purple-fill {
+  border-radius: 999px !important;
+}
+
+/* Spec panels under pricing cards: swap the solid saturated magenta
+   fill for a refined dark-navy panel with a subtle top hairline —
+   reads as premium/neutral rather than a loud color block. */
+.list-info.bg-purple,
+.plans.badge.feat.bg-purple {
+  background-color: var(--rh-navy) !important;
+}
+
+.list-info.bg-purple {
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.list-info.bg-purple i {
+  color: var(--rh-pink) !important;
+}
+
+/* Sticky nav glass tone matches the new dark palette */
+[data-color="pink"] .menu-wrap.fixed {
+  background: rgba(13, 15, 26, 0.72) !important;
+}
+
+/* Headings: slightly tighter, bolder — reads more "product site",
+   less "stock template" */
+.section-heading,
+.heading {
+  letter-spacing: -0.02em;
+  font-weight: 700 !important;
+}
+
+/* Card corners softened to match the pill buttons */
+.wrapper.price-container,
+.service-section,
+.help-container {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* The stock "flat yellow band" section (used for a features/help
+   highlight strip) is replaced with a navy-to-purple gradient to
+   match the rest of the new palette. Heading text switches to
+   light since it's no longer sitting on a bright background. */
+.sec-bg4,
+[data-background="light"] .box-container .sec-bg4 {
+  background-image: none !important;
+  background: linear-gradient(120deg, var(--rh-navy) 0%, var(--rh-navy-soft) 100%) !important;
+}
+
+.sec-bg4 .section-heading,
+.sec-bg4 .section-subheading {
+  color: #fff !important;
+}
+
+/* =====================================================
+   RobixHost — Pachete de gazduire (secțiunea #preturi)
+   Comutator lunar/anual scris de mână: cel din temă
+   (#run-switch) doar împarte prețul la 12, deci nu poate
+   reda un preț anual cu discount real.
+===================================================== */
+
+/* Comutatorul: două butoane reale într-un radiogroup, nu un div cu
+   onclick — merge cu tastatura și îl citește screen reader-ul. */
+.rh-switch {
+  position: relative;
+  padding: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .12);
+  gap: 4px;
+}
+
+[data-background="light"] .rh-switch {
+  background: rgba(13, 15, 26, .05);
+  border-color: rgba(13, 15, 26, .1);
+}
+
+.rh-switch-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--rh-text-muted);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+  padding: 11px 26px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color .25s ease, background .25s ease, box-shadow .25s ease;
+}
+
+.rh-switch-btn:hover { color: #fff; }
+[data-background="light"] .rh-switch-btn:hover { color: var(--rh-ink); }
+
+.rh-switch-btn.active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--rh-pink) 0%, var(--rh-purple) 100%);
+  box-shadow: 0 10px 22px -10px rgba(238, 85, 134, .75);
+}
+
+.rh-switch-btn:focus-visible {
+  outline: 2px solid var(--rh-purple);
+  outline-offset: 3px;
+}
+
+.rh-switch-save {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .22);
+  font-size: 11px;
+  letter-spacing: .02em;
+}
+
+.rh-switch-hint {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  opacity: .8;
+}
+
+/* Prețul lunar și cel anual stau amândouă în HTML — se vede unul sau
+   celălalt. Așa le indexează Google pe amândouă și pagina arată corect
+   și dacă JavaScript-ul nu pornește. */
+[data-rh-pricing][data-rh-cycle="monthly"] .rh-when-annual,
+[data-rh-pricing][data-rh-cycle="annually"] .rh-when-monthly {
+  display: none;
+}
+
+.rh-billing-note {
+  margin: 2px 0 18px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  min-height: 40px;
+}
+
+.rh-plan-desc {
+  margin: 0;
+  padding: 20px 28px 24px;
+  font-size: 14.5px;
+  line-height: 1.65;
+}
+
+/* Cardul recomandat: ridicat puțin și cu un chenar propriu, ca să se
+   vadă care e alegerea implicită fără să strigăm cu majuscule. */
+.rh-plan { height: 100%; display: flex; flex-direction: column; }
+.rh-plan .list-info { margin-top: auto; }
+
+.rh-plan-col { margin-bottom: 30px; display: flex; }
+.rh-plan-col > .rh-plan { width: 100%; }
+
+.rh-featured {
+  box-shadow: 0 0 0 2px var(--rh-purple), 0 40px 80px -30px rgba(123, 92, 255, .55);
+}
+
+@media (min-width: 992px) {
+  .rh-featured { transform: translateY(-14px); }
+  .rh-featured:hover { transform: translateY(-22px); }
+}
+
+.rh-plan .title { font-size: 26px; }
+
+.rh-plan .list-info li div { line-height: 1.35; }
+
+.rh-pricing-foot { margin-top: 10px; font-size: 15px; }
+
+.rh-link {
+  color: var(--rh-pink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* =====================================================
+   RobixHost — stratul de animație (robixhost-animate.js)
+   Reveal la scroll, micro-interacțiuni, stări de hover.
+   Tot ce e aici se oprește complet la prefers-reduced-motion.
+===================================================== */
+
+/* Reveal-ul propriu: AOS acoperă secțiunile mari, ăsta acoperă
+   elementele individuale fără să adauge atribute în 17 fișiere HTML. */
+.rh-reveal {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition: opacity .7s cubic-bezier(.22, 1, .36, 1),
+              transform .7s cubic-bezier(.22, 1, .36, 1);
+  will-change: opacity, transform;
+}
+
+.rh-reveal.rh-in {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Linkurile din meniu: subliniere care crește din stânga, nu o
+   culoare care se schimbă brusc. */
+.menu-wrap .nav-item > a::after,
+.menu-wrap .navbar-nav > li > a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--rh-pink), var(--rh-purple));
+  transition: width .35s cubic-bezier(.22, 1, .36, 1);
+}
+
+.menu-wrap .nav-item > a:hover::after,
+.menu-wrap .navbar-nav > li > a:hover::after { width: 100%; }
+
+.menu-wrap .nav-item > a,
+.menu-wrap .navbar-nav > li > a { position: relative; }
+
+/* Butoanele primare: luciu care trece o dată la hover. */
+.btn.btn-default-yellow-fill {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.btn-default-yellow-fill > span,
+.btn.btn-default-yellow-fill > i { position: relative; z-index: 2; }
+
+.btn.btn-default-yellow-fill::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .38), transparent);
+  transform: skewX(-18deg);
+  transition: left .6s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.btn.btn-default-yellow-fill:hover::before { left: 130%; }
+
+/* Rândurile din tabelul de specificații și din liste: fundal care
+   apare la hover, ca să urmărești rândul cu ochiul. */
+.table.sample tbody tr { transition: background .25s ease; }
+.table.sample tbody tr:hover { background: rgba(123, 92, 255, .07); }
+
+/* Iconițele din listele de specificații reacționează cu cardul. */
+.rh-plan:hover .list-info i { transform: scale(1.12); }
+.list-info i { transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+
+/* Numerele care se numără în sus (data-rh-count) nu trebuie să
+   schimbe lățimea rândului în timp ce urcă. */
+.rh-count { font-variant-numeric: tabular-nums; }
+
+/* Accordion FAQ: deschidere lină în loc de salt. */
+.accordion.faq .panel-collapse { transition: none; }
+.accordion.faq .panel-title { transition: color .25s ease, padding-left .25s ease; }
+.accordion.faq .panel-title:hover { padding-left: 6px; }
+
+/* Cardurile de serviciu urcă la hover cu o umbră colorată, nu cu
+   aceeași umbră gri pe care o are orice temă. */
+.service-section { transition: transform .4s cubic-bezier(.22, 1, .36, 1), box-shadow .4s ease; }
+
+/* Bara de progres a paginii, în capul ferestrei. */
+.rh-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--rh-pink), var(--rh-purple));
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Butonul "sus" apare cu scale, nu instant. */
+.cd-top { transition: opacity .3s ease, transform .3s cubic-bezier(.22, 1, .36, 1); }
+
+/* Nimic din toate astea nu rulează dacă utilizatorul a cerut mai
+   puțină mișcare din setările sistemului. */
+@media (prefers-reduced-motion: reduce) {
+  .rh-reveal { opacity: 1; transform: none; transition: none; }
+  .rh-progress { display: none; }
+  .btn.btn-default-yellow-fill::before { display: none; }
+  .lazyload svg,
+  .service-section > i,
+  .icon-cpu, .icon-ram, .icon-drives, .icon-drivessd, .icon-speed,
+  .icon-features, .icon-preferences, .icon-network, .icon-repair, .icon-helpdesk {
+    animation: none !important;
+  }
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Tema pune capitalize pe .section-heading, ceea ce in romana scrie
+   „Alege-L Pe Cel Care" — corect e o singura majuscula la inceput. */
+.rh-pricing .section-heading { text-transform: none; }
+
+/* Butonul „sus" era galben, singurul element galben ramas dupa
+   trecerea paletei pe roz/mov. */
+.cd-top {
+  background: linear-gradient(135deg, var(--rh-pink) 0%, var(--rh-purple) 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 14px 30px -12px rgba(123, 92, 255, .8);
+}
