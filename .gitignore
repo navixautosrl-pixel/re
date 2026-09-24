@@ -15,3 +15,10 @@ build/
 # Supabase CLI local state
 supabase/.branches/
 supabase/.temp/
+
+# Arhivele de livrare și încărcările brute: 39 MB de zip-uri care se
+# regenerează din sursele deja urmărite (_deliver/ din `npm run build` +
+# folderul site-ului, _incoming/ e o copie a ceea ce stă în robixhost-site/).
+# Nu au ce căuta în istoric.
+_deliver/
+_incoming/
