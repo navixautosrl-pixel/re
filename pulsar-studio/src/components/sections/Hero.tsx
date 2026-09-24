@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { MagneticButton } from "@/components/shared/MagneticButton";
-import { PulsarField } from "@/components/shared/PulsarField";
+import { SignalField } from "@/components/shared/SignalField";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
 const HEADLINE = ["Construim", "site-uri care", "îți cresc"];
@@ -44,7 +44,7 @@ export function Hero() {
         className="pointer-events-none absolute -right-[38%] top-1/2 w-[125vw] -translate-y-1/2 opacity-70 sm:-right-[26%] sm:w-[85vw] lg:-right-[8%] lg:w-[58vw] lg:opacity-100"
         aria-hidden="true"
       >
-        <PulsarField />
+        <SignalField />
       </motion.div>
 
       <div className="noise-overlay" aria-hidden="true" />

@@ -1,4 +1,4 @@
-// Fictional demo business — built to showcase Pulsar Studio's work, not a
+// Fictional demo business — built to showcase CreareWebsitePro's work, not a
 // real agency. Case studies are explicitly labeled demo/concept, never
 // presented as real client results.
 

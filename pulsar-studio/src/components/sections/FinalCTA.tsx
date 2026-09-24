@@ -1,7 +1,7 @@
 import { Reveal } from "@/components/shared/Reveal";
 import { Button } from "@/components/ui/Button";
 import { MagneticButton } from "@/components/shared/MagneticButton";
-import { PulsarField } from "@/components/shared/PulsarField";
+import { SignalField } from "@/components/shared/SignalField";
 import { siteConfig } from "@/lib/constants";
 
 /**
@@ -21,7 +21,7 @@ export function FinalCTA() {
         className="pointer-events-none absolute left-1/2 top-1/2 w-[135vw] -translate-x-1/2 -translate-y-1/2 opacity-40 sm:w-[80vw] lg:w-[58vw]"
         aria-hidden="true"
       >
-        <PulsarField />
+        <SignalField />
       </div>
 
       <div className="noise-overlay" aria-hidden="true" />

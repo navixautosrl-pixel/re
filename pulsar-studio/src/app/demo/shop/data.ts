@@ -1,4 +1,4 @@
-// Fictional demo business — built to showcase Pulsar Studio's work, not a
+// Fictional demo business — built to showcase CreareWebsitePro's work, not a
 // real store. Products, prices, and stock are illustrative only.
 
 export const shop = {

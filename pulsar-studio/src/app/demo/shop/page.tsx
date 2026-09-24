@@ -9,11 +9,11 @@ import { ShopCartDrawer } from "./_sections/CartDrawer";
 import { ShopAboutContactFooter } from "./_sections/AboutContactFooter";
 
 export const metadata: Metadata = {
-  title: { absolute: "Haven — Demo magazin online · Pulsar Studio" },
-  description: "Haven — demo de magazin online: catalog de produse, filtre și coș de cumpărături. Exemplu construit de Pulsar Studio. Nu este o afacere reală.",
+  title: { absolute: "Haven — Demo magazin online · CreareWebsitePro" },
+  description: "Haven — demo de magazin online: catalog de produse, filtre și coș de cumpărături. Exemplu construit de CreareWebsitePro. Nu este o afacere reală.",
   robots: { index: false, follow: false },
   alternates: { canonical: "/demo/shop" },
-  openGraph: { title: "Haven — Demo magazin online · Pulsar Studio", description: "Haven — demo de magazin online: catalog de produse, filtre și coș de cumpărături. Exemplu construit de Pulsar Studio. Nu este o afacere reală.", url: "/demo/shop" , images: ogImages },
+  openGraph: { title: "Haven — Demo magazin online · CreareWebsitePro", description: "Haven — demo de magazin online: catalog de produse, filtre și coș de cumpărături. Exemplu construit de CreareWebsitePro. Nu este o afacere reală.", url: "/demo/shop" , images: ogImages },
 };
 
 export default function ShopDemoPage() {

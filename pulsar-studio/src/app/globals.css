@@ -103,7 +103,7 @@ body {
 
 /* Demo-only display faces — each /demo/* route imports its own font CSS
    and uses exactly one of these, giving it a typographic identity distinct
-   from Pulsar Studio's own Space Grotesk and from each other. */
+   from CreareWebsitePro's own Space Grotesk and from each other. */
 .font-restaurant {
   font-family: "Playfair Display", ui-serif, Georgia, serif;
 }
@@ -357,9 +357,9 @@ body {
   }
 }
 
-/* --- Pulsar motif (hero signature visual) ------------------------------- */
+/* --- Signal motif (hero signature visual) ------------------------------- */
 
-.pulsar-stage {
+.signal-stage {
   position: relative;
   width: 100%;
   aspect-ratio: 1;
@@ -371,32 +371,32 @@ body {
   contain: layout paint style;
 }
 
-.pulsar-ring,
-.pulsar-core,
-.pulsar-glow,
-.pulsar-halo,
-.pulsar-sweep {
+.signal-ring,
+.signal-core,
+.signal-glow,
+.signal-halo,
+.signal-sweep {
   position: absolute;
   border-radius: 9999px;
   grid-area: 1 / 1;
 }
 
-.pulsar-ring {
+.signal-ring {
   inset: 0;
   border: 1px solid color-mix(in srgb, var(--accent-2) 55%, transparent);
   opacity: 0;
   transform: scale(0.2);
-  animation: pulsar-emit 8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  animation: signal-emit 8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
   /* transform+opacity only, on its own layer: the compositor can run these
      without re-rasterising. */
   will-change: transform, opacity;
 }
 
-.pulsar-ring--static {
+.signal-ring--static {
   animation: none;
 }
 
-.pulsar-core {
+.signal-core {
   width: 14%;
   height: 14%;
   background: radial-gradient(circle, #ffffff 0%, var(--accent-2) 45%, var(--accent) 100%);
@@ -405,7 +405,7 @@ body {
 
 /* The wide outer glow the core's second box-shadow used to draw. A gradient
    rasterises once; a 120px shadow spread does not. */
-.pulsar-glow {
+.signal-glow {
   width: 46%;
   height: 46%;
   background: radial-gradient(
@@ -416,7 +416,7 @@ body {
   );
 }
 
-.pulsar-halo {
+.signal-halo {
   width: 62%;
   height: 62%;
   /* The gradient is already soft; the blur filter it used to carry cost a
@@ -431,7 +431,7 @@ body {
 
 /* The sweep arm: a conic wedge rotating once every 12s, like a lighthouse
    beam. Masked to a ring so it reads as a sweep, not a filled pie. */
-.pulsar-sweep {
+.signal-sweep {
   inset: 12%;
   background: conic-gradient(
     from 0deg,
@@ -440,11 +440,11 @@ body {
     transparent 46deg
   );
   mask-image: radial-gradient(circle, transparent 38%, black 40%, black 98%, transparent 100%);
-  animation: pulsar-sweep 12s linear infinite;
+  animation: signal-sweep 12s linear infinite;
   will-change: transform;
 }
 
-@keyframes pulsar-emit {
+@keyframes signal-emit {
   0% {
     transform: scale(0.16);
     opacity: 0;
@@ -458,15 +458,15 @@ body {
   }
 }
 
-@keyframes pulsar-sweep {
+@keyframes signal-sweep {
   to {
     transform: rotate(360deg);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pulsar-ring,
-  .pulsar-sweep {
+  .signal-ring,
+  .signal-sweep {
     animation: none;
   }
 }
@@ -505,5 +505,76 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* --- Legal pages ---------------------------------------------------------
+   Long-form policy text. Its own rhythm rather than the marketing sections':
+   these are read line by line, not scanned, so the measure is narrower and
+   the leading looser than anywhere else on the site. */
+.legal-body p,
+.legal-body li {
+  color: var(--color-muted-foreground);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+
+.legal-body strong {
+  color: var(--color-foreground);
+  font-weight: 600;
+}
+
+.legal-body ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.legal-body ul li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.legal-body ul li::before {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  top: 0.75em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent-2);
+}
+
+.legal-body a {
+  color: var(--color-accent-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.legal-body dl {
+  display: grid;
+  gap: 0.35rem 1.25rem;
+  grid-template-columns: max-content 1fr;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.legal-body dt {
+  color: var(--color-muted-foreground);
+}
+
+.legal-body dd {
+  margin: 0;
+  color: var(--color-foreground);
+}
+
+@media (max-width: 480px) {
+  .legal-body dl {
+    grid-template-columns: 1fr;
+    gap: 0 0;
+  }
+
+  .legal-body dd {
+    margin-bottom: 0.6rem;
   }
 }

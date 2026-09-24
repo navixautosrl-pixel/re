@@ -12,11 +12,11 @@ import { FitnessSchedule } from "./_sections/Schedule";
 import { FitnessContactFooter } from "./_sections/ContactFooter";
 
 export const metadata: Metadata = {
-  title: { absolute: "FORGE — Demo sală de fitness · Pulsar Studio" },
-  description: "FORGE — demo de site pentru sală de fitness: abonamente, clase și program. Exemplu de website construit de Pulsar Studio. Nu este o afacere reală.",
+  title: { absolute: "FORGE — Demo sală de fitness · CreareWebsitePro" },
+  description: "FORGE — demo de site pentru sală de fitness: abonamente, clase și program. Exemplu de website construit de CreareWebsitePro. Nu este o afacere reală.",
   robots: { index: false, follow: false },
   alternates: { canonical: "/demo/fitness" },
-  openGraph: { title: "FORGE — Demo sală de fitness · Pulsar Studio", description: "FORGE — demo de site pentru sală de fitness: abonamente, clase și program. Exemplu de website construit de Pulsar Studio. Nu este o afacere reală.", url: "/demo/fitness" , images: ogImages },
+  openGraph: { title: "FORGE — Demo sală de fitness · CreareWebsitePro", description: "FORGE — demo de site pentru sală de fitness: abonamente, clase și program. Exemplu de website construit de CreareWebsitePro. Nu este o afacere reală.", url: "/demo/fitness" , images: ogImages },
 };
 
 export default function FitnessDemoPage() {

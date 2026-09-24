@@ -54,7 +54,7 @@ export function RestaurantContactFooter() {
       <footer className="border-t px-5 py-10 text-center sm:px-8" style={{ borderColor: "var(--r-border)", background: "var(--r-bg)" }}>
         <p className="font-restaurant text-xl text-[var(--r-fg)]">{restaurant.name}</p>
         <p className="mt-2 text-xs" style={{ color: "var(--r-muted)" }}>
-          Demo concept construit de Pulsar Studio · Nu este o afacere reală
+          Demo concept construit de CreareWebsitePro · Nu este o afacere reală
         </p>
       </footer>
     </>

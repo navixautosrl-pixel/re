@@ -150,7 +150,7 @@ export function AgencyContactFooter() {
       <footer className="border-t px-5 py-10 text-center sm:px-8" style={{ borderColor: "var(--a-border)", background: "var(--a-bg)" }}>
         <p className="font-agency text-lg uppercase text-[var(--a-fg)]">{agency.name}</p>
         <p className="mt-2 text-xs" style={{ color: "var(--a-muted)" }}>
-          Demo concept construit de Pulsar Studio · Nu este o afacere reală
+          Demo concept construit de CreareWebsitePro · Nu este o afacere reală
         </p>
       </footer>
     </>

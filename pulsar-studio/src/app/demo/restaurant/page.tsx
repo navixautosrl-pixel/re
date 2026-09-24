@@ -18,11 +18,11 @@ import { RestaurantReservation } from "./_sections/Reservation";
 import { RestaurantContactFooter } from "./_sections/ContactFooter";
 
 export const metadata: Metadata = {
-  title: { absolute: "Ember — Demo restaurant · Pulsar Studio" },
-  description: "Ember — demo de site pentru restaurant: meniu, galerie și formular de rezervare. Exemplu de website construit de Pulsar Studio. Nu este o afacere reală.",
+  title: { absolute: "Ember — Demo restaurant · CreareWebsitePro" },
+  description: "Ember — demo de site pentru restaurant: meniu, galerie și formular de rezervare. Exemplu de website construit de CreareWebsitePro. Nu este o afacere reală.",
   robots: { index: false, follow: false },
   alternates: { canonical: "/demo/restaurant" },
-  openGraph: { title: "Ember — Demo restaurant · Pulsar Studio", description: "Ember — demo de site pentru restaurant: meniu, galerie și formular de rezervare. Exemplu de website construit de Pulsar Studio. Nu este o afacere reală.", url: "/demo/restaurant" , images: ogImages },
+  openGraph: { title: "Ember — Demo restaurant · CreareWebsitePro", description: "Ember — demo de site pentru restaurant: meniu, galerie și formular de rezervare. Exemplu de website construit de CreareWebsitePro. Nu este o afacere reală.", url: "/demo/restaurant" , images: ogImages },
 };
 
 export default function RestaurantDemoPage() {

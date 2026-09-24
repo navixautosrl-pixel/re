@@ -5,8 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Every /demo/* page is a fictional business built to show what Pulsar
- * Studio can build — never a real client. This stays visible (not hidden
+ * Every /demo/* page is a fictional business built to show what this
+ * studio can build — never a real client. This stays visible (not hidden
  * behind hover) so nobody mistakes it for a live business, without
  * breaking the "looks like a real site" illusion the page itself creates.
  * Top-right, below each demo's own navbar — every hero in this project
@@ -26,7 +26,7 @@ export function DemoBadge({ dark = true, topClassName = "top-20" }: { dark?: boo
       )}
     >
       <ArrowLeft className="size-3.5 shrink-0" aria-hidden="true" />
-      <span className="hidden sm:inline">Demo Pulsar Studio</span>
+      <span className="hidden sm:inline">Demo CreareWebsitePro</span>
     </Link>
   );
 }

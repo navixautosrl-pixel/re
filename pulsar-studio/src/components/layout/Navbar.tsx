@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { navLinks, siteConfig } from "@/lib/constants";
 import { useSectionHref } from "@/lib/useSectionHref";
+import { Logo } from "@/components/shared/Logo";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -53,11 +54,13 @@ export function Navbar() {
         )}
       >
         <div className="container-max flex items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
-          <Link href={sectionHref("#acasa")} className="-my-1 flex items-center gap-2.5 py-1" onClick={() => setOpen(false)}>
-            <span className="flex size-8 items-center justify-center rounded-md bg-[image:var(--gradient-blue-purple)] font-display text-sm font-bold text-white">
-              P
-            </span>
-            <span className="font-display text-xl font-semibold tracking-tight text-foreground">{siteConfig.name}</span>
+          <Link
+            href={sectionHref("#acasa")}
+            className="-my-1 flex items-center py-1"
+            aria-label={`${siteConfig.name} — pagina principală`}
+            onClick={() => setOpen(false)}
+          >
+            <Logo />
           </Link>
 
           <nav className="hidden items-center gap-8 lg:flex" aria-label="Navigare principală">

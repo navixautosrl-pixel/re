@@ -12,7 +12,7 @@ import { caseStudies, type CaseStudy } from "../data";
  * drives horizontal movement through the case studies, the "cinematic
  * transition" an agency portfolio calls for, and this project's only use
  * of scroll-jacking (per the "don't pin more than 1-2 sections" rule —
- * Pulsar Studio's own Process section is the other one, on a different
+ * CreareWebsitePro's own Process section is the other one, on a different
  * page). Mobile/reduced-motion gets the plain stacked list instead —
  * pinned horizontal scroll is exactly the kind of effect that reads as
  * broken on a phone, not premium.

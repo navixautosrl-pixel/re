@@ -1,6 +1,6 @@
 // Brand-new agency identity, established for this project — no real company
 // name, contact details, portfolio clients, or stats were supplied, so
-// nothing below is presented as verified fact. "Pulsar Studio" is a
+// nothing below is presented as verified fact. "CreareWebsitePro" is a
 // placeholder name (swap `siteConfig.name` before go-live); pricing is an
 // editable starting proposal, not a published price list; portfolio items
 // are explicitly labeled demo/concept work, never real client results.
@@ -101,19 +101,23 @@ export const pricingDisclaimer =
 // SITE / BRAND
 // ---------------------------------------------------------------------------
 export const siteConfig = {
-  name: "Pulsar Studio",
-  legalName: "Pulsar Studio",
+  name: "CreareWebsitePro",
+  legalName: "CreareWebsitePro",
   tagline: "Construim site-uri care îți cresc afacerea.",
   description:
     "Website-uri la cheie, SEO și marketing digital — tot ce ai nevoie pentru o prezență online care contează. Partener RobixHost.ro.",
   // Search-facing copy is keyword-first; the brand name is what people find
   // us by last, not first. Kept separate from the on-page tagline so the
   // design copy and the SERP copy can differ without fighting each other.
-  seoTitle: "Creare Site Web și Magazine Online | SEO | Pulsar Studio",
+  seoTitle: "Creare Website & Magazin Online în România | CreareWebsitePro",
   seoDescription:
-    "Agenție de web design din România: creare site de prezentare, magazine online, optimizare SEO și marketing digital. Pachete de la 1.490 lei, termene clare. Cere o ofertă.",
-  email: "contact@pulsarstudio.ro",
-  domain: "pulsarstudio.ro",
+    "Creăm site-uri de prezentare, magazine online și optimizare SEO. Design pe măsură, termene clare, pachete de la 1.490 lei. Cere o ofertă gratuită.",
+  email: "robixhosting@gmail.com",
+  // Afișat în format românesc; `phoneHref` e forma internațională, singura
+  // pe care o acceptă tel: și schema.org fără ambiguitate de prefix.
+  phone: "0773 938 355",
+  phoneHref: "+40773938355",
+  domain: "crearewebsitepro.ro",
   robixHostUrl: "https://robixhost.ro",
   locality: "România",
 };
@@ -122,14 +126,21 @@ export const siteConfig = {
  * Terms this site should actually be findable by, in the words Romanian
  * visitors type. Used for the keywords meta and, more usefully, as the
  * schema.org knowsAbout list.
+ *
+ * Ordered by how close each one sits to what this site actually sells —
+ * the domain is built on "creare website", so that family leads.
  */
 export const seoKeywords = [
+  "creare website",
+  "creare website profesional",
   "creare site web",
   "creare site de prezentare",
   "firma creare site-uri",
-  "web design România",
+  "pret creare site web",
   "creare magazin online",
   "magazin online preturi",
+  "web design România",
+  "agentie web design",
   "optimizare SEO",
   "servicii SEO România",
   "agentie marketing digital",
@@ -138,7 +149,6 @@ export const seoKeywords = [
   "mentenanta website",
   "redesign site",
   "site responsive",
-  "agentie web design",
 ];
 
 export const navLinks = [
@@ -165,10 +175,45 @@ export const footerLinks = {
     { label: "FAQ", href: "#faq" },
   ],
   legal: [
-    { label: "Politica de confidențialitate", href: "/privacy" },
     { label: "Termeni și condiții", href: "/terms" },
+    { label: "Confidențialitate (GDPR)", href: "/privacy" },
+    { label: "Politica de cookie-uri", href: "/cookies" },
   ],
 };
+
+// ---------------------------------------------------------------------------
+// DATE DE FIRMĂ
+// ---------------------------------------------------------------------------
+/**
+ * ÎNLOCUIEȘTE ÎNAINTE DE LANSARE.
+ *
+ * Termenii, politica de confidențialitate și obligațiile ANPC cer datele
+ * reale de identificare ale comerciantului. Nu le am, așa că sunt lăsate ca
+ * marcaje evidente — și, cât timp `isPlaceholder` e `true`, paginile legale
+ * afișează un avertisment vizibil, ca să nu ajungă online arătând oficial
+ * fără să fie. Pune datele reale și treci `isPlaceholder` pe `false`.
+ */
+export const companyDetails = {
+  isPlaceholder: true,
+  legalName: "[Denumire firmă] S.R.L.",
+  cui: "[CUI/CIF]",
+  regCom: "[Nr. Registrul Comerțului]",
+  address: "[Adresa sediului social]",
+  bank: "[Banca]",
+  iban: "[IBAN]",
+};
+
+/**
+ * Metodele de plată acceptate, confirmate de client. Numerarul și ramburs-ul
+ * lipsesc intenționat — nu sunt acceptate.
+ */
+export const paymentMethods = [
+  { id: "visa", label: "Visa" },
+  { id: "mastercard", label: "Mastercard" },
+  { id: "transfer", label: "Transfer bancar" },
+  { id: "paypal", label: "PayPal" },
+  { id: "crypto", label: "Criptomonede" },
+] as const;
 
 // ---------------------------------------------------------------------------
 // SERVICES

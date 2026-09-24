@@ -81,7 +81,7 @@ export function ShopAboutContactFooter() {
       <footer className="border-t px-5 py-10 text-center sm:px-8" style={{ borderColor: "var(--s-border)", background: "var(--s-surface-2)" }}>
         <p className="text-lg font-semibold text-[var(--s-fg)]">{shop.name}</p>
         <p className="mt-2 text-xs" style={{ color: "var(--s-muted)" }}>
-          Demo concept construit de Pulsar Studio · Nu este o afacere reală
+          Demo concept construit de CreareWebsitePro · Nu este o afacere reală
         </p>
       </footer>
     </>

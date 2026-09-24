@@ -1,4 +1,4 @@
-// Fictional demo business — built to showcase Pulsar Studio's work, not a
+// Fictional demo business — built to showcase CreareWebsitePro's work, not a
 // real restaurant. No real menu, prices, chef, or reviews are represented.
 
 export const restaurant = {

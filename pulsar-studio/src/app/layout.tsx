@@ -15,6 +15,7 @@ import "@fontsource/dm-sans/latin-700.css";
 import "@fontsource/dm-sans/latin-ext-700.css";
 import "./globals.css";
 import { SmoothScroll } from "@/components/shared/SmoothScroll";
+import { CookieConsent } from "@/components/shared/CookieConsent";
 import { siteConfig, seoKeywords, services, pricingPlans } from "@/lib/constants";
 import { withBasePath } from "@/lib/basePath";
 
@@ -100,6 +101,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     url: origin,
     description: siteConfig.seoDescription,
     email: siteConfig.email,
+    telephone: siteConfig.phoneHref,
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "sales",
+      email: siteConfig.email,
+      telephone: siteConfig.phoneHref,
+      availableLanguage: ["ro", "en"],
+      areaServed: "RO",
+    },
     image: `${origin}/og.png`,
     logo: `${origin}/og.png`,
     inLanguage: "ro-RO",
@@ -144,7 +154,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="ro">
       <head>
-        <link rel="icon" href={withBasePath("/favicon.png")} type="image/png" />
+        <link rel="icon" href={withBasePath("/favicon.svg")} type="image/svg+xml" />
+        <link rel="icon" href={withBasePath("/favicon.png")} type="image/png" sizes="512x512" />
+        <link rel="apple-touch-icon" href={withBasePath("/favicon.png")} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body className="flex min-h-screen flex-col font-sans antialiased">
@@ -159,6 +171,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         <SmoothScroll />
         {children}
+        <CookieConsent />
       </body>
     </html>
   );

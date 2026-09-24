@@ -1,0 +1,30 @@
+# CreareWebsitePro — export static, servit de Apache/cPanel.
+
+# Adresele fara extensie sunt foldere cu index.html (trailingSlash: true),
+# deci nu e nevoie de rescrieri pentru rutare. Doar pagina de eroare.
+ErrorDocument 404 /404.html
+
+# HTTPS obligatoriu: paginile legale si formularul cer o conexiune sigura,
+# iar Google trateaza http:// ca pe un site separat.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Fisierele din /_next/static/ au hash in nume: se pot cache pe termen lung
+# fara riscul de a servi o versiune veche dupa o actualizare.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>

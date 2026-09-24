@@ -168,7 +168,7 @@ export function FitnessContactFooter() {
       <footer className="border-t px-5 py-10 text-center sm:px-8" style={{ borderColor: "var(--f-border)", background: "var(--f-bg)" }}>
         <p className="font-fitness text-xl uppercase text-[var(--f-fg)]">{gym.name}</p>
         <p className="mt-2 text-xs" style={{ color: "var(--f-muted)" }}>
-          Demo concept construit de Pulsar Studio · Nu este o afacere reală
+          Demo concept construit de CreareWebsitePro · Nu este o afacere reală
         </p>
       </footer>
     </>

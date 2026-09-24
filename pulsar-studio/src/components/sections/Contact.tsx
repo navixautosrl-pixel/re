@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import { Loader2, CheckCircle2, AlertCircle, Mail, Phone, MessageCircle } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { Select } from "@/components/ui/Select";
 import { budgetOptions, projectTypeOptions, siteConfig } from "@/lib/constants";
-import { submitContactForm } from "@/lib/contact";
+import { buildWhatsAppUrl, submitContactForm } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -62,11 +62,40 @@ export function Contact() {
                 Hai să pornim proiectul.
               </h2>
               <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
-                Completează formularul cu câteva detalii despre proiect — revenim cu următorul pas.
+                Completează formularul cu câteva detalii despre proiect — revenim cu următorul pas. Dacă e mai
+                simplu, sună-ne sau scrie-ne direct.
               </p>
-              <a href={`mailto:${siteConfig.email}`} className="mt-5 inline-block py-2 text-sm font-medium text-foreground transition-colors hover:text-accent-2">
-                {siteConfig.email}
-              </a>
+              <ul className="mt-6 space-y-1">
+                <li>
+                  <a
+                    href={`tel:${siteConfig.phoneHref}`}
+                    className="flex items-center gap-3 py-2 text-sm font-medium text-foreground transition-colors hover:text-accent-2"
+                  >
+                    <Phone className="size-4 shrink-0 text-accent-2" aria-hidden="true" />
+                    {siteConfig.phone}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`mailto:${siteConfig.email}`}
+                    className="flex items-center gap-3 py-2 text-sm font-medium text-foreground transition-colors hover:text-accent-2"
+                  >
+                    <Mail className="size-4 shrink-0 text-accent-2" aria-hidden="true" />
+                    <span className="break-all">{siteConfig.email}</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`https://wa.me/${siteConfig.phoneHref.replace("+", "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 py-2 text-sm font-medium text-foreground transition-colors hover:text-accent-2"
+                  >
+                    <MessageCircle className="size-4 shrink-0 text-accent-2" aria-hidden="true" />
+                    WhatsApp
+                  </a>
+                </li>
+              </ul>
             </Reveal>
           </div>
 
@@ -76,10 +105,29 @@ export function Contact() {
                 {status === "success" ? (
                   <div className="flex flex-col items-center py-10 text-center">
                     <CheckCircle2 className="size-10 text-accent-2" aria-hidden="true" />
-                    <p className="font-display mt-6 text-3xl font-semibold text-foreground">Solicitare trimisă.</p>
+                    <p className="font-display mt-6 text-3xl font-semibold text-foreground">Mesajul e pregătit.</p>
                     <p className="mt-3 max-w-sm text-muted-foreground">
-                      Îți mulțumim! Revenim către tine în cel mai scurt timp.
+                      Ți-am deschis aplicația de email cu toate detaliile completate. Mai rămâne să apeși
+                      „Trimite” — și revenim către tine în cel mai scurt timp.
                     </p>
+                    <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                      <a
+                        href={buildWhatsAppUrl(values)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent-2 hover:text-accent-2"
+                      >
+                        <MessageCircle className="size-4" aria-hidden="true" />
+                        Trimite pe WhatsApp în schimb
+                      </a>
+                      <a
+                        href={`tel:${siteConfig.phoneHref}`}
+                        className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent-2 hover:text-accent-2"
+                      >
+                        <Phone className="size-4" aria-hidden="true" />
+                        {siteConfig.phone}
+                      </a>
+                    </div>
                   </div>
                 ) : (
                   <form noValidate onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -211,11 +259,24 @@ export function Contact() {
                       <div className="flex items-start gap-3 rounded-md border border-destructive/30 bg-destructive/5 p-4">
                         <AlertCircle className="mt-0.5 size-4 shrink-0 text-destructive" aria-hidden="true" />
                         <p className="text-sm text-foreground/85">
-                          Formularul online nu este încă conectat la un serviciu de trimitere. Te rugăm să ne scrii direct la{" "}
+                          Nu am putut deschide aplicația ta de email. Scrie-ne direct la{" "}
                           <a href={`mailto:${siteConfig.email}`} className="text-accent-2 underline underline-offset-2">
                             {siteConfig.email}
+                          </a>
+                          , pe{" "}
+                          <a
+                            href={buildWhatsAppUrl(values)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-accent-2 underline underline-offset-2"
+                          >
+                            WhatsApp
                           </a>{" "}
-                          — revenim la formular imediat ce este activ.
+                          sau sună la{" "}
+                          <a href={`tel:${siteConfig.phoneHref}`} className="text-accent-2 underline underline-offset-2">
+                            {siteConfig.phone}
+                          </a>
+                          .
                         </p>
                       </div>
                     ) : null}

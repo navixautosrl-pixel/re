@@ -17,6 +17,6 @@ export const ogImages = [
     url: withBasePath("/og.png"),
     width: 1200,
     height: 630,
-    alt: "Pulsar Studio — agenție digitală",
+    alt: "CreareWebsitePro — agenție digitală",
   },
 ];

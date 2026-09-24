@@ -1,4 +1,4 @@
-// Fictional demo business — built to showcase Pulsar Studio's work, not a
+// Fictional demo business — built to showcase CreareWebsitePro's work, not a
 // real gym. No real trainers, member counts, or results are represented.
 
 export const gym = {
