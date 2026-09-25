@@ -48,8 +48,19 @@ export default function CookiesPage() {
           <strong>Marketing.</strong> Nu folosim cookie-uri de publicitate, remarketing sau urmărire între site-uri.
         </p>
         <p>
-          <strong>Terți.</strong> Site-ul nu încarcă fonturi, hărți, videoclipuri sau butoane de rețele sociale de pe
-          servere externe, deci niciun terț nu primește adresa ta IP prin simpla vizitare a paginii.
+          <strong>Chat live (Tawk.to).</strong> Butonul „Scrie-ne” din colțul paginii este desenat de noi și nu trimite
+          nimic nicăieri. Abia când dai click pe el se încarcă serviciul de chat{" "}
+          <a href="https://www.tawk.to/privacy-policy/" target="_blank" rel="noopener noreferrer">
+            Tawk.to
+          </a>
+          , care primește atunci adresa ta IP și îți pune cookie-uri proprii (printre care{" "}
+          <strong>__tawkuuid</strong>, cu durată de până la 6 luni) ca să recunoască firul discuției dacă revii. Dacă
+          nu deschizi chatul, nu se încarcă nimic de la ei.
+        </p>
+        <p>
+          <strong>Alți terți.</strong> Site-ul nu încarcă fonturi, hărți, videoclipuri sau butoane de rețele sociale de
+          pe servere externe. În afara chatului, pe care îl pornești tu, niciun terț nu primește adresa ta IP prin
+          simpla vizitare a paginii.
         </p>
       </LegalSection>
 
@@ -67,8 +78,12 @@ export default function CookiesPage() {
 
       <LegalSection n={4} title="Legătura cu datele tale personale">
         <p>
-          Refuzul cookie-urilor care nu sunt strict necesare nu afectează în niciun fel funcționarea site-ului. Ce se
-          întâmplă cu datele pe care ni le trimiți tu, prin formular sau email, este descris în{" "}
+          Refuzul cookie-urilor care nu sunt strict necesare nu afectează în niciun fel funcționarea site-ului. Chatul
+          live rămâne disponibil: se încarcă doar dacă îl deschizi tu, iar dacă nu vrei cookie-urile Tawk.to, scrie-ne
+          pe email sau sună-ne — datele de contact sunt mai jos.
+        </p>
+        <p>
+          Ce se întâmplă cu datele pe care ni le trimiți tu, prin formular, chat sau email, este descris în{" "}
           <a href="/privacy">Politica de confidențialitate</a>.
         </p>
       </LegalSection>

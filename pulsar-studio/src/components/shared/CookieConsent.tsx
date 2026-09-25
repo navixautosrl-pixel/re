@@ -91,19 +91,28 @@ declare global {
   }
 }
 
-export function CookieConsent() {
-  const prefersReducedMotion = useReducedMotion();
-
+/**
+ * Alegerea curentă a vizitatorului, sau `null` dacă nu a răspuns încă. Și
+ * `mounted`, pentru că pe server nu știm ce a ales: orice desenăm în funcție
+ * de consimțământ trebuie să aștepte browserul, altfel clipește la hidratare.
+ *
+ * Exportat pentru că nu doar bannerul are nevoie de el — chatul live se
+ * ascunde cât timp bannerul e deschis, ca să nu se suprapună peste el.
+ */
+export function useConsent() {
   const raw = useSyncExternalStore(subscribe, readRaw, () => "");
   const consent = useMemo(() => parse(raw), [raw]);
-
-  // Nu desenăm nimic până nu suntem în browser: pe server nu știm ce a ales
-  // vizitatorul, iar un banner randat „pe ghicite” ar clipi la hidratare.
   const mounted = useSyncExternalStore(
     noopSubscribe,
     () => true,
     () => false
   );
+  return { consent, mounted };
+}
+
+export function CookieConsent() {
+  const prefersReducedMotion = useReducedMotion();
+  const { consent, mounted } = useConsent();
 
   const [panelOpen, setPanelOpen] = useState(false);
   const [showDetails, setShowDetails] = useState(false);

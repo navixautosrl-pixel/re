@@ -46,7 +46,39 @@ Formspree, Web3Forms sau similar. Punctul de integrare e pregătit și comentat
 în `src/lib/contact.ts` — se schimbă o singură funcție, restul paginii rămâne
 neatins.
 
-### 3. Analytics (opțional)
+### 3. Chatul live (Tawk.to)
+
+Este montat, cu ID-ul tău (`6ab5b35a64e731344b0048a6`). Nu am putut verifica
+din mediul de aici că fereastra se deschide, pentru că ieșirea către
+`embed.tawk.to` e blocată în sandbox — am verificat că cererea pleacă spre
+adresa corectă. Testează o dată după ce urci site-ul.
+
+**Se încarcă la primul click, nu la încărcarea paginii.** Butonul „Scrie-ne”
+din colț e desenat de mine, local, și nu trimite nimic nicăieri; la click se
+încarcă scriptul Tawk și fereastra lor se deschide imediat.
+
+Am făcut așa pentru că eticheta Tawk pusă direct în pagină pornește la
+fiecare vizită, trimite IP-ul fiecărui vizitator la Tawk și îi pune
+cookie-uri proprii înainte să fi cerut ceva — ceea ce ar fi contrazis două
+lucruri scrise negru pe alb în pagina `/cookies`: că niciun terț nu primește
+IP-ul prin simpla vizitare, și că nimic în afara setării strict necesare nu
+pornește fără acord. În plus, pagina se încarcă mai repede pentru cei care
+nu deschid chatul.
+
+Ambele politici sunt actualizate: Tawk.to e declarat explicit, cu ce
+cookie-uri pune și pe ce durată.
+
+**Dacă vrei să pornească la fiecare vizită** (ca să poți trimite mesaje
+proactive): în `src/components/shared/LiveChat.tsx`, schimbă
+`const LOAD_ON = "click"` în `"load"`. Atunci actualizează și secțiunea 2 din
+`/cookies` — Tawk devine un terț activ pe fiecare pagină, nu unul pornit la
+cerere.
+
+Dacă scriptul e blocat (blocant de reclame), butonul nu rămâne blocat pe
+„Se deschide…”: după 8 secunde spune ce s-a întâmplat și afișează emailul și
+telefonul.
+
+### 4. Analytics (opțional)
 
 Nu e instalat niciun instrument de măsurare a traficului. Dacă vrei Google
 Analytics sau Plausible, **nu-l pune direct în pagină**: ar porni înainte de
@@ -74,6 +106,7 @@ furnizorului și durata cookie-urilor lui.
 - **ANPC**: butoane SAL și SOL în subsol, obligatorii pentru comerț online.
 - **Metode de plată**: Visa, Mastercard, transfer bancar, PayPal,
   criptomonede. Numerarul și ramburs-ul sunt marcate explicit ca neacceptate.
+- **Chat live Tawk.to**, pornit la click (vezi mai sus).
 - **SEO**: titluri și descrieri noi construite pe „creare website”, listă de
   cuvinte cheie reordonată, canonical și Open Graph pe domeniul nou, date
   structurate curățate (erau două noduri `WebSite` și două `FAQPage`

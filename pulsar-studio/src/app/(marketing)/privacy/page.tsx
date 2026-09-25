@@ -46,8 +46,8 @@ export default function PrivacyPage() {
 
       <LegalSection n={2} title="Ce date colectăm și de unde">
         <p>
-          <strong>Date pe care ni le dai tu.</strong> Când completezi formularul de contact sau ne scrii pe email ori
-          WhatsApp: nume, adresă de email, număr de telefon, denumirea firmei (opțional), tipul de proiect, bugetul
+          <strong>Date pe care ni le dai tu.</strong> Când completezi formularul de contact sau ne scrii pe email,
+          WhatsApp ori în chatul de pe site: nume, adresă de email, număr de telefon, denumirea firmei (opțional), tipul de proiect, bugetul
           estimat și mesajul tău. Formularul de pe site nu are un server propriu: la trimitere, datele completate sunt
           pregătite ca mesaj în aplicația ta de email sau de WhatsApp, iar tu ești cel care îl trimite. Nu se salvează
           nimic pe acest site.
@@ -116,6 +116,15 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong>furnizorul serviciului de email</strong> prin care primim mesajele tale;
+          </li>
+          <li>
+            <strong>Tawk.to</strong>, furnizorul chatului de pe site, dar numai dacă îl deschizi tu — primește atunci
+            adresa ta IP și conținutul discuției. Detalii în{" "}
+            <a href="/cookies">Politica de cookie-uri</a> și în{" "}
+            <a href="https://www.tawk.to/privacy-policy/" target="_blank" rel="noopener noreferrer">
+              politica lor de confidențialitate
+            </a>
+            ;
           </li>
           <li>
             <strong>contabilul și, după caz, procesatorul de plăți</strong>, pentru facturare și încasări;
