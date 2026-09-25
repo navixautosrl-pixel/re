@@ -18,20 +18,18 @@ import { useReducedMotion } from "@/lib/useReducedMotion";
  * simpla vizitare a paginii, și că nimic în afara setării strict necesare nu
  * pornește fără acord.
  *
- * Așa că butonul de aici e al nostru, desenat local, fără nicio cerere în
- * afară. Scriptul Tawk se încarcă la primul click — clicul e acțiunea prin
- * care vizitatorul cere chatul — și fereastra lor se deschide imediat ce e
- * gata. Pentru cine nu dă click, pagina rămâne fără terți și cu ~300 KB mai
- * puțin de descărcat.
+ * Varianta pornită la cerere a fost construită tot aici și e la un cuvânt
+ * distanță: `LOAD_ON = "click"` afișează în loc un buton desenat de noi, iar
+ * Tawk se încarcă abia la apăsarea lui.
  *
- * DACĂ VREI SĂ PORNEASCĂ LA FIECARE VIZITĂ (cu mesaj proactiv):
- * schimbă `LOAD_ON = "click"` în `LOAD_ON = "load"` mai jos. Atunci
- * completează și secțiunea 2 din /cookies: Tawk devine un terț activ pe
- * fiecare pagină, nu unul pornit la cerere.
+ * Proprietarul a ales însă `"load"` — widgetul pornește la fiecare vizită,
+ * ca să poată trimite mesaje proactive. Asta înseamnă că Tawk devine un terț
+ * activ pe fiecare pagină, iar /cookies spune asta explicit: ce cookie-uri
+ * pune, pe ce durată și cine le primește.
  */
 
 const TAWK_SRC = "https://embed.tawk.to/6ab5b35a64e731344b0048a6/default";
-const LOAD_ON: "click" | "load" = "click";
+const LOAD_ON: "click" | "load" = "load";
 
 type TawkApi = {
   onLoad?: () => void;

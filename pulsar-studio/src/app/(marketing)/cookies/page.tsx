@@ -48,19 +48,29 @@ export default function CookiesPage() {
           <strong>Marketing.</strong> Nu folosim cookie-uri de publicitate, remarketing sau urmărire între site-uri.
         </p>
         <p>
-          <strong>Chat live (Tawk.to).</strong> Butonul „Scrie-ne” din colțul paginii este desenat de noi și nu trimite
-          nimic nicăieri. Abia când dai click pe el se încarcă serviciul de chat{" "}
+          <strong>Chat live (Tawk.to).</strong> Fereastra de asistență din colțul paginii este furnizată de{" "}
           <a href="https://www.tawk.to/privacy-policy/" target="_blank" rel="noopener noreferrer">
             Tawk.to
-          </a>
-          , care primește atunci adresa ta IP și îți pune cookie-uri proprii (printre care{" "}
-          <strong>__tawkuuid</strong>, cu durată de până la 6 luni) ca să recunoască firul discuției dacă revii. Dacă
-          nu deschizi chatul, nu se încarcă nimic de la ei.
+          </a>{" "}
+          și pornește la fiecare vizită, ca să îți putem răspunde imediat ce ai o întrebare. Pentru asta, Tawk.to
+          primește adresa ta IP și îți pune cookie-uri proprii — printre care <strong>__tawkuuid</strong>, cu durată
+          de până la 6 luni — ca să recunoască firul discuției dacă revii pe site. Dacă nu vrei asta, poți bloca
+          domeniul <strong>embed.tawk.to</strong> din browser sau ne poți scrie pe email ori la telefon; site-ul
+          funcționează identic.
         </p>
         <p>
-          <strong>Alți terți.</strong> Site-ul nu încarcă fonturi, hărți, videoclipuri sau butoane de rețele sociale de
-          pe servere externe. În afara chatului, pe care îl pornești tu, niciun terț nu primește adresa ta IP prin
-          simpla vizitare a paginii.
+          <strong>Formularul de contact.</strong> Când apeși „Trimite”, mesajul ne ajunge pe WhatsApp printr-un
+          serviciu de livrare,{" "}
+          <a href="https://www.callmebot.com/" target="_blank" rel="noopener noreferrer">
+            CallMeBot
+          </a>
+          . Nu pune cookie-uri, dar primește ce ai completat în formular. Dacă preferi să nu treacă prin el, scrie-ne
+          direct pe email sau sună-ne.
+        </p>
+        <p>
+          <strong>Alți terți.</strong> Site-ul nu încarcă fonturi, hărți, videoclipuri sau butoane de rețele sociale
+          de pe servere externe. În afara chatului, niciun terț nu primește adresa ta IP prin simpla vizitare a
+          paginii.
         </p>
       </LegalSection>
 
@@ -78,9 +88,9 @@ export default function CookiesPage() {
 
       <LegalSection n={4} title="Legătura cu datele tale personale">
         <p>
-          Refuzul cookie-urilor care nu sunt strict necesare nu afectează în niciun fel funcționarea site-ului. Chatul
-          live rămâne disponibil: se încarcă doar dacă îl deschizi tu, iar dacă nu vrei cookie-urile Tawk.to, scrie-ne
-          pe email sau sună-ne — datele de contact sunt mai jos.
+          Refuzul cookie-urilor care nu sunt strict necesare nu afectează în niciun fel funcționarea site-ului.
+          Chatul live este un serviciu de asistență, nu un instrument de urmărire, și pornește la fiecare vizită; dacă
+          nu vrei cookie-urile Tawk.to, blochează domeniul lor din browser sau contactează-ne pe email ori la telefon.
         </p>
         <p>
           Ce se întâmplă cu datele pe care ni le trimiți tu, prin formular, chat sau email, este descris în{" "}

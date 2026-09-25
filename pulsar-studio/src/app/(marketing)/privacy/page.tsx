@@ -48,9 +48,9 @@ export default function PrivacyPage() {
         <p>
           <strong>Date pe care ni le dai tu.</strong> Când completezi formularul de contact sau ne scrii pe email,
           WhatsApp ori în chatul de pe site: nume, adresă de email, număr de telefon, denumirea firmei (opțional), tipul de proiect, bugetul
-          estimat și mesajul tău. Formularul de pe site nu are un server propriu: la trimitere, datele completate sunt
-          pregătite ca mesaj în aplicația ta de email sau de WhatsApp, iar tu ești cel care îl trimite. Nu se salvează
-          nimic pe acest site.
+          estimat și mesajul tău. Formularul de pe site nu are un server propriu: la trimitere, datele completate ne
+          sunt livrate ca mesaj pe WhatsApp, printr-un serviciu extern (CallMeBot). Nu se salvează nimic pe acest
+          site.
         </p>
         <p>
           <strong>Date colectate automat.</strong> Serverul pe care este găzduit site-ul înregistrează, ca orice server
@@ -118,8 +118,12 @@ export default function PrivacyPage() {
             <strong>furnizorul serviciului de email</strong> prin care primim mesajele tale;
           </li>
           <li>
-            <strong>Tawk.to</strong>, furnizorul chatului de pe site, dar numai dacă îl deschizi tu — primește atunci
-            adresa ta IP și conținutul discuției. Detalii în{" "}
+            <strong>CallMeBot</strong>, serviciul prin care mesajul din formularul de contact ne este livrat pe
+            WhatsApp — primește conținutul completat de tine;
+          </li>
+          <li>
+            <strong>Tawk.to</strong>, furnizorul chatului de pe site — primește adresa ta IP la fiecare vizită și
+            conținutul discuției, dacă scrii în chat. Detalii în{" "}
             <a href="/cookies">Politica de cookie-uri</a> și în{" "}
             <a href="https://www.tawk.to/privacy-policy/" target="_blank" rel="noopener noreferrer">
               politica lor de confidențialitate

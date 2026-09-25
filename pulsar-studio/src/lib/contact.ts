@@ -10,24 +10,44 @@ export type ContactPayload = {
   message: string;
 };
 
-/**
- * Site-ul e export static: nu are server, deci nu are unde să primească un
- * POST. Până acum, trimiterea formularului arunca pur și simplu — adică
- * butonul principal al paginii nu funcționa.
+/*
+ * Formularul trimite mesajul pe WhatsApp prin CallMeBot.
  *
- * Varianta de aici chiar livrează: compune mesajul și îl deschide în
- * aplicația de email a vizitatorului, cu destinatarul, subiectul și tot
- * conținutul deja completate. Nu e elegant, dar ajunge la tine, funcționează
- * pe orice găzduire și nu pretinde că există un backend.
+ * Site-ul e export static: nu are server care să primească un POST. CallMeBot
+ * e un API cu GET simplu, deci merge chemat direct din browser.
  *
- * CÂND AI UN ENDPOINT REAL (funcție serverless, Formspree, Web3Forms):
- * înlocuiește corpul funcției cu fetch-ul către el și șterge `openMailClient`.
- * Restul paginii nu trebuie atins — tot ce știe este că funcția rezolvă sau
- * aruncă.
+ * DE ȘTIUT, ca să nu fie o surpriză mai târziu:
+ *
+ * 1. Cheia de mai jos ajunge în codul livrat browserului. Oricine deschide
+ *    codul paginii o poate citi și îți poate trimite mesaje pe WhatsApp prin
+ *    ea. Nu-ți dă acces nimeni la nimic, dar e o portiță de spam. Singura
+ *    rezolvare adevărată e un mic releu pe server (funcție pe Vercel sau
+ *    Cloudflare) care ține cheia la el; atunci se schimbă doar `ENDPOINT`.
+ *
+ * 2. CallMeBot nu trimite anteturi CORS, deci cererea pleacă cu `no-cors` și
+ *    răspunsul lor nu poate fi citit din pagină. Știm dacă cererea a plecat,
+ *    nu dacă ei au livrat-o. De asta pagina de confirmare păstrează și
+ *    telefonul, și emailul: dacă mesajul nu ajunge, omul are ce face.
+ *
+ * 3. CallMeBot limitează frecvența. Două trimiteri una după alta pot fi
+ *    ignorate de ei — nu e o eroare a site-ului.
  */
+
+const CALLMEBOT = {
+  /** Numărul care primește mesajele, în format internațional. */
+  phone: siteConfig.phoneHref,
+  /** Cheia personală obținută de la CallMeBot pe WhatsApp. */
+  apikey: "9102404",
+  endpoint: "https://api.callmebot.com/whatsapp.php",
+};
+
+/** CallMeBot taie mesajele foarte lungi; tăiem noi, ca să nu ne taie ei. */
+const MAX_LENGTH = 900;
 
 function buildMessage(payload: ContactPayload) {
   const lines = [
+    "Cerere ofertă — crearewebsitepro.ro",
+    "",
     `Nume: ${payload.name}`,
     `Email: ${payload.email}`,
     payload.phone ? `Telefon: ${payload.phone}` : null,
@@ -39,7 +59,8 @@ function buildMessage(payload: ContactPayload) {
     payload.message,
   ].filter((line): line is string => line !== null);
 
-  return lines.join("\n");
+  const text = lines.join("\n");
+  return text.length > MAX_LENGTH ? `${text.slice(0, MAX_LENGTH - 1)}…` : text;
 }
 
 export function buildWhatsAppUrl(payload: ContactPayload) {
@@ -56,7 +77,14 @@ export function buildMailtoUrl(payload: ContactPayload) {
 }
 
 export async function submitContactForm(payload: ContactPayload): Promise<{ ok: true }> {
-  if (typeof window === "undefined") throw new Error("NO_WINDOW");
-  window.location.href = buildMailtoUrl(payload);
+  const url =
+    `${CALLMEBOT.endpoint}` +
+    `?phone=${encodeURIComponent(CALLMEBOT.phone)}` +
+    `&text=${encodeURIComponent(buildMessage(payload))}` +
+    `&apikey=${encodeURIComponent(CALLMEBOT.apikey)}`;
+
+  // `no-cors` întoarce un răspuns opac: se rezolvă dacă cererea a plecat și
+  // aruncă dacă rețeaua a refuzat-o. E tot semnalul pe care îl putem avea.
+  await fetch(url, { method: "GET", mode: "no-cors", cache: "no-store" });
   return { ok: true };
 }

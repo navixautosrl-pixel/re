@@ -30,21 +30,30 @@ Se editează într-un singur loc, în sursă: `src/lib/constants.ts`, obiectul
 pentru o firmă de servicii din România și sunt gata de citit, dar dă-le un
 ochi unui om de specialitate înainte să te bazezi pe ele.
 
-### 2. Formularul de contact
+### 2. Formularul de contact — trimite pe WhatsApp
 
-Site-ul e static, deci nu are server care să primească formularul. Până acum
-butonul de trimitere pur și simplu dădea eroare.
+La apăsarea butonului, mesajul îți ajunge pe WhatsApp prin CallMeBot, la
+numărul `0773 938 355`. Cheia (`9102404`) e în `src/lib/contact.ts`.
 
-Acum funcționează așa: la trimitere, se deschide aplicația de email a
-vizitatorului cu destinatarul, subiectul și toate câmpurile deja completate —
-mai rămâne să apese „Trimite”. În pagina de confirmare are și varianta
-WhatsApp, și numărul de telefon.
+**Două lucruri de știut, ca să nu fie surpriză:**
 
-Când vrei un formular care trimite singur (fără să depindă de clientul de
-email al vizitatorului), îți trebuie un endpoint: o funcție serverless,
-Formspree, Web3Forms sau similar. Punctul de integrare e pregătit și comentat
-în `src/lib/contact.ts` — se schimbă o singură funcție, restul paginii rămâne
-neatins.
+1. **Cheia e vizibilă în codul din browser.** Site-ul e static, nu are server
+   unde s-o ascundă. Oricine deschide codul paginii o poate citi și îți poate
+   trimite mesaje pe WhatsApp prin ea. Nu-i dă nimănui acces la nimic, dar e
+   o portiță de spam. Rezolvarea, dacă devine o problemă: un mic releu (o
+   funcție gratuită pe Vercel sau Cloudflare) care ține cheia la el — atunci
+   se schimbă o singură constantă, `ENDPOINT`.
+
+2. **Nu putem citi răspunsul lor.** CallMeBot nu trimite anteturi CORS, deci
+   știm că cererea a plecat, nu că ei au livrat-o. De asta pagina de
+   confirmare păstrează la vedere telefonul și emailul. Dacă CallMeBot
+   respinge (cheie greșită, prea multe mesaje într-un minut), site-ul tot va
+   spune „Mesajul a plecat”. **Testează o dată după ce urci site-ul** — e
+   singurul mod de a fi sigur.
+
+Nu am putut testa trimiterea reală de aici: ieșirea către `api.callmebot.com`
+e blocată în mediul în care lucrez. Am verificat că cererea pleacă spre
+adresa corectă, cu numărul, cheia și textul tău în ea.
 
 ### 3. Chatul live (Tawk.to)
 
@@ -53,30 +62,16 @@ din mediul de aici că fereastra se deschide, pentru că ieșirea către
 `embed.tawk.to` e blocată în sandbox — am verificat că cererea pleacă spre
 adresa corectă. Testează o dată după ce urci site-ul.
 
-**Se încarcă la primul click, nu la încărcarea paginii.** Butonul „Scrie-ne”
-din colț e desenat de mine, local, și nu trimite nimic nicăieri; la click se
-încarcă scriptul Tawk și fereastra lor se deschide imediat.
+**Pornește la fiecare vizită**, cum ai cerut, ca să poți trimite mesaje
+proactive. Asta înseamnă că Tawk primește IP-ul fiecărui vizitator și îi pune
+cookie-urile lui la fiecare încărcare de pagină — așa că ambele politici sunt
+scrise să spună exact asta: ce cookie-uri pune, pe ce durată, cine le
+primește și cum poate cineva să le evite.
 
-Am făcut așa pentru că eticheta Tawk pusă direct în pagină pornește la
-fiecare vizită, trimite IP-ul fiecărui vizitator la Tawk și îi pune
-cookie-uri proprii înainte să fi cerut ceva — ceea ce ar fi contrazis două
-lucruri scrise negru pe alb în pagina `/cookies`: că niciun terț nu primește
-IP-ul prin simpla vizitare, și că nimic în afara setării strict necesare nu
-pornește fără acord. În plus, pagina se încarcă mai repede pentru cei care
-nu deschid chatul.
-
-Ambele politici sunt actualizate: Tawk.to e declarat explicit, cu ce
-cookie-uri pune și pe ce durată.
-
-**Dacă vrei să pornească la fiecare vizită** (ca să poți trimite mesaje
-proactive): în `src/components/shared/LiveChat.tsx`, schimbă
-`const LOAD_ON = "click"` în `"load"`. Atunci actualizează și secțiunea 2 din
-`/cookies` — Tawk devine un terț activ pe fiecare pagină, nu unul pornit la
-cerere.
-
-Dacă scriptul e blocat (blocant de reclame), butonul nu rămâne blocat pe
-„Se deschide…”: după 8 secunde spune ce s-a întâmplat și afișează emailul și
-telefonul.
+Varianta „pornește doar la click” e construită tot acolo și e la un cuvânt
+distanță, dacă te răzgândești: în `src/components/shared/LiveChat.tsx`,
+`const LOAD_ON = "load"` → `"click"`. Atunci apare în colț un buton desenat
+local, iar Tawk se încarcă abia la apăsarea lui.
 
 ### 4. Analytics (opțional)
 
@@ -106,7 +101,13 @@ furnizorului și durata cookie-urilor lui.
 - **ANPC**: butoane SAL și SOL în subsol, obligatorii pentru comerț online.
 - **Metode de plată**: Visa, Mastercard, transfer bancar, PayPal,
   criptomonede. Numerarul și ramburs-ul sunt marcate explicit ca neacceptate.
-- **Chat live Tawk.to**, pornit la click (vezi mai sus).
+- **Chat live Tawk.to**, pornit la fiecare vizită (vezi mai sus).
+- **Formularul trimite pe WhatsApp** prin CallMeBot, nu mai deschide clientul
+  de email.
+- **Bannerul de cookie-uri nu mai fură clicuri**: sub 1024px e o fereastră
+  cu voal, peste 1024px un cartonaș în colțul din stânga-jos. Înainte se
+  întindea pe toată lățimea și ateriza exact peste butonul „Cere o ofertă”
+  din hero — clicul ajungea în banner, nu în buton.
 - **SEO**: titluri și descrieri noi construite pe „creare website”, listă de
   cuvinte cheie reordonată, canonical și Open Graph pe domeniul nou, date
   structurate curățate (erau două noduri `WebSite` și două `FAQPage`

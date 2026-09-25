@@ -105,10 +105,10 @@ export function Contact() {
                 {status === "success" ? (
                   <div className="flex flex-col items-center py-10 text-center">
                     <CheckCircle2 className="size-10 text-accent-2" aria-hidden="true" />
-                    <p className="font-display mt-6 text-3xl font-semibold text-foreground">Mesajul e pregătit.</p>
+                    <p className="font-display mt-6 text-3xl font-semibold text-foreground">Mesajul a plecat.</p>
                     <p className="mt-3 max-w-sm text-muted-foreground">
-                      Ți-am deschis aplicația de email cu toate detaliile completate. Mai rămâne să apeși
-                      „Trimite” — și revenim către tine în cel mai scurt timp.
+                      L-am trimis direct pe WhatsApp-ul nostru și revenim către tine în cel mai scurt timp. Dacă
+                      vrei să ne scrii între timp, ai mai jos toate căile.
                     </p>
                     <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                       <a
@@ -118,7 +118,7 @@ export function Contact() {
                         className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent-2 hover:text-accent-2"
                       >
                         <MessageCircle className="size-4" aria-hidden="true" />
-                        Trimite pe WhatsApp în schimb
+                        Deschide conversația
                       </a>
                       <a
                         href={`tel:${siteConfig.phoneHref}`}
@@ -259,7 +259,7 @@ export function Contact() {
                       <div className="flex items-start gap-3 rounded-md border border-destructive/30 bg-destructive/5 p-4">
                         <AlertCircle className="mt-0.5 size-4 shrink-0 text-destructive" aria-hidden="true" />
                         <p className="text-sm text-foreground/85">
-                          Nu am putut deschide aplicația ta de email. Scrie-ne direct la{" "}
+                          Nu am putut trimite mesajul — probabil o problemă de conexiune. Scrie-ne direct la{" "}
                           <a href={`mailto:${siteConfig.email}`} className="text-accent-2 underline underline-offset-2">
                             {siteConfig.email}
                           </a>

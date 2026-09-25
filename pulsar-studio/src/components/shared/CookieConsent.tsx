@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { useReducedMotion } from "@/lib/useReducedMotion";
@@ -114,6 +114,7 @@ export function CookieConsent() {
   const prefersReducedMotion = useReducedMotion();
   const { consent, mounted } = useConsent();
 
+  const panelRef = useRef<HTMLDivElement>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [analytics, setAnalytics] = useState(false);
@@ -151,10 +152,35 @@ export function CookieConsent() {
   // Escape închide doar dacă există deja o alegere salvată. Altfel ar fi o
   // cale de a scăpa de banner fără a răspunde, iar la reîncărcare ar apărea
   // din nou — supărător și fără rost.
+  //
+  // Tab rămâne închis în panou: panoul trebuie oricum răspuns, iar sub
+  // 1024px stă peste pagină cu un voal, deci un focus scăpat dedesubt ar
+  // ajunge pe conținut pe care nimeni nu-l vede.
   useEffect(() => {
     if (!open) return;
+    const panel = panelRef.current;
+    panel?.focus();
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && consent) setPanelOpen(false);
+      if (e.key === "Escape" && consent) {
+        setPanelOpen(false);
+        return;
+      }
+      if (e.key !== "Tab" || !panel) return;
+      const focusable = panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || active === panel)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -166,24 +192,46 @@ export function CookieConsent() {
     <AnimatePresence>
       {open ? (
         <motion.div
+          key="cookie-scrim"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration }}
+          onClick={() => consent && setPanelOpen(false)}
+          /* Voalul există doar sub 1024px. Acolo, orice carton așezat în
+             josul ecranului acoperă butoanele din hero, iar un clic pe ele
+             ajunge tăcut în carton — exact bugul raportat. Cu voal, e limpede
+             că întâi se răspunde. Pe ecran lat cartonul stă în colț și nu
+             încalecă nimic, deci nu întunecăm pagina degeaba. */
+          className="fixed inset-0 z-[89] bg-[#050816]/70 backdrop-blur-[2px] lg:hidden"
+          aria-hidden="true"
+        />
+      ) : null}
+      {open ? (
+        <motion.div
           key="cookie-consent"
+          ref={panelRef}
+          tabIndex={-1}
+          data-consent-panel
           role="dialog"
+          aria-modal="true"
           aria-labelledby="cookie-title"
           aria-describedby="cookie-desc"
           initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 24 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: prefersReducedMotion ? 0 : 24 }}
           transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-x-3 bottom-3 z-[90] mx-auto max-w-3xl rounded-xl border border-border bg-[color:var(--color-surface)] p-5 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.9)] sm:inset-x-6 sm:bottom-6 sm:p-6"
+          /* Sub 1024px: centrat, peste voal. Peste: cartonaș îngust în
+             colțul din stânga-jos, departe de butoanele din hero. */
+          className="fixed inset-x-4 top-1/2 z-[90] mx-auto max-w-[30rem] -translate-y-1/2 rounded-xl border border-border bg-[color:var(--color-surface)] p-5 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.9)] lg:inset-x-auto lg:bottom-6 lg:left-6 lg:top-auto lg:translate-y-0"
         >
-          <h2 id="cookie-title" className="font-display text-base font-semibold text-foreground">
-            Cookie-uri pe acest site
+          <h2 id="cookie-title" className="font-display text-sm font-semibold text-foreground">
+            Cookie-uri
           </h2>
-          <p id="cookie-desc" className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Folosim o singură setare strict necesară, ca să reținem răspunsul tău de aici. Orice altceva — de exemplu
-            măsurarea traficului — pornește doar dacă îl accepți. Detaliile sunt în{" "}
+          <p id="cookie-desc" className="mt-1.5 text-[0.8125rem] leading-relaxed text-muted-foreground">
+            Folosim strictul necesar plus chatul de asistență. Restul pornește doar cu acordul tău —{" "}
             <Link href="/cookies" className="text-accent-2 underline underline-offset-2">
-              politica de cookie-uri
+              detalii
             </Link>
             .
           </p>
@@ -216,28 +264,28 @@ export function CookieConsent() {
             ) : null}
           </AnimatePresence>
 
-          <div className="mt-5 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-            <button
-              type="button"
-              onClick={() => save(true)}
-              className="order-1 rounded-full bg-[image:var(--gradient-blue-purple)] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 sm:order-3"
-            >
-              Acceptă toate
-            </button>
-            <button
-              type="button"
-              onClick={() => save(showDetails ? analytics : false)}
-              className="order-2 rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent-2 hover:text-accent-2"
-            >
-              {showDetails ? "Salvează alegerea" : "Refuz"}
-            </button>
+          <div className="mt-3.5 flex items-center gap-2">
             <button
               type="button"
               onClick={() => setShowDetails((v) => !v)}
               aria-expanded={showDetails}
-              className="order-3 py-3 text-sm font-medium text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground sm:order-1 sm:mr-auto sm:px-0"
+              className="mr-auto py-2 text-[0.8125rem] font-medium text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
             >
-              {showDetails ? "Ascunde detaliile" : "Setări"}
+              {showDetails ? "Ascunde" : "Setări"}
+            </button>
+            <button
+              type="button"
+              onClick={() => save(showDetails ? analytics : false)}
+              className="rounded-full border border-border px-4 py-2.5 text-[0.8125rem] font-semibold text-foreground transition-colors hover:border-accent-2 hover:text-accent-2"
+            >
+              {showDetails ? "Salvează" : "Refuz"}
+            </button>
+            <button
+              type="button"
+              onClick={() => save(true)}
+              className="rounded-full bg-[image:var(--gradient-blue-purple)] px-4 py-2.5 text-[0.8125rem] font-semibold text-white transition-opacity hover:opacity-90"
+            >
+              Acceptă toate
             </button>
           </div>
         </motion.div>

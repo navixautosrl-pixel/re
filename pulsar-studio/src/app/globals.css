@@ -97,6 +97,15 @@ body {
   border-radius: 4px;
 }
 
+/* Regula de mai sus nu stă într-un @layer, deci bate utilitarele Tailwind —
+   inclusiv `focus-visible:outline-none`. Panoul de cookie-uri primește focus
+   programatic la deschidere (ca să funcționeze capcana de Tab), iar un inel
+   de focus în jurul întregului carton arată a defect de randare. Focusul
+   real rămâne vizibil pe butoanele dinăuntru. */
+[data-consent-panel]:focus-visible {
+  outline: none;
+}
+
 .font-display {
   font-family: var(--font-display);
 }
