@@ -84,6 +84,49 @@ corectă, prin bannerul de cookie-uri, sunt comentate la finalul fișierului
 După ce îl adaugi, completează și secțiunea 2 din pagina `/cookies` cu numele
 furnizorului și durata cookie-urilor lui.
 
+## Paginile pe domenii de activitate
+
+Site-ul are acum, pe lângă pagina principală, **16 pagini de nișă** și o
+pagină de index:
+
+    /creare-site/                      index pe categorii
+    /creare-site/balti-de-pescuit/
+    /creare-site/terenuri-de-padel/
+    /creare-site/baze-de-inot/
+    /creare-site/terenuri-de-tenis/
+    /creare-site/sali-de-fitness/
+    /creare-site/detailing-auto/
+    /creare-site/tractari-auto/
+    /creare-site/service-auto/
+    /creare-site/shaormerie/
+    /creare-site/fast-food/
+    /creare-site/restaurante/
+    /creare-site/pensiuni-turistice/
+    /creare-site/magazine-online/
+    /creare-site/cabinete-stomatologice/
+    /creare-site/saloane-de-infrumusetare/
+    /creare-site/firme-de-constructii/
+
+**De ce pagini separate, și nu secțiuni în pagina principală.** O pagină se
+poate clasa pentru o singură intenție de căutare. „Creare site baltă de
+pescuit” și „site pentru detailing auto” sunt două intenții diferite, cu
+oameni diferiți în spate. Puse amândouă pe aceeași pagină, se anulează
+reciproc: Google nu știe pe ce s-o claseze și n-o clasează pe niciuna. Puse
+pe pagini separate, fiecare are titlu propriu, descriere proprie, un singur
+H1 și un text care chiar răspunde la acea căutare.
+
+**Riscul, și cum a fost evitat.** Paginile care diferă doar prin cuvântul
+schimbat se numesc „doorway pages”, Google le tratează ca spam și poate
+retrograda tot domeniul. De aceea fiecare pagină e scrisă separat: alte
+probleme, alte secțiuni necesare, alte întrebări frecvente. Suprapunerea
+maximă între oricare două pagini, măsurată pe vocabular, e de 32% — și aceea
+între shaormerie și fast food, care chiar sunt înrudite.
+
+**Cum adaugi o nișă nouă.** Tot conținutul stă în
+`src/lib/niches.ts`. Copiezi o intrare, îi schimbi textele și apare automat
+peste tot: în index, în sitemap, în legăturile dintre pagini. Scrie conținut
+real pentru ea — o intrare copiată cu numele schimbat face rău, nu bine.
+
 ## Ce s-a schimbat față de versiunea anterioară
 
 - **Brand**: Pulsar Studio → CreareWebsitePro, peste tot (meniu, subsol,
@@ -101,7 +144,7 @@ furnizorului și durata cookie-urilor lui.
 - **ANPC**: butoane SAL și SOL în subsol, obligatorii pentru comerț online.
 - **Metode de plată**: Visa, Mastercard, transfer bancar, PayPal,
   criptomonede. Numerarul și ramburs-ul sunt marcate explicit ca neacceptate.
-- **Chat live Tawk.to**, pornit la fiecare vizită (vezi mai sus).
+- **16 pagini pe domenii de activitate** plus un index (vezi mai sus).\n- **Chat live Tawk.to**, pornit la fiecare vizită (vezi mai sus).
 - **Formularul trimite pe WhatsApp** prin CallMeBot, nu mai deschide clientul
   de email.
 - **Bannerul de cookie-uri nu mai fură clicuri**: sub 1024px e o fereastră

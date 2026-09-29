@@ -29,7 +29,10 @@ export function Navbar() {
   }, [open]);
 
   useEffect(() => {
+    // Doar ancorele: `document.querySelector("/creare-site")` aruncă
+    // SyntaxError, iar efectul s-ar opri înainte să urmărească ceva.
     const sections = navLinks
+      .filter((link) => link.href.startsWith("#"))
       .map((link) => document.querySelector(link.href))
       .filter((el): el is Element => el !== null);
     if (sections.length === 0) return;

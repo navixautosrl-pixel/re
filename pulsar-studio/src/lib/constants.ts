@@ -153,6 +153,10 @@ export const seoKeywords = [
 
 export const navLinks = [
   { label: "Servicii", href: "#servicii" },
+  // Singura intrare care duce către o pagină reală, nu către o secțiune din
+  // pagina principală. Navbar-ul ține cont de asta când urmărește secțiunea
+  // activă la derulare.
+  { label: "Domenii", href: "/creare-site" },
   { label: "Pachete", href: "#pachete" },
   { label: "Portofoliu", href: "#portofoliu" },
   { label: "Proces", href: "#proces" },
@@ -169,6 +173,7 @@ export const footerLinks = {
     { label: "Mentenanță", href: "#servicii" },
   ],
   nav: [
+    { label: "Domenii de activitate", href: "/creare-site" },
     { label: "Pachete", href: "#pachete" },
     { label: "Portofoliu", href: "#portofoliu" },
     { label: "Proces", href: "#proces" },

@@ -1,3 +1,4 @@
+import { jsonLd } from "@/lib/jsonLd";
 import { siteConfig, faqItems } from "@/lib/constants";
 import { Hero } from "@/components/sections/Hero";
 import { Trust } from "@/components/sections/Trust";
@@ -18,7 +19,7 @@ import { Contact } from "@/components/sections/Contact";
 // three unconnected things that happen to share a domain.
 const origin = `https://${siteConfig.domain}`;
 
-const jsonLd = [
+const homeLd = [
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -46,7 +47,7 @@ const jsonLd = [
 export default function Home() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(homeLd) }} />
       <Hero />
       <Trust />
       <Services />

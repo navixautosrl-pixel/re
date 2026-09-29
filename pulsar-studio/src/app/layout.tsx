@@ -17,6 +17,7 @@ import "./globals.css";
 import { SmoothScroll } from "@/components/shared/SmoothScroll";
 import { CookieConsent } from "@/components/shared/CookieConsent";
 import { siteConfig, seoKeywords, services, pricingPlans } from "@/lib/constants";
+import { jsonLd } from "@/lib/jsonLd";
 import { withBasePath } from "@/lib/basePath";
 
 export const metadata: Metadata = {
@@ -92,7 +93,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   // published package prices, the contact address, the hosting partner.
   // Nothing about staff, ratings, reviews, addresses or founding dates is
   // asserted, because none of it is established.
-  const jsonLd = {
+  const organizationLd = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     "@id": `${origin}/#organization`,
@@ -157,7 +158,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="icon" href={withBasePath("/favicon.svg")} type="image/svg+xml" />
         <link rel="icon" href={withBasePath("/favicon.png")} type="image/png" sizes="512x512" />
         <link rel="apple-touch-icon" href={withBasePath("/favicon.png")} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(organizationLd) }} />
       </head>
       <body className="flex min-h-screen flex-col font-sans antialiased">
         {/* Self-contained colours rather than theme tokens: this link is
