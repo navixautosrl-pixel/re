@@ -10,7 +10,7 @@ export function WhyUs() {
       <div className="container-max px-5 sm:px-8 lg:px-10">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-            Construit ca să funcționeze.
+            De ce merită un website construit pe comandă
           </h2>
         </Reveal>
 

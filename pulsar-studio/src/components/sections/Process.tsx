@@ -44,7 +44,7 @@ export function Process() {
         <Reveal className="lg:col-span-4">
           <div className="lg:sticky lg:top-32">
             <h2 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-              De la idee la lansare.
+              Cum decurge realizarea unui website
             </h2>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
               {processSteps.length} pași, fără surprize. Știi în fiecare moment la ce lucrăm și ce urmează.

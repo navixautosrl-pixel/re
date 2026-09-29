@@ -133,6 +133,30 @@ editezi nimic acolo.
 Nu ține de site, dar pentru o firmă de servicii aduce des mai mult decât
 SEO-ul în primele luni, și e gratuit: `business.google.com`.
 
+## Ce s-a reparat la SEO-ul de pe pagină
+
+Un audit al paginii principale a arătat o lipsă reală, nu una închipuită:
+
+| Înainte | După |
+|---|---|
+| H1: „Construim site-uri care îți cresc afacerea." | H1: „Creare website pentru afaceri care cresc." |
+| „creare website" apărea de **0 ori** în pagină | apare de **3 ori**, inclusiv în H1 |
+| toate cele 8 H2-uri erau sloganuri | 7 din 8 descriu ce e în secțiune, cu cuvintele căutate |
+| „România", „preț" — 0 apariții | prezente |
+
+Titlul paginii (65 caractere) și descrierea (146) erau deja bune și au rămas
+neatinse. Promisiunea din vechiul H1 nu s-a pierdut — a coborât în paragraful
+de sub titlu, unde îi e locul.
+
+**Despre meta `keywords`:** există în pagină, dar **Google o ignoră din
+2009**. Nu are niciun efect asupra clasării. Am lăsat-o pentru că Bing se mai
+uită ocazional la ea, însă nu te baza pe ea.
+
+**Și o precizare cinstită:** asta nu e motivul pentru care nu a intrat nimeni
+în prima săptămână. Era o problemă reală și merita reparată, dar nicio pagină
+nu clasează un domeniu de șapte zile, oricât de bine ar fi scrisă. Cele două
+lucruri sunt separate.
+
 ## Cât durează, realist
 
 Un domeniu nou nu se clasează în zile. Ordinea obișnuită:

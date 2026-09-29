@@ -20,7 +20,7 @@ export function Services() {
       <div className="container-max px-5 sm:px-8 lg:px-10">
         <Reveal className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <h2 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:col-span-7">
-            Ce putem face pentru tine?
+            Servicii de creare website și promovare online
           </h2>
           <p className="text-sm leading-relaxed text-muted-foreground lg:col-span-4 lg:col-start-9">
             Creare site-uri de prezentare, magazine online, optimizare SEO și marketing digital — cinci direcții,

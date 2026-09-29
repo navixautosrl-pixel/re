@@ -8,7 +8,7 @@ import { MagneticButton } from "@/components/shared/MagneticButton";
 import { SignalField } from "@/components/shared/SignalField";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
-const HEADLINE = ["Construim", "site-uri care", "îți cresc"];
+const HEADLINE = ["Creare", "website pentru", "afaceri care"];
 
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
@@ -87,7 +87,7 @@ export function Hero() {
               animate={{ y: "0%" }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.78, delay: prefersReducedMotion ? 0 : 0.22, ease }}
             >
-              afacerea.
+              cresc.
             </motion.span>
           </span>
         </h1>
@@ -101,9 +101,9 @@ export function Hero() {
             transition={{ duration: prefersReducedMotion ? 0 : 0.8, delay: prefersReducedMotion ? 0 : 0.46, ease }}
             className="max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg lg:col-span-5 lg:col-start-1"
           >
-            Website-uri la cheie, <span className="text-foreground">SEO</span> și{" "}
-            <span className="text-foreground">marketing digital</span> — tot ce ai nevoie pentru o prezență online
-            care contează.
+            Site de prezentare, <span className="text-foreground">magazin online</span>,{" "}
+            <span className="text-foreground">SEO</span> și marketing digital, pentru firme din România. Construim
+            site-uri care îți cresc afacerea, nu doar arată bine.
           </motion.p>
 
           <motion.div

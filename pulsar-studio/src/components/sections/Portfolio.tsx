@@ -32,7 +32,7 @@ export function Portfolio() {
       <div className="container-max px-5 sm:px-8 lg:px-10">
         <Reveal className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <h2 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:col-span-6">
-            Concepte, nu promisiuni goale.
+            Exemple de site-uri construite de noi
           </h2>
           <p className="text-sm leading-relaxed text-muted-foreground lg:col-span-5 lg:col-start-8">
             Patru site-uri demo complete și funcționale, construite de noi de la zero. Intră în oricare și
