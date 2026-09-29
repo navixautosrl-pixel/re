@@ -354,6 +354,46 @@ export const processSteps = [
 // ---------------------------------------------------------------------------
 // PORTFOLIO — explicitly demo/concept work, not real client results.
 // ---------------------------------------------------------------------------
+/**
+ * PROIECTE LIVRATE — site-uri reale, ale unor clienți reali.
+ *
+ * Nu inventa intrări aici. Un portofoliu cu un proiect care nu există se
+ * verifică într-un click și costă mai mult decât aduce. Intră în listă doar
+ * ce e online și ce clientul a acceptat să fie arătat.
+ *
+ * `preview` e opțional: cât timp lipsește fișierul, cardul se desenează cu
+ * gradientul brandului și numele proiectului. Arată intenționat, nu rupt —
+ * dar o captură reală convinge de zece ori mai mult, deci pune-o de îndată
+ * ce o ai.
+ */
+export type ClientProject = {
+  id: string;
+  href: string;
+  preview?: string;
+  previewPosition?: string;
+  category: string;
+  title: string;
+  description: string;
+};
+
+export const clientProjects: ClientProject[] = [
+  {
+    id: "balta-lazar",
+    href: "https://baltalazaralexandria.ro",
+    category: "Baltă de pescuit",
+    title: "Balta Lazăr, Alexandria",
+    description:
+      "Site de prezentare pentru o baltă de pescuit din Alexandria, județul Teleorman.",
+  },
+  {
+    id: "paradisul-tenilor",
+    href: "https://paradisultenilor.ro",
+    category: "Baltă de pescuit",
+    title: "Paradisul Tenilor",
+    description: "Site de prezentare pentru o baltă de pescuit.",
+  },
+];
+
 export const portfolioItems = [
   {
     id: "restaurant",

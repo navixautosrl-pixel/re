@@ -40,6 +40,14 @@ export type Niche = {
   faq: { q: string; a: string }[];
   /** Pachetul care acoperă, de regulă, un astfel de proiect. */
   recommended: string;
+  /**
+   * Id-uri din `clientProjects` — site-uri reale, livrate, din exact acest
+   * domeniu. Pe o pagină care încearcă să convingă un proprietar de baltă,
+   * un site de baltă deja online valorează mai mult decât tot textul de
+   * deasupra lui. Lasă gol dacă nu ai livrat încă nimic în domeniu; nu
+   * completa cu proiecte dintr-un domeniu vecin.
+   */
+  proof?: string[];
   related: string[];
 };
 
@@ -123,6 +131,7 @@ export const niches: Niche[] = [
       },
     ],
     recommended: "business",
+    proof: ["balta-lazar", "paradisul-tenilor"],
     related: ["terenuri-de-padel", "pensiuni-turistice", "baze-de-inot"],
   },
   {

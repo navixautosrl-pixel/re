@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, Check, ChevronRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, ChevronRight } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { Button } from "@/components/ui/Button";
 import { ogImages } from "@/lib/basePath";
-import { pricingPlans, siteConfig } from "@/lib/constants";
+import { clientProjects, pricingPlans, siteConfig } from "@/lib/constants";
 import { jsonLd } from "@/lib/jsonLd";
 import { getNiche, niches } from "@/lib/niches";
 
@@ -52,6 +52,9 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
   const origin = `https://${siteConfig.domain}`;
   const url = `${origin}/creare-site/${niche.slug}`;
   const plan = pricingPlans.find((p) => p.id === niche.recommended);
+  const proof = (niche.proof ?? [])
+    .map((id) => clientProjects.find((project) => project.id === id))
+    .filter((project): project is NonNullable<typeof project> => !!project);
   const related = niche.related.map(getNiche).filter((n): n is NonNullable<typeof n> => !!n);
 
   // Firul Ana are rost dublu: îl vede omul, în capul paginii, și îl citește
@@ -145,6 +148,45 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
           </Reveal>
         </div>
       </section>
+
+      {/* ---- Dovada ----
+           Sus, înaintea oricărui argument: proprietarul de baltă care ajunge
+           aici vrea să vadă o baltă, nu o listă de calități. */}
+      {proof.length ? (
+        <section className="border-t border-border bg-surface py-14">
+          <div className="container-max px-5 sm:px-8 lg:px-10">
+            <Reveal>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-2">
+                Am construit deja pentru {niche.name}
+              </h2>
+            </Reveal>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {proof.map((project, i) => (
+                <Reveal key={project.id} delay={i * 0.07}>
+                  <a
+                    href={project.href}
+                    target="_blank"
+                    rel="noopener"
+                    className="group flex h-full items-start justify-between gap-5 rounded-lg border border-border bg-background p-6 transition-colors hover:border-accent-2"
+                  >
+                    <div>
+                      <h3 className="font-display text-lg font-semibold text-foreground">{project.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{project.description}</p>
+                      <span className="mt-3 block text-xs text-accent-2">
+                        {project.href.replace("https://", "")}
+                      </span>
+                    </div>
+                    <ArrowUpRight
+                      className="size-5 shrink-0 text-muted-foreground transition-all group-hover:rotate-45 group-hover:text-accent-2"
+                      aria-hidden="true"
+                    />
+                  </a>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* ---- Problemele ---- */}
       <section className="section-y border-t border-border">

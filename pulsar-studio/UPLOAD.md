@@ -84,6 +84,40 @@ corectă, prin bannerul de cookie-uri, sunt comentate la finalul fișierului
 După ce îl adaugi, completează și secțiunea 2 din pagina `/cookies` cu numele
 furnizorului și durata cookie-urilor lui.
 
+## Proiectele livrate — două lucruri de făcut
+
+### 1. Capturile (îmi trebuie de la tine)
+
+`baltalazaralexandria.ro` și `paradisultenilor.ro` apar acum în portofoliu, ca
+**Proiecte livrate**, înaintea demo-urilor. Nu am putut ajunge la ele din
+mediul în care lucrez, deci cardurile lor se desenează cu gradientul brandului
+și domeniul scris mare. Arată intenționat, dar o captură reală convinge mult
+mai mult — mai ales că demo-urile de dedesubt au capturi, iar un client real
+nu are voie să arate mai slab decât un concept.
+
+Trimite-mi câte o captură de ecran a paginii principale de la fiecare (browser
+la 1440×900, pagina derulată sus, fără bannere de cookie-uri deschise). Le
+convertesc, le pun în `public/previews/` și completez câmpul `preview` în
+`src/lib/constants.ts`, la `clientProjects`.
+
+### 2. Linkul din subsolul lor (fă-l tu, azi)
+
+Ăsta e cel mai valoros lucru pe care îl poți face pentru clasare săptămâna
+asta, și e gratis. Pune în subsolul ambelor site-uri:
+
+```html
+<p style="text-align:center;font-size:13px;opacity:.7;margin:16px 0">
+  Site realizat de
+  <a href="https://crearewebsitepro.ro/creare-site/balti-de-pescuit/"
+     rel="noopener">CreareWebsitePro</a>
+</p>
+```
+
+Linkul duce spre pagina de nișă, nu spre prima pagină: e mai relevant tematic
+și e exact pagina pe care vrei s-o clasezi pe „creare site baltă de pescuit".
+Fără `rel="nofollow"` — e un link editorial normal, pus de tine pe propriile
+lucrări.
+
 ## Măsurare — de făcut prima dată, înaintea oricărui alt lucru
 
 Fără ce urmează, nu se poate răspunde la întrebarea „de ce nu vine nimeni”.
