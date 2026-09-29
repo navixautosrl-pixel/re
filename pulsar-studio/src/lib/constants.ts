@@ -122,6 +122,31 @@ export const siteConfig = {
   locality: "România",
 };
 
+// ---------------------------------------------------------------------------
+// MĂSURARE
+// ---------------------------------------------------------------------------
+/**
+ * Fără astea două completate, nu se poate răspunde la nicio întrebare despre
+ * trafic. „Nu am avut nicio căutare” și „am avut afișări, dar niciun click”
+ * și „am avut clicuri, dar niciun contact” arată identic din afară și se
+ * rezolvă complet diferit.
+ *
+ * `searchConsoleVerification` — codul din Google Search Console, metoda
+ * „HTML tag”. Doar partea dintre ghilimele din `content="..."`, nu eticheta
+ * întreagă. Search Console e gratuit și e singurul loc din care afli pe ce
+ * cuvinte apari, pe ce poziție și câte afișări ai.
+ *
+ * `googleAnalyticsId` — identificatorul GA4, de forma `G-XXXXXXXXXX`.
+ * Opțional: Search Console îți spune ce se întâmplă în Google, Analytics îți
+ * spune ce fac oamenii după ce ajung pe site. Se încarcă numai după ce
+ * vizitatorul acceptă din bannerul de cookie-uri; pagina /cookies își
+ * ajustează singură textul când îl completezi.
+ */
+export const analytics = {
+  searchConsoleVerification: "",
+  googleAnalyticsId: "",
+};
+
 /**
  * Terms this site should actually be findable by, in the words Romanian
  * visitors type. Used for the keywords meta and, more usefully, as the

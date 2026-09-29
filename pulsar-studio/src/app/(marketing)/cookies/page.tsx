@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalPage, LegalSection } from "@/components/legal/LegalPage";
 import { CookieSettingsButton } from "@/components/shared/CookieConsent";
 import { ogImages } from "@/lib/basePath";
-import { siteConfig } from "@/lib/constants";
+import { analytics, siteConfig } from "@/lib/constants";
 
 const TITLE = "Politica de cookie-uri";
 const DESCRIPTION =
@@ -39,11 +39,21 @@ export default function CookiesPage() {
           reapărea la fiecare pagină. Nu conține date personale, nu pleacă de pe dispozitivul tău și expiră după 12
           luni.
         </p>
-        <p>
-          <strong>Analiză de trafic.</strong> Nu sunt active în acest moment. Dacă vom adăuga un instrument de măsurare
-          a traficului, el va porni <strong>numai după ce îl accepți</strong> din bannerul de cookie-uri, iar această
-          pagină va fi actualizată cu numele furnizorului și durata cookie-urilor folosite.
-        </p>
+        {analytics.googleAnalyticsId ? (
+          <p>
+            <strong>Analiză de trafic.</strong> Folosim Google Analytics 4, ca să vedem ce pagini sunt citite și de
+            unde vin vizitatorii. Pornește <strong>numai dacă îl accepți</strong> din bannerul de cookie-uri, are
+            adresa IP anonimizată și semnalele de publicitate oprite, deci nu te urmărește între site-uri.
+            Cookie-urile lui (<strong>_ga</strong> și <strong>_ga_*</strong>) durează până la 2 ani și se șterg odată
+            cu datele site-ului din browser.
+          </p>
+        ) : (
+          <p>
+            <strong>Analiză de trafic.</strong> Nu sunt active în acest moment. Dacă vom adăuga un instrument de
+            măsurare a traficului, el va porni <strong>numai după ce îl accepți</strong> din bannerul de cookie-uri,
+            iar această pagină va afișa automat numele furnizorului și durata cookie-urilor folosite.
+          </p>
+        )}
         <p>
           <strong>Marketing.</strong> Nu folosim cookie-uri de publicitate, remarketing sau urmărire între site-uri.
         </p>

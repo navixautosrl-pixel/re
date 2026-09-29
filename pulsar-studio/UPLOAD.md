@@ -84,6 +84,72 @@ corectă, prin bannerul de cookie-uri, sunt comentate la finalul fișierului
 După ce îl adaugi, completează și secțiunea 2 din pagina `/cookies` cu numele
 furnizorului și durata cookie-urilor lui.
 
+## Măsurare — de făcut prima dată, înaintea oricărui alt lucru
+
+Fără ce urmează, nu se poate răspunde la întrebarea „de ce nu vine nimeni”.
+„Nu apar deloc în Google”, „apar, dar nimeni nu dă click” și „intră lume, dar
+nu mă contactează nimeni” arată identic din afară și au trei rezolvări
+complet diferite.
+
+### 1. Google Search Console — gratuit, obligatoriu
+
+1. Intră pe `search.google.com/search-console` și adaugă
+   `crearewebsitepro.ro`.
+2. Alege metoda de verificare **HTML tag**. Îți dă ceva de forma
+   `<meta name="google-site-verification" content="AbC123..." />`.
+3. Copiază **doar partea dintre ghilimele** (`AbC123...`) în
+   `src/lib/constants.ts`, la `analytics.searchConsoleVerification`.
+4. Reconstruiește, urcă, apasă „Verify”.
+5. La **Sitemaps**, trimite `https://crearewebsitepro.ro/sitemap.xml`.
+6. La **URL Inspection**, lipește adresa paginii principale și apasă
+   „Request indexing”. La fel pentru `/creare-site/`.
+
+De aici afli pe ce cuvinte apari, pe ce poziție, câte afișări și câte clicuri
+ai. Datele apar în 2–3 zile de la verificare și nu se pot recupera retroactiv
+— de-asta merită făcut acum, nu peste o lună.
+
+### 2. Verifică în 10 secunde dacă ești indexat
+
+Caută în Google, exact așa:
+
+    site:crearewebsitepro.ro
+
+- **Apar pagini** → ești indexat. Lipsa traficului e o problemă de poziție,
+  nu de indexare.
+- **Nu apare nimic** → Google încă nu ți-a luat site-ul în evidență. E
+  normal la un domeniu nou și se rezolvă cu pașii de mai sus.
+
+### 3. Google Analytics — opțional, după Search Console
+
+Dacă vrei să vezi și ce fac oamenii după ce ajung pe site, pune
+identificatorul GA4 (`G-XXXXXXXXXX`) la `analytics.googleAnalyticsId`, în
+același fișier. Se încarcă **numai după** ce vizitatorul acceptă din bannerul
+de cookie-uri, cu IP anonimizat și fără semnale de publicitate. Pagina
+`/cookies` își schimbă singură textul când îl completezi — nu trebuie să
+editezi nimic acolo.
+
+### 4. Profilul Google Business
+
+Nu ține de site, dar pentru o firmă de servicii aduce des mai mult decât
+SEO-ul în primele luni, și e gratuit: `business.google.com`.
+
+## Cât durează, realist
+
+Un domeniu nou nu se clasează în zile. Ordinea obișnuită:
+
+| Când | Ce se întâmplă |
+|---|---|
+| Zilele 1–14 | Google descoperă și indexează site-ul. Trafic: aproape zero. Normal. |
+| Lunile 1–3 | Încep afișările pe căutări lungi și specifice („creare site baltă de pescuit”). Primele clicuri. |
+| Lunile 3–6 | Paginile de nișă prind poziții reale. Cuvintele scurte și comerciale („creare website”) încă nu. |
+| Luna 6+ | Termenii grei devin posibili — dar depind de vechimea domeniului și de linkuri către el, nu de cum arată site-ul. |
+
+De asta paginile pe domenii sunt cea mai bună investiție din site-ul acesta:
+„creare website” e disputat de zeci de agenții cu ani de vechime, pe când
+„creare site pentru bălți de pescuit” aproape că nu are concurență. Căutările
+lungi aduc mai puțini oameni, dar mult mai devreme — și pe aceia care știu
+deja exact ce vor.
+
 ## Paginile pe domenii de activitate
 
 Site-ul are acum, pe lângă pagina principală, **16 pagini de nișă** și o
