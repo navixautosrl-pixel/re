@@ -84,23 +84,28 @@ corectă, prin bannerul de cookie-uri, sunt comentate la finalul fișierului
 După ce îl adaugi, completează și secțiunea 2 din pagina `/cookies` cu numele
 furnizorului și durata cookie-urilor lui.
 
-## Proiectele livrate — două lucruri de făcut
+## Proiectele livrate
 
-### 1. Capturile (îmi trebuie de la tine)
+`baltalazaralexandria.ro` și `paradisultenilor.ro` apar **doar pe
+`/creare-site/balti-de-pescuit/`**, nu pe pagina principală.
 
-`baltalazaralexandria.ro` și `paradisultenilor.ro` apar acum în portofoliu, ca
-**Proiecte livrate**, înaintea demo-urilor. Nu am putut ajunge la ele din
-mediul în care lucrez, deci cardurile lor se desenează cu gradientul brandului
-și domeniul scris mare. Arată intenționat, dar o captură reală convinge mult
-mai mult — mai ales că demo-urile de dedesubt au capturi, iar un client real
-nu are voie să arate mai slab decât un concept.
+Motivul: două lucrări pe prima pagină se citesc ca „atât au livrat”. Aceleași
+două, pe pagina scrisă pentru bălți de pescuit, se citesc ca „ăștia fac exact
+asta”. Pe măsură ce livrezi în alte domenii, fiecare nișă își capătă propriile
+proiecte — câmpul `proof` din `src/lib/niches.ts` leagă un domeniu de lucrările
+reale din el. Nu-l completa cu un proiect dintr-un domeniu vecin; strică exact
+efectul pentru care există.
 
-Trimite-mi câte o captură de ecran a paginii principale de la fiecare (browser
-la 1440×900, pagina derulată sus, fără bannere de cookie-uri deschise). Le
-convertesc, le pun în `public/previews/` și completez câmpul `preview` în
-`src/lib/constants.ts`, la `clientProjects`.
+Capturile sunt cele trimise de tine, de pe telefon, afișate ca atare — într-o
+ramă de telefon, nu întinse pe lățimea unui card, ca să nu mintă despre ce ai
+văzut. Stau în `public/previews/`. Când se schimbă site-urile, înlocuiește
+fișierele cu aceleași nume.
 
-### 2. Linkul din subsolul lor (fă-l tu, azi)
+Descrierile sunt scrise din ce se vede efectiv pe capturi: localitatea, tipul
+de pescuit, cabanele, modul de rezervare, panoul de vreme. Nimic despre tarife
+sau rezultate, pentru că nu apar acolo.
+
+### Linkul din subsolul lor (fă-l tu, azi)
 
 Ăsta e cel mai valoros lucru pe care îl poți face pentru clasare săptămâna
 asta, și e gratis. Pune în subsolul ambelor site-uri:

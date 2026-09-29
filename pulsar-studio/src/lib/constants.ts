@@ -380,17 +380,20 @@ export const clientProjects: ClientProject[] = [
   {
     id: "balta-lazar",
     href: "https://baltalazaralexandria.ro",
-    category: "Baltă de pescuit",
-    title: "Balta Lazăr, Alexandria",
+    preview: "/previews/balta-lazar.webp",
+    category: "Baltă de pescuit · Teleorman",
+    title: "Balta Lazăr",
     description:
-      "Site de prezentare pentru o baltă de pescuit din Alexandria, județul Teleorman.",
+      "Baltă privată de crap și somn din Poroschia, la 5 km de Alexandria. Taxele de pescuit la vedere, cabanele de pe malul apei, rezervare direct pe WhatsApp și un panou cu vremea și presiunea, actualizat live — exact ce verifică un pescar înainte să plece de acasă.",
   },
   {
     id: "paradisul-tenilor",
     href: "https://paradisultenilor.ro",
-    category: "Baltă de pescuit",
+    preview: "/previews/paradisul-tenilor.webp",
+    category: "Baltă de pescuit · Teleorman",
     title: "Paradisul Tenilor",
-    description: "Site de prezentare pentru o baltă de pescuit.",
+    description:
+      "Baltă privată de pescuit din Alexandria. Rezervare de loc la baltă și tarife afișate din prima pagină, peste același panou de vreme în timp real.",
   },
 ];
 

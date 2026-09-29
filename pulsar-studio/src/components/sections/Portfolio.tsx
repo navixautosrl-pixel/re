@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { Button } from "@/components/ui/Button";
 import { withBasePath } from "@/lib/basePath";
-import { clientProjects, portfolioItems } from "@/lib/constants";
+import { portfolioItems } from "@/lib/constants";
 
 // Shown behind the screenshot while it loads, as the fallback if it ever
 // fails, and as the whole tile for a live project that has no screenshot yet
@@ -160,38 +160,20 @@ export function Portfolio() {
       <div className="container-max px-5 sm:px-8 lg:px-10">
         <Reveal className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <h2 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:col-span-6">
-            Site-uri construite de noi
+            Exemple de site-uri construite de noi
           </h2>
           <p className="text-sm leading-relaxed text-muted-foreground lg:col-span-5 lg:col-start-8">
-            Întâi proiectele livrate, online acum, pe domeniile clienților. Sub ele, patru site-uri demo pe care
-            le poți folosi exact ca pe unele reale — meniuri, coș de cumpărături, filtre, formulare.
+            Patru site-uri demo complete și funcționale, construite de noi de la zero. Intră în oricare și
+            folosește-l exact ca pe un site real — meniuri, coș de cumpărături, filtre, formulare.
           </p>
         </Reveal>
 
-        {/* Proiectele livrate stau primele și ocupă fiecare jumătate de rând.
-            Un site real al unui client cântărește mai mult decât orice demo,
-            oricât de bine construit ar fi demo-ul. */}
-        {clientProjects.length ? (
-          <>
-            <Reveal className="mt-14">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-2">Proiecte livrate</h3>
-            </Reveal>
-            <div className="mt-6 grid gap-5 sm:gap-6 lg:grid-cols-12">
-              {clientProjects.map((item, i) => (
-                <Reveal key={item.id} delay={i * 0.07} className="lg:col-span-6">
-                  <ProjectTile item={item} index={i} badge="Proiect live" external />
-                </Reveal>
-              ))}
-            </div>
-          </>
-        ) : null}
-
-        <Reveal className="mt-16">
-          <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-            Demo-uri — concepte construite de noi, nu afaceri reale
-          </h3>
-        </Reveal>
-        <div className="mt-6 grid gap-5 sm:gap-6 lg:grid-cols-12">
+        {/* Proiectele livrate nu stau aici, ci pe pagina domeniului lor —
+            /creare-site/<nișă>/. Două lucrări pe prima pagină se citesc ca
+            „atât au livrat”; aceleași două, pe pagina scrisă pentru acel
+            domeniu, se citesc ca „ăștia fac exact asta”. Vezi `proof` în
+            src/lib/niches.ts. */}
+        <div className="mt-14 grid gap-5 sm:gap-6 lg:grid-cols-12">
           {portfolioItems.map((item, i) => (
             <Reveal key={item.id} delay={i * 0.07} className={spans[i % spans.length]}>
               <ProjectTile item={item} index={i} badge="Demo Concept" external={false} />

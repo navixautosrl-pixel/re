@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowRight, ArrowUpRight, Check, ChevronRight } from "lucide-react";
 import { Reveal } from "@/components/shared/Reveal";
 import { Button } from "@/components/ui/Button";
-import { ogImages } from "@/lib/basePath";
+import { ogImages, withBasePath } from "@/lib/basePath";
 import { clientProjects, pricingPlans, siteConfig } from "@/lib/constants";
 import { jsonLd } from "@/lib/jsonLd";
 import { getNiche, niches } from "@/lib/niches";
@@ -153,33 +153,65 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
            Sus, înaintea oricărui argument: proprietarul de baltă care ajunge
            aici vrea să vadă o baltă, nu o listă de calități. */}
       {proof.length ? (
-        <section className="border-t border-border bg-surface py-14">
+        <section className="border-t border-border bg-surface section-y">
           <div className="container-max px-5 sm:px-8 lg:px-10">
             <Reveal>
               <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-2">
-                Am construit deja pentru {niche.name}
+                Am construit deja pentru {niche.label.toLowerCase()}
               </h2>
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
+                Sunt online acum, pe domeniile lor. Intră și uită-te — e cel mai cinstit mod de a-ți da seama dacă
+                ne merită banii.
+              </p>
             </Reveal>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+
+            <div className="mt-10 grid gap-5 sm:gap-6 lg:grid-cols-2">
               {proof.map((project, i) => (
                 <Reveal key={project.id} delay={i * 0.07}>
                   <a
                     href={project.href}
                     target="_blank"
                     rel="noopener"
-                    className="group flex h-full items-start justify-between gap-5 rounded-lg border border-border bg-background p-6 transition-colors hover:border-accent-2"
+                    className="group flex h-full gap-5 rounded-lg border border-border bg-background p-5 transition-colors hover:border-accent-2 sm:gap-7 sm:p-7"
                   >
-                    <div>
-                      <h3 className="font-display text-lg font-semibold text-foreground">{project.title}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{project.description}</p>
-                      <span className="mt-3 block text-xs text-accent-2">
-                        {project.href.replace("https://", "")}
+                    {/* Capturile sunt făcute pe telefon, deci se arată ca
+                        atare: ramă de telefon, decupată de sus, cu marginile
+                        rotunjite. Un ecran de telefon întins pe lățimea unui
+                        card ar minți despre ce ai văzut. */}
+                    {project.preview ? (
+                      <div className="shrink-0 overflow-hidden rounded-[1.1rem] border border-border-strong bg-black shadow-[0_18px_40px_-20px_rgba(0,0,0,0.9)]">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={withBasePath(project.preview)}
+                          alt={`Site-ul ${project.title}, văzut pe telefon`}
+                          width={640}
+                          height={1263}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-[15rem] w-[7.4rem] object-cover object-top transition-transform duration-[900ms] ease-[var(--ease-premium)] group-hover:scale-[1.04] sm:h-[19rem] sm:w-[9.4rem]"
+                        />
+                      </div>
+                    ) : null}
+
+                    <div className="flex min-w-0 flex-col">
+                      <p className="text-xs font-semibold uppercase tracking-[0.1em] text-accent-2">
+                        {project.category}
+                      </p>
+                      <h3 className="font-display mt-2 text-xl font-semibold text-foreground sm:text-2xl">
+                        {project.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{project.description}</p>
+                      {/* „baltalazaralexandria.ro” e un singur cuvânt de 23
+                          de caractere: fără break-all împingea cardul în
+                          lateral la 320px, lângă previzualizarea telefonului. */}
+                      <span className="mt-auto flex items-center gap-2 pt-5 text-sm font-medium text-foreground">
+                        <span className="break-all">{project.href.replace("https://", "")}</span>
+                        <ArrowUpRight
+                          className="size-4 shrink-0 transition-transform group-hover:rotate-45"
+                          aria-hidden="true"
+                        />
                       </span>
                     </div>
-                    <ArrowUpRight
-                      className="size-5 shrink-0 text-muted-foreground transition-all group-hover:rotate-45 group-hover:text-accent-2"
-                      aria-hidden="true"
-                    />
                   </a>
                 </Reveal>
               ))}
