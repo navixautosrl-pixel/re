@@ -84,6 +84,63 @@ corectă, prin bannerul de cookie-uri, sunt comentate la finalul fișierului
 După ce îl adaugi, completează și secțiunea 2 din pagina `/cookies` cu numele
 furnizorului și durata cookie-urilor lui.
 
+## ȘTERGE `/UPLOAD.md` de pe server, dacă ai urcat o arhivă anterioară
+
+Arhivele pe care ți le-am dat până acum conțineau, din greșeala mea, chiar
+acest fișier în rădăcina site-ului. Asta înseamnă că era citibil public la
+`crearewebsitepro.ro/UPLOAD.md` — cu tot cu notele interne și mențiunea că
+paginile legale sunt necompletate. Nu e o breșă de securitate (cheia
+CallMeBot e oricum vizibilă în codul din browser), dar nu are ce căuta
+acolo.
+
+**Șterge fișierul `UPLOAD.md` din `public_html/`.** Arhiva de acum nu-l mai
+conține; îl primești separat, lângă ea.
+
+## Verificarea completă — ce s-a testat și ce s-a găsit
+
+Rulate pe arhiva finală, dezarhivată și servită ca de pe găzduire:
+
+| Verificare | Rezultat |
+|---|---|
+| ESLint, TypeScript, build de producție | curate |
+| 751 legături interne | toate rezolvă într-un fișier real |
+| 519 resurse (CSS, JS, imagini, fonturi, iconițe) | toate există |
+| Ancore `#...` | toate au un `id` corespondent |
+| Symlink-uri în export și în arhivă | 0 |
+| `.htaccess` în arhivă | prezent |
+| Titluri și descrieri pe paginile indexabile | unice, fără duplicate |
+| Canonical, `og:image`, `lang="ro"`, un singur `h1` | pe fiecare pagină |
+| Ierarhia titlurilor (h1→h2→h3) | fără salturi |
+| JSON-LD | valid, fără entități duplicate |
+| Sitemap vs. `robots` meta | în acord |
+| Imagini | toate cu `alt`, `width` și `height` |
+| 28 de pagini × 10 lățimi (320→1920) | fără scroll orizontal |
+| Erori de consolă, erori JS, cereri eșuate | niciuna |
+| `prefers-reduced-motion` | nimic nu rămâne invizibil |
+| Banner cookie-uri (apare, salvează, nu reapare, se redeschide) | funcționează |
+| Formular → CallMeBot | o singură cerere, cu cheia și datele corecte |
+| Meniu mobil | se deschide, are toate legăturile |
+
+Trei lucruri erau **stricate și s-au reparat** la această verificare:
+
+1. **Sitemap-ul trimitea cele 4 demo-uri**, care sunt marcate `noindex,
+   nofollow`. Search Console raportează asta ca eroare („Submitted URL marked
+   noindex”). Demo-urile au ieșit din sitemap — rămân noindex, pentru că sunt
+   afaceri fictive și n-au ce căuta în rezultate ca și cum ar fi reale.
+2. **Cinci legături din paginile legale nu aveau `/` la final** (`/privacy`,
+   `/cookies`). Cu `trailingSlash: true`, fiecare click pe ele provoca o
+   redirecționare 301 inutilă.
+3. **`UPLOAD.md` ajungea în rădăcina site-ului** (vezi mai sus).
+
+Verificările se pot repeta oricând:
+
+```bash
+npm run build
+python3 scripts/audit-static.py out
+python3 -m http.server 4300 --directory out &
+python3 scripts/audit-runtime.py http://localhost:4300 out
+```
+
 ## Proiectele livrate
 
 `baltalazaralexandria.ro` și `paradisultenilor.ro` apar **doar pe

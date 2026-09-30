@@ -124,7 +124,7 @@ export default function PrivacyPage() {
           <li>
             <strong>Tawk.to</strong>, furnizorul chatului de pe site — primește adresa ta IP la fiecare vizită și
             conținutul discuției, dacă scrii în chat. Detalii în{" "}
-            <a href="/cookies">Politica de cookie-uri</a> și în{" "}
+            <a href="/cookies/">Politica de cookie-uri</a> și în{" "}
             <a href="https://www.tawk.to/privacy-policy/" target="_blank" rel="noopener noreferrer">
               politica lor de confidențialitate
             </a>
@@ -178,7 +178,7 @@ export default function PrivacyPage() {
       <LegalSection n={8} title="Cookie-uri">
         <p>
           Site-ul folosește un număr minim de cookie-uri. Ce sunt, care sunt strict necesare și cum îți schimbi opțiunea
-          scrie în <a href="/cookies">Politica de cookie-uri</a>.
+          scrie în <a href="/cookies/">Politica de cookie-uri</a>.
         </p>
       </LegalSection>
 

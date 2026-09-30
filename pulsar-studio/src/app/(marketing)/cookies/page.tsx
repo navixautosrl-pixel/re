@@ -104,7 +104,7 @@ export default function CookiesPage() {
         </p>
         <p>
           Ce se întâmplă cu datele pe care ni le trimiți tu, prin formular, chat sau email, este descris în{" "}
-          <a href="/privacy">Politica de confidențialitate</a>.
+          <a href="/privacy/">Politica de confidențialitate</a>.
         </p>
       </LegalSection>
     </LegalPage>

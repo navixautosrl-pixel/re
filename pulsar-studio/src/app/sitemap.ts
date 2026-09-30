@@ -5,12 +5,18 @@ import { niches } from "@/lib/niches";
 export const dynamic = "force-static";
 
 /*
- * Paginile legale lipsesc intenționat: sunt marcate `noindex`, iar o pagină
- * dată în sitemap și refuzată în meta este exact contradicția pe care
- * Search Console o raportează ca eroare.
+ * Aici intră numai paginile care se pot indexa.
  *
- * Paginile de domeniu sunt cele pe care vrem să le găsească Google, deci au
- * prioritate mare — mai mare decât demo-urile, care doar arată ce livrăm.
+ * Lipsesc intenționat:
+ *  - paginile legale, marcate `noindex`;
+ *  - cele patru demo-uri, marcate `noindex, nofollow` — sunt afaceri
+ *    fictive, iar un restaurant care nu există n-are ce căuta în
+ *    rezultatele Google ca și cum ar fi real.
+ *
+ * O pagină trimisă în sitemap și refuzată în meta este exact contradicția
+ * pe care Search Console o raportează ca eroare („Submitted URL marked
+ * noindex”), așa că lista de mai jos trebuie să rămână în acord cu
+ * `robots` din metadata fiecărei pagini.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = `https://${siteConfig.domain}`;
@@ -23,17 +29,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const demos = ["restaurant", "fitness", "shop", "agency"].map((slug) => ({
-    url: `${base}/demo/${slug}`,
-    lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.4,
-  }));
-
   return [
     { url: base, lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: `${base}/creare-site`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     ...nichePages,
-    ...demos,
   ];
 }

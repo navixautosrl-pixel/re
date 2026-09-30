@@ -224,8 +224,8 @@ export default function TermsPage() {
       <LegalSection n={13} title="Protecția datelor personale">
         <p>
           Prelucrăm datele personale conform Regulamentului (UE) 2016/679 (GDPR). Detaliile — ce date colectăm, pe ce
-          temei, cât le păstrăm și ce drepturi ai — sunt în <a href="/privacy">Politica de confidențialitate</a>, iar
-          cele despre cookie-uri în <a href="/cookies">Politica de cookie-uri</a>.
+          temei, cât le păstrăm și ce drepturi ai — sunt în <a href="/privacy/">Politica de confidențialitate</a>, iar
+          cele despre cookie-uri în <a href="/cookies/">Politica de cookie-uri</a>.
         </p>
       </LegalSection>
 
