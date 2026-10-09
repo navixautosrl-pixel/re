@@ -19,22 +19,33 @@ export function rateLimit(key: string, limit = 5, windowMs = 60_000) {
 }
 
 /**
- * Client IP from headers our own proxy sets — never the leftmost X-Forwarded-For value,
- * which the client controls. Order: Vercel's header, x-real-ip (set by nginx/Caddy you run),
- * else the X-Forwarded-For entry added by the last TRUSTED_PROXY_HOPS proxies (default 1).
+ * Client IP from headers our own infrastructure sets — never the leftmost X-Forwarded-For value,
+ * which the client controls. Platform headers are trusted only when the deployment says so:
+ *   x-vercel-forwarded-for → only on Vercel (VERCEL is set by the platform)
+ *   x-real-ip              → only with TRUST_X_REAL_IP=true (your nginx/Caddy overwrites it)
+ * Otherwise: the X-Forwarded-For entry added by the last TRUSTED_PROXY_HOPS proxies (default 1).
  */
 export function clientIp(req: Request) {
   const h = req.headers;
-  const direct = h.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip")?.trim();
-  if (direct) return direct;
+  if (process.env.VERCEL) {
+    const v = h.get("x-vercel-forwarded-for")?.split(",")[0]?.trim();
+    if (v) return v;
+  }
+  if (process.env.TRUST_X_REAL_IP === "true") {
+    const v = h.get("x-real-ip")?.trim();
+    if (v) return v;
+  }
   const hops = (h.get("x-forwarded-for") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
   const trusted = Math.max(1, Number(process.env.TRUSTED_PROXY_HOPS) || 1);
   return hops[hops.length - trusted] ?? "local";
 }
 
-/** Per-IP limit plus a global per-route cap, so spoofed or rotating IPs can't flood the inbox. */
-export function allow(route: string, req: Request, perIp = 5, global = 60) {
-  return rateLimit(`${route}:*`, global) && rateLimit(`${route}:${clientIp(req)}`, perIp);
+/**
+ * Per-IP limit first; only requests that pass it count toward a high per-route backstop, so one
+ * client hammering the endpoint can't use up the global budget for everyone else.
+ */
+export function allow(route: string, req: Request, perIp = 5, global = 300) {
+  return rateLimit(`${route}:${clientIp(req)}`, perIp) && rateLimit(`${route}:*`, global);
 }
 
 /** Rejects cross-site form posts: the Origin must match the Host the request came to. */

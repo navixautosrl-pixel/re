@@ -71,8 +71,9 @@ Repo-level tools used on this project (run from the repo root):
 (`ORDER_SINK=resend` + `RESEND_API_KEY`/`MAIL_TO`/`MAIL_FROM` — the `file` sink does not work on
 serverless), `SITE_URL`, and `SITE_INDEXABLE=true` only at launch. Point `www.rbtfishpro.ro` at it.
 
-**Node host / VPS**: `npm ci && npm run build && npm start` behind nginx/Caddy (set
-`x-real-ip`; `TRUSTED_PROXY_HOPS` if you rely on X-Forwarded-For). `ORDER_SINK=file` with a
+**Node host / VPS**: `npm ci && npm run build && npm start` behind nginx/Caddy: have the proxy overwrite
+`X-Real-IP` and set `TRUST_X_REAL_IP=true`, or set `TRUSTED_PROXY_HOPS` to the number of proxies
+appending to X-Forwarded-For. `ORDER_SINK=file` with a
 persistent `DATA_DIR` works here; back the directory up.
 
 Static cPanel hosting is **not** enough: the order and contact APIs need a Node runtime.
