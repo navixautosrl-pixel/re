@@ -1,0 +1,179 @@
+{
+  "capturedAt": "2026-10-09",
+  "projects": [
+    {
+      "slug": "riviera-padel",
+      "kind": "next",
+      "title": "Riviera Padel Lounge and Sports — Padel, Ping-Pong și Biliard în București",
+      "stack": [
+        "Next.js 16.3.4",
+        "Motion",
+        "Radix UI",
+        "Tailwind CSS"
+      ],
+      "fonts": [
+        "Hanken Grotesk",
+        "Jetbrains Mono",
+        "Saira Extra Condensed"
+      ],
+      "htmlPages": null,
+      "commits": 5,
+      "firstCommit": "2026-09-11",
+      "lastCommit": "2026-09-11",
+      "lastMessage": "Fix broken images/favicon when deployed under a URL subpath",
+      "hiddenCookieBanner": false
+    },
+    {
+      "slug": "pulsar-studio",
+      "kind": "next",
+      "title": "Creare Website & Magazin Online în România | CreareWebsitePro",
+      "stack": [
+        "Next.js 16.3.4",
+        "GSAP",
+        "Motion",
+        "Radix UI",
+        "Tailwind CSS"
+      ],
+      "fonts": [
+        "Anton",
+        "DM Sans",
+        "Playfair Display",
+        "Space Grotesk",
+        "Unbounded"
+      ],
+      "htmlPages": null,
+      "commits": 17,
+      "firstCommit": "2026-09-17",
+      "lastCommit": "2026-09-30",
+      "lastMessage": "Audit the built export end to end, and fix the three things it found",
+      "hiddenCookieBanner": true
+    },
+    {
+      "slug": "autospa-detailing-v2",
+      "kind": "next",
+      "title": "Auto Spa Detailing — Spălătorie Auto & Detailing în Chiajna, Ilfov",
+      "stack": [
+        "Next.js 16.3.4",
+        "Motion",
+        "Radix UI",
+        "Tailwind CSS"
+      ],
+      "fonts": [
+        "Bebas Neue",
+        "Inter"
+      ],
+      "htmlPages": null,
+      "commits": 1,
+      "firstCommit": "2026-09-06",
+      "lastCommit": "2026-09-06",
+      "lastMessage": "Add Auto Spa Detailing v2: photo-led urban premium redesign, no 3D",
+      "hiddenCookieBanner": true
+    },
+    {
+      "slug": "cadru-digital",
+      "kind": "next",
+      "title": "Cadru Digital — Agenție de creare website-uri și SEO în România",
+      "stack": [
+        "Next.js 16.3.4",
+        "Motion",
+        "Radix UI",
+        "Tailwind CSS"
+      ],
+      "fonts": [
+        "Fraunces",
+        "Instrument Sans"
+      ],
+      "htmlPages": null,
+      "commits": 3,
+      "firstCommit": "2026-09-07",
+      "lastCommit": "2026-09-07",
+      "lastMessage": "Cadru Digital: vivid color redesign — gradient, aurora, living blob",
+      "hiddenCookieBanner": false
+    },
+    {
+      "slug": "robixhost-site",
+      "kind": "static",
+      "title": "RobixHost - Gazduire Web, VPS si Servere Dedicate in Romania",
+      "stack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "fonts": [],
+      "htmlPages": 17,
+      "commits": 1,
+      "firstCommit": "2026-09-19",
+      "lastCommit": "2026-09-19",
+      "lastMessage": "Add the RobixHost static site: six hosting packages, WHMCS wiring, motion pass",
+      "hiddenCookieBanner": true
+    },
+    {
+      "slug": "website-robixhost",
+      "kind": "static",
+      "title": "RobixHost",
+      "stack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "fonts": [],
+      "htmlPages": 1,
+      "commits": 1,
+      "firstCommit": "2026-09-03",
+      "lastCommit": "2026-09-03",
+      "lastMessage": "Add RbtPro Fishing site (boilies/fishmeal bait)",
+      "hiddenCookieBanner": false
+    },
+    {
+      "slug": "website-rbtpro",
+      "kind": "static",
+      "title": "RbtPro Fishing",
+      "stack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "fonts": [],
+      "htmlPages": 1,
+      "commits": 3,
+      "firstCommit": "2026-09-03",
+      "lastCommit": "2026-09-03",
+      "lastMessage": "Add an editorial \"spotlight\" section to RbtPro, poster-style",
+      "hiddenCookieBanner": false
+    },
+    {
+      "slug": "website-v2",
+      "kind": "static",
+      "title": "WebRapid",
+      "stack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "fonts": [],
+      "htmlPages": 1,
+      "commits": 1,
+      "firstCommit": "2026-09-03",
+      "lastCommit": "2026-09-03",
+      "lastMessage": "Add WebRapid v2: same content, Tailwind + shadcn-style, light mode",
+      "hiddenCookieBanner": false
+    },
+    {
+      "slug": "website",
+      "kind": "static",
+      "title": "WebRapid",
+      "stack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "fonts": [],
+      "htmlPages": 1,
+      "commits": 1,
+      "firstCommit": "2026-09-03",
+      "lastCommit": "2026-09-03",
+      "lastMessage": "Add RbtPro Fishing site (boilies/fishmeal bait)",
+      "hiddenCookieBanner": false
+    }
+  ]
+}

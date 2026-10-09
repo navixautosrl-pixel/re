@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+/*
+  Creative direction: a photographer's contact sheet on a light table. Each site in
+  the repo is a frame on a dark film strip, with edge numbers. The selects are circled
+  in red grease pencil. Light-table white page, warm near-black film, one red for
+  marks only. Bricolage Grotesque's optical-size axis does the hierarchy (opsz 96 for
+  display, 14 for text). A mono face appears only as film-edge numbering.
+
+  Motion storyboard (easing: --ease-out entrances, linear for scrubs)
+  1 Load: SSR HTML in final layout, fonts preloaded, no loader.
+  2 Hero [PRIMARY ~1.3s, CSS only, so it also runs without JS]: frames "expose"
+    with a clip-path wipe left→right (stagger 70ms), then the grease-pencil circle
+    draws around the select (stroke-dashoffset). The CTAs are not animated.
+  3 Type: hero headline words rise from a mask once; nothing else.
+  4 Scroll [PRIMARY #2, GSAP, ≥900px only]: the mobile film strip slides horizontally
+    while its section is pinned (scrub, ease none). Below 900px it's a native
+    scroll-snap strip.
+  5 Navigation: card → case page morphs the frame into the hero (React ViewTransition).
+  6 Images: no scale-on-scroll; frames lift 2px on hover/focus.
+  7 Micro: filter chips, loupe dialog (native <dialog>), copy-free.
+  8 Sections: no section entrance animations.
+  9 Mobile / reduced motion: no pin, no scrub, everything final immediately.
+*/
+
+@theme inline {
+  --color-table: oklch(97.6% 0.004 250);
+  --color-table-2: oklch(94% 0.006 250);
+  --color-film: oklch(20% 0.012 60);
+  --color-film-2: oklch(28% 0.012 60);
+  --color-ink: oklch(22% 0.012 60);
+  --color-ink-2: oklch(44% 0.012 60);
+  --color-rule: oklch(84% 0.008 250);
+  --color-pencil: oklch(55% 0.205 27);
+  --color-edge: oklch(78% 0.09 75);
+
+  --font-sans: var(--font-bricolage), var(--font-bricolage-ro), ui-sans-serif, system-ui, sans-serif;
+  --font-edge: var(--font-plex-mono), ui-monospace, monospace;
+
+  --radius-frame: 2px;
+  --radius-panel: 14px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  --step--1: clamp(0.82rem, 0.79rem + 0.15vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.12rem);
+  --step-1: clamp(1.18rem, 1.08rem + 0.45vw, 1.42rem);
+  --step-3: clamp(1.9rem, 1.35rem + 2.4vw, 3.2rem);
+  --step-5: clamp(2.7rem, 1.4rem + 6vw, 7rem);
+  --gap: clamp(1rem, 0.7rem + 1.2vw, 1.75rem);
+  --section: clamp(4rem, 2.6rem + 6vw, 9rem);
+}
+
+html { scroll-padding-top: 5rem; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+body {
+  background: var(--color-table);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  font-optical-sizing: auto;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
+.display { font-variation-settings: "opsz" 96; font-weight: 760; letter-spacing: -0.035em; line-height: 0.92; }
+.edge { font-family: var(--font-edge); font-weight: 500; letter-spacing: 0.06em; font-size: 0.72rem; }
+
+:focus-visible { outline: 2px solid var(--color-pencil); outline-offset: 3px; }
+
+/* Film: a dark strip with sprocket holes drawn by gradients (no images). */
+.film {
+  background-color: var(--color-film);
+  background-image:
+    radial-gradient(circle at 50% 50%, var(--color-table) 0 3.2px, transparent 3.6px),
+    radial-gradient(circle at 50% 50%, var(--color-table) 0 3.2px, transparent 3.6px);
+  background-size: 18px 12px, 18px 12px;
+  background-repeat: repeat-x, repeat-x;
+  background-position: 0 6px, 0 calc(100% - 6px);
+  padding-block: 22px;
+}
+
+/* ---------- Hero entrance (CSS only; final state is the default) ---------- */
+.word-mask { display: inline-block; overflow: hidden; padding-bottom: 0.12em; margin-bottom: -0.12em; vertical-align: bottom; }
+.word-mask > span { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-word > span { animation: rise 0.8s var(--ease-out) both; animation-delay: calc(var(--i) * 60ms); }
+  .expose { animation: expose 0.9s var(--ease-out) both; animation-delay: calc(250ms + var(--i) * 70ms); }
+  .pencil-path { stroke-dasharray: 1; animation: draw 0.9s var(--ease-out) both; animation-delay: 1s; }
+}
+@keyframes rise { from { transform: translateY(110%); } }
+@keyframes expose { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+/* Frames */
+.frame { transition: transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }
+@media (hover: hover) { .frame-link:hover .frame { transform: translateY(-2px); box-shadow: 0 10px 24px -14px oklch(20% 0.02 60 / 0.6); } }
+.frame-link:focus-visible .frame { outline: 2px solid var(--color-pencil); outline-offset: 3px; }
+
+dialog::backdrop { background: oklch(15% 0.01 60 / 0.82); }
+dialog[open] { animation: loupe-in 220ms var(--ease-out); }
+@keyframes loupe-in { from { opacity: 0; transform: scale(0.97); } }
+@media (prefers-reduced-motion: reduce) { dialog[open] { animation: none; } }
+
+/* View transitions (React ViewTransition in the case-study navigation) */
+::view-transition-group(.frame-morph) { animation-duration: 420ms; animation-timing-function: var(--ease-out); }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
