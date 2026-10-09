@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { contactSchema, fieldErrors } from "@/lib/schemas";
 import { deliver, sinkFor } from "@/lib/server/deliver";
-import { clientIp, rateLimit, sameOrigin } from "@/lib/server/rate-limit";
+import { allow, sameOrigin } from "@/lib/server/rate-limit";
 
 const json = (status: number, body: Record<string, unknown>) =>
   NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } });
@@ -10,7 +10,7 @@ const TOPICS = { produse: "Produse", comanda: "O comandă", colaborare: "Colabor
 
 export async function POST(req: Request) {
   if (!sameOrigin(req)) return json(403, { ok: false, error: "bad_origin" });
-  if (!rateLimit(`contact:${clientIp(req)}`, 5)) return json(429, { ok: false, error: "rate_limited" });
+  if (!allow("contact", req)) return json(429, { ok: false, error: "rate_limited" });
   let body: unknown;
   try {
     body = await req.json();

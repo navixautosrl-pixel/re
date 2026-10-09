@@ -220,7 +220,7 @@ export function CheckoutForm({ ordersOpen }: { ordersOpen: boolean }) {
 
         <div>
           <label className="flex items-start gap-3">
-            <input {...f("terms")} type="checkbox" className="mt-1 size-5 shrink-0 accent-[var(--cyan)]" />
+            <input {...f("terms")} type="checkbox" className="mt-0.5 size-6 shrink-0 accent-[var(--cyan)]" />
             <span>
               Am citit și accept <Link href="/termeni-si-conditii" className="link">termenii și condițiile</Link> și{" "}
               <Link href="/politica-de-confidentialitate" className="link">politica de confidențialitate</Link>.

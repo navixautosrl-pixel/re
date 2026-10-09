@@ -22,14 +22,14 @@ export default function AboutPage() {
         <figure className="grain relative overflow-hidden rounded-[var(--radius-panel)]">
           <Picture
             base="/img/catch-night"
-            widths={[480, 800, 1045]}
+            widths={[480, 640, 800, 1045]}
             width={1045}
             height={1040}
             sizes="(min-width: 1024px) 52vw, 100vw"
             alt="Pescar ținând un crap de 17 kg noaptea, la Balta Lazăr din Alexandria"
             className="h-auto w-full"
           />
-          <figcaption className="absolute bottom-4 left-4 text-[length:var(--step--1)] text-lamp">Crap de 17 kg, Balta Lazăr din Alexandria</figcaption>
+          <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-4 pb-4 pt-12 text-[length:var(--step--1)] text-lamp">Crap de 17 kg, Balta Lazăr din Alexandria</figcaption>
         </figure>
         <div className="space-y-6 text-[length:var(--step-1)]">
           <p>

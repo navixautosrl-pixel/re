@@ -12,9 +12,9 @@ export function Breadcrumbs({ items }: { items: { name: string; path: string }[]
             <li key={it.path} className="flex items-center gap-2">
               {i > 0 && <span aria-hidden="true" className="text-moss">/</span>}
               {i === all.length - 1 ? (
-                <span aria-current="page" className="text-mist">{it.name}</span>
+                <span aria-current="page" className="inline-block py-0.5 text-mist">{it.name}</span>
               ) : (
-                <Link href={it.path} className="link">{it.name}</Link>
+                <Link href={it.path} className="link inline-block min-w-6 py-0.5 text-center">{it.name}</Link>
               )}
             </li>
           ))}

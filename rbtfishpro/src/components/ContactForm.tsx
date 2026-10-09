@@ -126,7 +126,7 @@ export function ContactForm() {
       </div>
       <div>
         <label className="flex items-start gap-3">
-          <input {...f("privacy")} type="checkbox" className="mt-1 size-5 shrink-0 accent-[var(--cyan)]" />
+          <input {...f("privacy")} type="checkbox" className="mt-0.5 size-6 shrink-0 accent-[var(--cyan)]" />
           <span>
             Sunt de acord ca datele mele să fie folosite pentru a-mi răspunde, conform{" "}
             <Link href="/politica-de-confidentialitate" className="link">politicii de confidențialitate</Link>.

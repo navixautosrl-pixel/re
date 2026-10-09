@@ -168,7 +168,7 @@ for (const p of pages) {
         imgsNoAlt: [...document.images].filter((i) => !i.hasAttribute("alt")).length,
         imgsNoDims: [...document.images].filter((i) => !i.getAttribute("width") && !i.style.aspectRatio && getComputedStyle(i).aspectRatio === "auto").length,
         emptyLinks: [...document.querySelectorAll("a")].filter((a) => !a.getAttribute("href") || a.getAttribute("href") === "#").length,
-        unnamedControls: [...document.querySelectorAll("a[href],button")].filter((el) => !(el.innerText.trim() || el.getAttribute("aria-label") || el.getAttribute("aria-labelledby") || el.querySelector("img[alt]:not([alt=''])") || el.title)).length,
+        unnamedControls: [...document.querySelectorAll("a[href],button")].filter((el) => !((el.innerText || el.textContent).trim() || el.getAttribute("aria-label") || el.getAttribute("aria-labelledby") || el.querySelector("img[alt]:not([alt=''])") || el.title)).length,
         unlabeledInputs: [...document.querySelectorAll("input:not([type=hidden]):not([type=submit]),select,textarea")].filter((el) => !(el.labels?.length || el.getAttribute("aria-label") || el.getAttribute("aria-labelledby"))).length,
         brokenAnchors: [...document.querySelectorAll('a[href^="#"]')].map((a) => a.getAttribute("href")).filter((h) => h.length > 1 && !document.getElementById(decodeURIComponent(h.slice(1)))),
         internalLinks: [...new Set([...document.querySelectorAll("a[href]")].map((a) => a.href).filter((h) => h.startsWith(location.origin)).map((h) => h.split("#")[0]))],

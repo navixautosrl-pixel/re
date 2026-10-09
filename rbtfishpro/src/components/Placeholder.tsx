@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 export function Placeholder({ children, field }: { children: ReactNode; field: string }) {
   return (
     <span className="ph" data-placeholder={field}>
-      <span aria-hidden="true">✎</span>
+      <span aria-hidden="true">✎ </span>
       <span>
         <span className="sr-only">Informație de completat: </span>
         {children}

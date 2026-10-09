@@ -12,7 +12,7 @@ export function Hero() {
       <div className="grain absolute inset-0 -z-10">
         <Picture
           base="/img/catch-night"
-          widths={[480, 800, 1045]}
+          widths={[480, 640, 800, 1045]}
           width={1045}
           height={1040}
           eager

@@ -62,10 +62,10 @@ export default async function ProductPage({ params }: PageProps<"/produse/[slug]
 
       <section className="wrap mt-8 grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] md:gap-14">
         <figure>
-          <div className="relative grid aspect-[4/5] place-items-end justify-center overflow-hidden rounded-[var(--radius-panel)] bg-[radial-gradient(120%_70%_at_50%_100%,var(--reed),var(--night-2)_65%)] pt-10">
+          <div className="relative grid aspect-square place-items-end justify-center overflow-hidden rounded-[var(--radius-panel)] bg-[radial-gradient(120%_70%_at_50%_100%,var(--reed),var(--night-2)_65%)] pt-10">
             <span aria-hidden="true" className="absolute inset-x-0 bottom-[10%] h-px bg-gradient-to-r from-transparent via-cyan/40 to-transparent" />
             <span aria-hidden="true" className="absolute left-0 top-0 h-1 w-full" style={{ background: p.accent }} />
-            <BagImage base={p.image.base} width={p.image.width} height={p.image.height} alt={p.image.alt} eager className="relative mb-[6%] h-auto w-[min(56%,245px)] drop-shadow-[0_22px_26px_rgba(0,0,0,0.6)]" />
+            <BagImage base={p.image.base} width={p.image.width} height={p.image.height} alt={p.image.alt} eager className="relative mb-[6%] h-[80%] w-auto max-w-[70%] object-contain drop-shadow-[0_22px_26px_rgba(0,0,0,0.6)]" />
           </div>
           <figcaption className="mt-3 text-[length:var(--step--1)] text-mist-2">
             Imagine din afișul gamei RBT Fish Pro. <Placeholder field={`photo.${p.slug}`}>fotografie reală a pungii, față și spate</Placeholder>
@@ -118,7 +118,7 @@ export default async function ProductPage({ params }: PageProps<"/produse/[slug]
 
       <section className="wrap mt-24 mb-24" aria-labelledby="related">
         <h2 id="related" className="display text-[length:var(--step-3)]">Alte rețete</h2>
-        <ul className="mt-8 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-3">
           {related.map((r) => (
             <li key={r.slug}><ProductCard p={r} /></li>
           ))}

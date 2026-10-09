@@ -5,14 +5,14 @@ import { fieldErrors, orderSchema } from "@/lib/schemas";
 import { priceCart } from "@/lib/pricing";
 import { formatBani } from "@/lib/format";
 import { deliver, sinkFor } from "@/lib/server/deliver";
-import { clientIp, rateLimit, sameOrigin } from "@/lib/server/rate-limit";
+import { allow, sameOrigin } from "@/lib/server/rate-limit";
 
 const json = (status: number, body: Record<string, unknown>) =>
   NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } });
 
 export async function POST(req: Request) {
   if (!sameOrigin(req)) return json(403, { ok: false, error: "bad_origin" });
-  if (!rateLimit(`order:${clientIp(req)}`, 5)) return json(429, { ok: false, error: "rate_limited" });
+  if (!allow("order", req)) return json(429, { ok: false, error: "rate_limited" });
 
   let body: unknown;
   try {

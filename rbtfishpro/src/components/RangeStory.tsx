@@ -61,10 +61,13 @@ export function RangeStory() {
     };
   }, []);
 
+  // The wrapper stays React's node: GSAP re-parents the pinned <section> into a pin-spacer,
+  // so unmounting must remove a parent React still owns (otherwise removeChild throws).
   return (
+    <div>
     <section ref={root} aria-labelledby="story-title" className="relative overflow-hidden bg-night-2 min-[900px]:h-svh min-[900px]:min-h-[40rem]">
       <div className="grid h-full min-[900px]:grid-cols-[1.35fr_1fr]">
-        <figure data-story-photo className="grain relative aspect-[4/3] overflow-hidden min-[900px]:aspect-auto min-[900px]:h-full">
+        <div data-story-photo className="grain relative aspect-[4/3] overflow-hidden min-[900px]:aspect-auto min-[900px]:h-full">
           <Picture
             base="/img/catch-sunrise"
             widths={[640, 1024, 1448]}
@@ -74,8 +77,7 @@ export function RangeStory() {
             alt="Pescar cu un crap oglindă mare, în zori, pe ponton, cu ceață pe apă și trestie în lumina răsăritului"
             className="h-full w-full object-cover object-[45%_center]"
           />
-          <figcaption className="absolute bottom-4 left-4 text-[length:var(--step--1)] text-mist drop-shadow">Crap oglindă, în zori. Fotografie RbtFishPro.</figcaption>
-        </figure>
+        </div>
 
         <div className="flex flex-col justify-center px-[var(--gutter)] py-14 min-[900px]:py-10">
           <h2 id="story-title" className="display text-[length:var(--step-3)]">
@@ -98,8 +100,13 @@ export function RangeStory() {
             ))}
           </dl>
           <Link href="/despre-noi" className="link mt-8 self-start font-semibold">Despre RbtFishPro</Link>
+          <p className="mt-6 flex items-center gap-3 text-[length:var(--step--1)] text-lamp">
+            <span aria-hidden="true" className="h-px w-8 bg-lamp" />
+            Foto: crap oglindă, în zori
+          </p>
         </div>
       </div>
     </section>
+    </div>
   );
 }

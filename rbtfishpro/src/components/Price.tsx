@@ -8,7 +8,7 @@ export function Price({ lei, className = "" }: { lei: number; className?: string
     <span className={`inline-flex flex-wrap items-baseline gap-x-2 ${className}`}>
       <span className="tabular font-semibold">{formatBani(toBani(lei))}</span>
       {!site.catalog.pricesConfirmed && (
-        <span className="ph text-[0.75em]" data-placeholder="price">{t.product.examplePrice}</span>
+        <span className="ph text-[length:var(--step--1)]" data-placeholder="price">{t.product.examplePrice}</span>
       )}
     </span>
   );

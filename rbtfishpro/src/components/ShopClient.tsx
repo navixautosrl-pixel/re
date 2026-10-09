@@ -16,7 +16,7 @@ const norm = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").to
 
 export function ShopGrid({ items }: { items: typeof products }) {
   return (
-    <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+    <ul className="grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-4">
       {items.map((p, i) => (
         <li key={p.slug}>
           <ProductCard p={p} headingLevel="h2" eager={i < 4} />

@@ -8,7 +8,7 @@ import { t } from "@/i18n/ro";
 import "./globals.css";
 
 // Self-hosted, subset to Latin + Romanian (ă â î ș ț) — no third-party font request.
-// The display cut is large and heavy: "optional" keeps it from reflowing on slow first visits (CLS).
+// Both faces use "optional": no reflow on slow first visits (CLS); repeat visits get them from cache.
 const display = localFont({
   src: [
     { path: "../fonts/barlow-condensed-800-italic.woff2", weight: "800", style: "italic" },
@@ -24,12 +24,14 @@ const body = localFont({
     { path: "../fonts/barlow-600.woff2", weight: "600", style: "normal" },
   ],
   variable: "--ff-body",
-  display: "swap",
+  // "optional" too: the hero text is bottom-anchored, so a late swap of the lead paragraph
+  // moved the headline (CLS 0.171 under devtools throttling). Preloaded, so normally ready.
+  display: "optional",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: "RbtFishPro — boilies pentru crap: Fishmeal și Birdfood, 20 și 24 mm", template: "%s | RbtFishPro" },
+  title: { default: "Boilies pentru crap: Fishmeal și Birdfood | RbtFishPro", template: "%s | RbtFishPro" },
   description:
     "Boilies RbtFishPro pentru pescuitul la crap: Fishmeal fără aromă, Fishmeal cu squid și prună, Birdfood Scopex și Birdfood Căpșună, în 20 sau 24 mm.",
   applicationName: site.name,

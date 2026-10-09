@@ -28,7 +28,8 @@ import { pageMeta } from "@/lib/seo";
  */
 
 export const metadata = pageMeta({
-  title: "RbtFishPro — boilies pentru crap: Fishmeal și Birdfood, 20 și 24 mm",
+  title: "Boilies pentru crap: Fishmeal și Birdfood | RbtFishPro",
+  absolute: true,
   description:
     "Boilies RbtFishPro pentru pescuitul la crap: Fishmeal fără aromă, Fishmeal cu squid și prună, Birdfood Scopex și Birdfood Căpșună, în 20 sau 24 mm. Comandă online.",
   path: "/",
@@ -50,7 +51,7 @@ export default function Home() {
           </div>
           <Link href="/magazin" className="btn btn-ghost">Toate produsele</Link>
         </Reveal>
-        <ul className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-12 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-4">
           {products.map((p, i) => (
             <Reveal as="li" key={p.slug} delay={i * 60}>
               <ProductCard p={p} />

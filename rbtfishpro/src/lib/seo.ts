@@ -4,9 +4,9 @@ import { site } from "@/config/site";
 export const abs = (path: string) => `${site.url}${path}`;
 
 /** Per-page metadata with canonical + OG; `private` pages (cart, checkout, legal drafts) are never indexed. */
-export function pageMeta({ title, description, path, noindex }: { title: string; description: string; path: string; noindex?: boolean }): Metadata {
+export function pageMeta({ title, description, path, noindex, absolute }: { title: string; description: string; path: string; noindex?: boolean; absolute?: boolean }): Metadata {
   return {
-    title,
+    title: absolute ? { absolute: title } : title,
     description,
     alternates: { canonical: path },
     openGraph: { title, description, url: path, type: "website", locale: "ro_RO", siteName: site.name, images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Crap prins la răsărit, cu sigla RBT Fish Pro" }] },

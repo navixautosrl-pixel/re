@@ -18,8 +18,23 @@ export function rateLimit(key: string, limit = 5, windowMs = 60_000) {
   return entry.n <= limit;
 }
 
+/**
+ * Client IP from headers our own proxy sets — never the leftmost X-Forwarded-For value,
+ * which the client controls. Order: Vercel's header, x-real-ip (set by nginx/Caddy you run),
+ * else the X-Forwarded-For entry added by the last TRUSTED_PROXY_HOPS proxies (default 1).
+ */
 export function clientIp(req: Request) {
-  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "local";
+  const h = req.headers;
+  const direct = h.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip")?.trim();
+  if (direct) return direct;
+  const hops = (h.get("x-forwarded-for") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+  const trusted = Math.max(1, Number(process.env.TRUSTED_PROXY_HOPS) || 1);
+  return hops[hops.length - trusted] ?? "local";
+}
+
+/** Per-IP limit plus a global per-route cap, so spoofed or rotating IPs can't flood the inbox. */
+export function allow(route: string, req: Request, perIp = 5, global = 60) {
+  return rateLimit(`${route}:*`, global) && rateLimit(`${route}:${clientIp(req)}`, perIp);
 }
 
 /** Rejects cross-site form posts: the Origin must match the Host the request came to. */
