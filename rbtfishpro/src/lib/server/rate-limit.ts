@@ -41,10 +41,10 @@ export function clientIp(req: Request) {
 }
 
 /**
- * Per-IP limit first; only requests that pass it count toward a high per-route backstop, so one
- * client hammering the endpoint can't use up the global budget for everyone else.
+ * Per-IP limit first; only requests that pass it count toward the per-route backstop
+ * (RATE_LIMIT_GLOBAL per minute, default 60 — ample for a small shop's orders and messages).
  */
-export function allow(route: string, req: Request, perIp = 5, global = 300) {
+export function allow(route: string, req: Request, perIp = 5, global = Number(process.env.RATE_LIMIT_GLOBAL) || 60) {
   return rateLimit(`${route}:${clientIp(req)}`, perIp) && rateLimit(`${route}:*`, global);
 }
 
