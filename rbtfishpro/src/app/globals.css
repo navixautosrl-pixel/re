@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/*
+ * RbtFishPro design tokens.
+ * Palette is taken from the brand's own world: the olive-black of a lake at night
+ * (not neutral black), reed and moss greens from the bank, mist white for type.
+ * Two controlled accents, each with one job:
+ *   --cyan  the packaging's printed cyan → actions only (buttons, focus, links)
+ *   --lamp  the gold of the sunrise logo / head-torch light → catch captions, placeholders
+ */
+:root {
+  --night: oklch(15% 0.012 140);
+  --night-2: oklch(18.5% 0.016 136);
+  --reed: oklch(24% 0.022 132);
+  --moss: oklch(45% 0.06 128);
+  --mist: oklch(96.5% 0.006 120);
+  --mist-2: oklch(80% 0.016 125);
+  --cyan: oklch(80% 0.13 215);
+  --cyan-2: oklch(88% 0.09 215);
+  --lamp: oklch(81% 0.11 80);
+  --danger: oklch(72% 0.16 25);
+  --ok: oklch(80% 0.14 150);
+
+  /* Fluid type: few steps, big jumps at the top */
+  --step--1: clamp(0.84rem, 0.82rem + 0.1vw, 0.9rem);
+  --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.1rem);
+  --step-1: clamp(1.18rem, 1.1rem + 0.4vw, 1.4rem);
+  --step-2: clamp(1.5rem, 1.3rem + 0.9vw, 2.1rem);
+  --step-3: clamp(2rem, 1.5rem + 2.3vw, 3.4rem);
+  --step-4: clamp(2.6rem, 1.6rem + 4.6vw, 5.6rem);
+  --step-5: clamp(3.3rem, 1.6rem + 8vw, 9rem);
+
+  /* One easing family (motion storyboard, see src/components/motion.ts) */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --radius-btn: 3px;
+  --radius-panel: 6px;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+}
+
+@theme inline {
+  --color-night: var(--night);
+  --color-night-2: var(--night-2);
+  --color-reed: var(--reed);
+  --color-moss: var(--moss);
+  --color-mist: var(--mist);
+  --color-mist-2: var(--mist-2);
+  --color-cyan: var(--cyan);
+  --color-cyan-2: var(--cyan-2);
+  --color-lamp: var(--lamp);
+  --color-danger: var(--danger);
+  --color-ok: var(--ok);
+  --font-sans: var(--ff-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--ff-display), var(--ff-body), ui-sans-serif, sans-serif;
+}
+
+html {
+  color-scheme: dark;
+  background: var(--night);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 5rem;
+}
+body {
+  background: var(--night);
+  color: var(--mist);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  font-kerning: normal;
+  overflow-x: clip;
+}
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+::selection { background: var(--cyan); color: var(--night); }
+
+:focus-visible {
+  outline: 2.5px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Display face: the packaging's condensed, slanted lettering. Used for headings only. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: -0.012em;
+}
+.display-2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.tabular { font-variant-numeric: tabular-nums; }
+
+.wrap { width: min(100% - 2 * var(--gutter), 78rem); margin-inline: auto; }
+.measure { max-width: 62ch; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+  min-height: 3rem; padding: 0.7rem 1.4rem;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-display); font-weight: 700; font-style: italic;
+  text-transform: uppercase; font-size: 1.15rem; letter-spacing: 0.01em; line-height: 1;
+  transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out), border-color 200ms var(--ease-out), transform 200ms var(--ease-out);
+  cursor: pointer;
+}
+.btn:active { transform: translateY(1px); }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
+.btn-primary { background: var(--cyan); color: var(--night); }
+.btn-primary:hover { background: var(--cyan-2); }
+.btn-ghost { border: 1.5px solid color-mix(in oklch, var(--mist) 45%, transparent); color: var(--mist); }
+.btn-ghost:hover { border-color: var(--mist); background: color-mix(in oklch, var(--mist) 8%, transparent); }
+
+/* Text links: underline sweep in cyan (ambient) */
+.link {
+  color: var(--mist);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--cyan) 60%, transparent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.22em;
+  transition: text-decoration-color 200ms var(--ease-out), color 200ms var(--ease-out);
+}
+.link:hover { color: var(--cyan-2); text-decoration-color: var(--cyan); }
+
+/* Form controls */
+.field-label { display: block; font-weight: 600; margin-bottom: 0.35rem; }
+.field {
+  width: 100%; min-height: 3rem; padding: 0.65rem 0.85rem;
+  background: var(--night); color: var(--mist);
+  border: 1.5px solid color-mix(in oklch, var(--mist-2) 45%, transparent);
+  border-radius: var(--radius-btn);
+  transition: border-color 150ms var(--ease-out);
+}
+.field::placeholder { color: color-mix(in oklch, var(--mist-2) 75%, transparent); }
+.field:hover { border-color: var(--mist-2); }
+.field:focus-visible { outline-offset: 1px; border-color: var(--cyan); }
+.field[aria-invalid="true"] { border-color: var(--danger); }
+.field-error { color: var(--danger); font-size: var(--step--1); margin-top: 0.35rem; }
+select.field { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--mist-2) 50%), linear-gradient(135deg, var(--mist-2) 50%, transparent 50%); background-position: calc(100% - 1.15rem) 55%, calc(100% - 0.8rem) 55%; background-size: 0.35rem 0.35rem; background-repeat: no-repeat; padding-right: 2.2rem; }
+
+/* Placeholder convention: anything the client still has to supply */
+.ph {
+  display: inline-flex; align-items: baseline; gap: 0.4em; flex-wrap: wrap;
+  padding: 0.05em 0.5em; border: 1.5px dashed var(--lamp); border-radius: 3px;
+  color: var(--lamp); font-size: 0.92em; font-weight: 600; line-height: 1.5;
+}
+
+/* Water ripples behind the product bags (ambient) */
+.ripples { position: absolute; inset: auto 0 6% 0; height: 22%; pointer-events: none; }
+.ripples span {
+  position: absolute; left: 50%; top: 50%; width: 70%; aspect-ratio: 4 / 1;
+  border: 1.5px solid color-mix(in oklch, var(--cyan) 35%, transparent); border-radius: 50%;
+  translate: -50% -50%; scale: 0.6; opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .bag:hover .ripples span, .bag:focus-within .ripples span { animation: ripple 1.6s var(--ease-out) infinite; }
+  .bag:hover .ripples span:nth-child(2), .bag:focus-within .ripples span:nth-child(2) { animation-delay: 0.45s; }
+  .bag:hover .ripples span:nth-child(3), .bag:focus-within .ripples span:nth-child(3) { animation-delay: 0.9s; }
+}
+@keyframes ripple { 0% { scale: 0.5; opacity: 0.9; } 100% { scale: 1.35; opacity: 0; } }
+.bag img { transition: transform 450ms var(--ease-out); }
+@media (prefers-reduced-motion: no-preference) {
+  .bag:hover img { transform: translateY(-6px) rotate(-1.5deg); }
+}
+
+/* Hero entrance — PRIMARY. CSS only, so it runs before hydration and never depends on JS.
+   Lines rise out of a mask; the photo settles from a slight zoom. CTA is never hidden. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-line > span { display: inline-block; animation: line-up 1s var(--ease-out) both; }
+  .hero-line:nth-child(2) > span { animation-delay: 90ms; }
+  .hero-line:nth-child(3) > span { animation-delay: 180ms; }
+  .hero-photo { animation: settle 1.6s var(--ease-out) both; }
+  .hero-fade { animation: fade 0.8s var(--ease-out) 0.35s both; }
+}
+.hero-line { display: block; overflow: clip; padding-block: 0.04em; margin-block: -0.04em; }
+@keyframes line-up { from { transform: translateY(105%); } to { transform: none; } }
+@keyframes settle { from { transform: scale(1.07); } to { transform: none; } }
+@keyframes fade { from { opacity: 0.001; } to { opacity: 1; } }
+
+/* Section reveals — SECONDARY. Only hidden once JS has run (html.js) and motion is allowed,
+   so content is always visible without JS or under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal]:not([data-in]) { opacity: 0; transform: translateY(24px); }
+  .js [data-reveal] { transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out); transition-delay: var(--d, 0ms); }
+}
+
+/* Header: transparent over the hero, solid once scrolled */
+.site-header { transition: background-color 250ms var(--ease-out), border-color 250ms var(--ease-out); }
+.site-header[data-solid="true"] { background: color-mix(in oklch, var(--night) 92%, transparent); border-color: color-mix(in oklch, var(--mist) 10%, transparent); backdrop-filter: blur(8px); }
+
+/* Product details */
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .chev { transform: rotate(45deg); }
+.chev { transition: transform 200ms var(--ease-out); }
+
+/* Grain over photographs, very light — matches the night-photo texture */
+.grain::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.07; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}
