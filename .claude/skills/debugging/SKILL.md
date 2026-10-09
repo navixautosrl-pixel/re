@@ -25,6 +25,18 @@ Not a pipeline stage with a fixed position — it's invoked ad hoc, the moment a
 - **Env var is `undefined` only in production** — set locally but never added to the actual deployment target (Vercel project settings), or read at build time when it's only available at runtime (or vice versa).
 - **CORS/cookie issues with SSR auth** — usually a mismatch between the Supabase client used (browser vs server) and where the code is actually running, or a cookie domain/`sameSite` misconfiguration.
 
+## Front-end / marketing-site failure patterns (from this repo's history)
+
+- **Asset 404s only when deployed under a subpath** → unprefixed URLs (`next/image` priority preload, metadata icons); serve the export under the real subpath locally (`site_qa.mjs --base-path`).
+- **Layout overflow at 320px** → `100vw`, fixed-width grid columns, absolutely positioned decoration; `site_qa.mjs` names the offending elements.
+- **Content invisible without JS / with reduced motion** → CSS `opacity:0` waiting for a script; render final state, animate only as enhancement.
+- **Scroll animation wrong after content changes height** → stale ScrollTrigger positions; `ScrollTrigger.refresh()` via ResizeObserver.
+- **Anchor link lands under the header / page jumps when closing menu** → in-flow mobile menu; make it an overlay, add `scroll-padding-top`.
+- **CLS on load** → font swap without metric fallback (`next/font`), images without dimensions.
+- **Hydration mismatch** → `window`/`Date`/`localStorage` in first render; use `useSyncExternalStore` for client-only branches.
+- **Build fails only in CI / Linux** → case-sensitive imports, missing env vars, Node version mismatch.
+Reproduce in the real browser (Playwright script), fix the cause, re-run the same reproduction, then the full QA script.
+
 ## When the cause isn't obvious
 
 Add targeted logging or a minimal reproduction script rather than guessing-and-checking against the full app repeatedly — narrow the search space before trying fixes.

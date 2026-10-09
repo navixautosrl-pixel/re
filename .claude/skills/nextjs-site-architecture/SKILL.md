@@ -52,6 +52,22 @@ src/
 interactive leaf in a small `'use client'` component that receives children/props.
 Never put `'use client'` on `layout.tsx` or a whole page just to animate a heading.
 
+## Routing & rendering strategies
+
+- **File routing**: `app/<segment>/page.tsx`; shared chrome in `layout.tsx`; `loading.tsx` (Suspense fallback), `error.tsx` (client error boundary), `not-found.tsx`; route groups `(marketing)/` organize without changing URLs; dynamic `[slug]/`.
+- **Choose per route**:
+  | Strategy | When | How |
+  |---|---|---|
+  | Static (SSG) — default for sites | content known at build | Server Components fetch at build; with `output: "export"` this is the only mode |
+  | Static dynamic routes | many pages from data (services, case studies) | `generateStaticParams()` + `export const dynamicParams = false` |
+  | Revalidated (ISR) | content changes, server hosting (Vercel/Node) | `fetch(url, { next: { revalidate: 3600 } })` or on-demand `revalidatePath()` from a CMS webhook |
+  | Dynamic (SSR) | per-request data, cookies/headers, auth | request-time APIs (`cookies()`, `headers()`); not available in static export |
+  | Client-only | browser-only widgets | `next/dynamic(() => import(...), { ssr: false })` inside a Client Component |
+- **Params are async** in current Next: `const { slug } = await params` in pages and `generateMetadata`.
+- **Navigation**: `<Link>` for internal links (prefetch); plain `<a>` for hash links within a page.
+- **Data**: fetch in the Server Component that needs it; parallelize independent fetches (`Promise.all`); pass only serializable, minimal props to Client Components (see `vercel-react-best-practices`).
+- Always confirm details for the installed version in `node_modules/next/dist/docs/` (`official-documentation-research`).
+
 ## next.config.ts (static export, optional subpath)
 
 ```ts

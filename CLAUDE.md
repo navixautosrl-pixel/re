@@ -76,6 +76,26 @@ When building or improving a site or app, act simultaneously as:
 | `web-quality-audit` | same | Category-by-category evidence-led audit + `scripts/analyze.sh` static smoke test. |
 | `vercel-react-best-practices` | Vercel | 70 React/Next.js performance rules (waterfalls, bundle, RSC serialization, re-renders). |
 
+*Round 2 (2026-10-09): the full list of 91 requested areas is in `.claude/SKILLS_INVENTORY.md`, with status and evidence per area.* Added skills:
+- **Vendored, official:** WordPress `wordpress-router` + 8 `wp-*`; Sanity `content-modeling-best-practices`, `sanity-best-practices`; `stripe-best-practices`; `supabase-postgres-best-practices`; Sentry `skill-scanner`, `gha-security-review`; Chrome DevTools `debug-optimize-lcp`, `a11y-debugging`; Vercel `vercel-react-view-transitions`, `vercel-composition-patterns`.
+- **Custom, foundations:** `html-css-javascript`, `typescript`, `react-development`, `git-version-control`, `official-documentation-research`, `project-environment-audit`, `technical-documentation`.
+- **Custom, design & motion:** `premium-typography`, `scroll-storytelling`, `micro-interactions`, `page-transitions`, `reduced-motion-accessibility`, `threejs-webgl`, `rive-interactive-animation`, `lottie-animation`, `interactive-product-design`, `video-optimization`.
+- **Custom, backend & commerce:** `cms-integration`, `woocommerce-development`, `shopify-development`, `email-automation`, `form-validation`, `api-integration`.
+- **Custom, SEO & marketing:** `google-search-console`, `local-seo`, `programmatic-seo`, `website-migration`, `a-b-testing`, `competitor-website-analysis`.
+- **Custom, QA & operations:** `lighthouse-auditing`, `image-optimization`, `visual-regression-testing`, `cross-browser-testing`, `dependency-auditing`, `gdpr-privacy`, `web-vitals-monitoring`, `monitoring-logging`, `ci-cd-automation`, `skill-management`.
+
+Scripts that were actually run (on `skill-atelier/` / `contact-sheet/`):
+- `lighthouse-auditing/scripts/lh_runs.mjs`
+- `image-optimization/scripts/optimize_images.mjs`
+- `gdpr-privacy/scripts/privacy_audit.mjs`
+- `competitor-website-analysis/scripts/analyze_sites.mjs`
+- `a-b-testing/scripts/sample_size.py`
+- `project-environment-audit/scripts/env_audit.sh`
+- `skill-management/scripts/audit_skills.py` (run after any skill change)
+- `skill-management/scripts/inventory_91.py`
+
+**Skill listing budget:** with ~107 skills (~40k characters of descriptions), Claude Code's default skill-listing budget (1% of the context window) truncates descriptions. Set `"skillListingBudgetFraction": 0.05` in `.claude/settings.json`; this needs the user's approval because it changes Claude Code configuration. The `skill-management` skill explains why.
+
 `seo` / `performance` / `security` above remain the **app-builder-specific** versions. For marketing sites use `technical-seo` / `web-performance` / `web-best-practices`.
 
 **Agents** (`.claude/agents/`, project-scoped subagents for the app-builder pipeline):
@@ -109,6 +129,7 @@ When building or improving a site or app, act simultaneously as:
 - `stripe` — official Stripe MCP, `https://mcp.stripe.com`. OAuth on first use, no env var.
 - `vercel` — official Vercel MCP, `https://mcp.vercel.com`. OAuth on first use, no env var.
 - `playwright-local` — same `@playwright/mcp` server the `playwright` plugin bundles, but launched with `--browser=chromium` instead of the plugin's default (which targets the `chrome` channel — not installed in this sandbox, so the plugin's own `mcp__playwright__*` tools fail with "Chromium distribution 'chrome' is not found"). This one resolves via `PLAYWRIGHT_BROWSERS_PATH` to the pre-installed Chromium instead, so its tools actually work here. Pinned as an exact-version devDependency in the repo's root `package.json`/`package-lock.json` (run `npm install` after cloning) and launched from the committed local binary (`./node_modules/.bin/playwright-mcp`) rather than `npx ...@latest`, so `npm ci` and the lockfile are the supply-chain guarantee, not trust-on-first-use of whatever's newest on install day — bump the pinned version deliberately, after reviewing the release. Runs with `--isolated` (in-memory browser profile, nothing persisted to disk between sessions) and `--blocked-origins` covering the known cloud-metadata SSRF targets across AWS/ECS/EKS, GCP, Azure, and Alibaba Cloud, both `http`/`https` and hostname variants. This is deliberately **defense-in-depth, not the security boundary**: `@playwright/mcp`'s own `--help` says `--blocked-origins` "does not serve as a security boundary and does not affect redirects," and a hostname/IP blocklist is inherently enumerable-incomplete (there is no bound on cloud-provider metadata addresses, DNS rebinding, or open redirects that dodge it). A hard boundary — `--allowed-origins` default-deny, or network-namespace/iptables-level DROP rules on link-local + metadata ranges — is deliberately not used here: this server is driven interactively by the agent itself (not fed attacker-controlled URLs from an untrusted third party), and it's used across this repo's many different site projects and their live/staging domains, so a fixed allowlist would have to be hand-maintained per project and would break the tool's actual job. The real control is upstream of this flag: never navigate this browser to a URL sourced from untrusted external content (a scraped page, an email, third-party form input) without treating it the same as any other SSRF-risk fetch. New MCP servers only load at session start, so a session already running when this was added needs a fresh session before `mcp__playwright-local__*` tools appear — until then, fall back to driving `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` directly via the Python `playwright` package (already present) from Bash, exactly as this repo's history already does.
+- `chrome-devtools`: Chrome DevTools MCP, exact-pinned `chrome-devtools-mcp@1.10.1` in the root `package.json`, launched from `./node_modules/.bin` against the pre-installed Chromium with `--headless --isolated --usageStatistics=false --performanceCrux=false`. The last two flags stop usage data and traced URLs going to Google. It provides Lighthouse audits, performance traces with insights, an accessibility snapshot and console/network inspection, and is what the vendored `debug-optimize-lcp` and `a11y-debugging` skills use. Verified with an MCP handshake (30 tools). Like `playwright-local`, its tools appear only in a session started after `npm install`.
 - GitHub is already available through the session's own tool set in this environment — no separate MCP install needed here.
 
 All four HTTP servers (21st, supabase, stripe, vercel) use OAuth, not API keys — see "What you need to authorize manually" below for exactly what that means in practice. `playwright-local` is a local process, no auth needed.

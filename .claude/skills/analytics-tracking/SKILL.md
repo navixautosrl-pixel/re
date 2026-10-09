@@ -53,6 +53,14 @@ GA4 Measurement ID (`G-XXXXXXX`) or GTM container ID (`GTM-XXXXXXX`), which ad p
 6. **Search Console**: verify via DNS TXT (preferred) or HTML meta tag supplied by the user; submit `sitemap.xml`.
 7. **Privacy-friendly alternative**: Plausible/Umami (cookieless) may not need a consent banner for analytics alone — confirm with the client's legal advisor; we don't give legal sign-off.
 
+## Google Tag Manager (when the client manages tags)
+
+- One GTM container per site; install the snippet after the consent default (head) + noscript iframe (body) — or `@next/third-parties/google` `<GoogleTagManager gtmId=… />`.
+- Push events to the data layer from code, configure tags in GTM: `window.dataLayer.push({ event: "generate_lead", form_id: "contact", service: "coating" })`.
+- In GTM: GA4 Configuration (Google tag) + GA4 Event tags triggered by Custom Event triggers; Consent Mode settings per tag ("Require additional consent"); a CMP template for the banner.
+- Workspace hygiene: naming (`GA4 – Event – generate_lead`), versions with notes, Preview mode (Tag Assistant) before Publish, limited user permissions (Publish only for owners).
+- Verify with GTM Preview + network requests (Playwright as below). Don't let GTM inject arbitrary third-party scripts without the same privacy review as code (`gdpr-privacy`).
+
 ## Verification (required)
 
 - Playwright: load page with consent denied → assert **no** request to `google-analytics.com/g/collect` (or that it's a cookieless ping with `gcs=G100`); accept → assert `collect` requests carrying `en=page_view`; trigger the form success → `en=generate_lead`.

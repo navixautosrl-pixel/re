@@ -97,7 +97,8 @@ async function newPage(opts = {}) {
   const log = { console: [], pageErrors: [], failed: [] };
   page.on("console", (m) => m.type() === "error" && log.console.push(m.text()));
   page.on("pageerror", (e) => log.pageErrors.push(String(e)));
-  page.on("requestfailed", (r) => log.failed.push(`${r.failure()?.errorText} ${r.url()}`));
+  // ERR_ABORTED = cancelled by the page (e.g. Next.js <Link> prefetches torn down on close), not a failure.
+  page.on("requestfailed", (r) => { const e = r.failure()?.errorText ?? ""; if (!/ERR_ABORTED/.test(e)) log.failed.push(`${e} ${r.url()}`); });
   page.on("response", (r) => r.status() >= 400 && log.failed.push(`${r.status()} ${r.url()}`));
   return { ctx, page, log };
 }

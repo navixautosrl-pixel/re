@@ -1,0 +1,82 @@
+# Template — copy to .github/workflows/<site>-ci.yml and replace SITE_DIR.
+# Checks every push/PR that touches the site; deploys main to SFTP after approval.
+name: site-ci
+
+on:
+  push:
+    branches: [main]
+    paths: ["SITE_DIR/**", ".claude/skills/site-qa-playwright/**", ".github/workflows/site-ci.yml"]
+  pull_request:
+    paths: ["SITE_DIR/**"]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [cms-publish]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SITE_DIR: SITE_DIR
+  BASE_PATH: ""          # e.g. /demo/site for subpath hosting
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.SITE_DIR }}
+    steps:
+      # Pin third-party actions to full commit SHAs in real use (comment = version).
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ env.SITE_DIR }}/package-lock.json
+      - run: npm ci
+      - run: npx eslint .
+      - run: npx tsc --noEmit
+      - run: npm run build
+      - name: Install root tooling (Playwright for QA scripts)
+        working-directory: .
+        run: npm ci && npx playwright install --with-deps chromium
+      - name: Browser QA
+        run: node ../.claude/skills/site-qa-playwright/scripts/site_qa.mjs --dir out --base-path "${BASE_PATH}" --out qa-report
+        env:
+          CHROMIUM_PATH: ""   # let Playwright use its own downloaded Chromium in CI
+      - name: Structured data
+        run: node ../.claude/skills/structured-data/scripts/validate_jsonld.mjs out
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: site-build-and-qa
+          path: |
+            ${{ env.SITE_DIR }}/out
+            ${{ env.SITE_DIR }}/qa-report
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: check
+    runs-on: ubuntu-latest
+    environment: production   # configure required reviewers in repo settings
+    steps:
+      # upload-artifact strips the common prefix (SITE_DIR), so restore into SITE_DIR
+      # to get SITE_DIR/out back where the rsync step expects it.
+      - uses: actions/download-artifact@v4
+        with:
+          name: site-build-and-qa
+          path: ${{ env.SITE_DIR }}
+      - name: Upload via SFTP (rsync over SSH)
+        env:
+          SSH_KEY: ${{ secrets.SFTP_KEY }}
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USER: ${{ secrets.SFTP_USER }}
+          SFTP_PATH: ${{ secrets.SFTP_PATH }}
+        run: |
+          install -m 600 /dev/null ~/key && printf '%s\n' "$SSH_KEY" > ~/key
+          rsync -az --delete -e "ssh -i ~/key -o StrictHostKeyChecking=accept-new" "${SITE_DIR}/out/" "${SFTP_USER}@${SFTP_HOST}:${SFTP_PATH}/"
+          rm -f ~/key

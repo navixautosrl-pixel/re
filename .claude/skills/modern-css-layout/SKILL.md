@@ -61,6 +61,21 @@ Implementation stage of any site; any "it breaks on mobile/tablet" bug; token se
 9. **Logical properties** (`margin-inline`, `padding-block`, `inset-inline-start`) — RTL-safe by default.
 10. **View transitions** (same-document) for in-page state swaps where supported; always behind `@media (prefers-reduced-motion: no-preference)` and with a no-op fallback.
 
+## Advanced compositions (premium layouts)
+
+- **Editorial asymmetric grid**: named 12-col grid with deliberate spans instead of equal columns:
+  ```css
+  .editorial { display: grid; grid-template-columns: [full-start] minmax(1rem,1fr) [main-start] repeat(12, minmax(0, 5.5rem)) [main-end] minmax(1rem,1fr) [full-end]; column-gap: var(--space-s); }
+  .editorial > .lede { grid-column: main-start / span 7; } .editorial > .aside { grid-column: span 4 / main-end; align-self: end; }
+  .editorial > .bleed { grid-column: full; }
+  ```
+- **Subgrid** for cards whose titles/buttons must align across a row: parent defines rows, card uses `grid-template-rows: subgrid; grid-row: span 3;`.
+- **Bento with hierarchy** (not identical tiles): one hero tile `grid-column: span 2; grid-row: span 2`, supporting tiles smaller, at least two radii/treatments by importance; collapse to a single column under ~640px.
+- **Overlap & layering**: place items in the same grid area (`grid-area: 1 / 1`) instead of absolute positioning — stays responsive; control stacking with `isolation: isolate` + `z-index`.
+- **Sticky split** (text scrolls, media sticks): `position: sticky; top: calc(var(--header-h) + 2rem)` on the media column; `align-self: start` on the sticky child; disable under 768px.
+- **Full-bleed inside a constrained page**: `.bleed { width: 100vw; margin-inline: calc(50% - 50vw); }` only with `overflow-x: clip` on an ancestor — prefer the named-grid `full` track instead.
+- Verify every composition at 320 / 768 / 1024 / 1440 — asymmetric layouts break first at tablet widths.
+
 ## Best practices
 
 - Mobile-first: base styles = smallest screen; `min-width` queries add.

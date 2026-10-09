@@ -30,6 +30,15 @@ the logo swapped. Output is a short written direction that every later stage obe
 9. **Tokens**: hand off to `design-system` / `modern-css-layout` as CSS custom properties (`--color-*`, `--font-*`, `--step-*` fluid type, `--space-*`, `--radius-*` with **at least two radii by hierarchy**, `--ease-*`, `--dur-*`).
 10. **Motion personality** in one line (e.g. "mechanical, precise, short overshoot-free eases") → feeds the CLAUDE.md motion storyboard.
 
+## Image art direction (expands step 8)
+
+- **Shot list** from the concept: hero (the transformation/result), process (hands, tools, close-ups), place (exterior for wayfinding, interior atmosphere), people (real team/clients with consent), detail macros. Real photography of the client's work beats any stock.
+- **Consistency rules**: one lighting mood (e.g. cool daylight, hard shadows), one color grade, consistent lens/angle family, aspect ratios per slot (hero 16:9 desktop / 4:5 mobile via `<picture media>`), focal point noted per image for `object-position`.
+- **Responsive crops**: art-direct different crops per breakpoint rather than shrinking one wide image; keep subjects out of text-overlay zones; check contrast of text over images (use scrims only where needed, verify ≥ 4.5:1).
+- **Treatments**: duotone/grain/masks only when the concept calls for it; same treatment everywhere it's used.
+- **No real images yet?** Say so; use typographic or illustrative solutions, or clearly marked placeholders — never stock pretending to be the client's work.
+- Hand off to `image-optimization` (formats/sizes) and `video-optimization` for motion.
+
 ## Deliverable (put in the plan or `DESIGN.md` in the project)
 
 ```

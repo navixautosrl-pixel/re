@@ -38,6 +38,15 @@ Strategy stage (sitemap + keyword map), copywriting stage (titles/headings/brief
 10. **Local SEO**: NAP (name, address, phone) identical everywhere (site footer, schema, Google Business Profile); one location page per *real* location — never city-swapped clones for places with no presence. GBP optimization is a recommendation to the client (we can't edit it without access).
 11. **Multilingual**: separate URLs per language (`/en/…`), `<html lang>`, `hreflang` alternates including `x-default`, each page canonical to itself, translated (not just machine-swapped) titles/metas. Next.js: `alternates: { languages: { "ro-RO": "/", "en": "/en/" } }`.
 
+## Content strategy (pillars, clusters, calendar)
+
+- **Pillar + cluster**: one pillar page per core service/topic (broad intent, comprehensive, links down) + cluster articles answering specific questions (link up to the pillar and sideways to siblings). Example: pillar "Protecție ceramică auto" → clusters "cât durează protecția ceramică", "ceramică vs folie PPF", "cum se întreține".
+- **Prioritize** clusters by business value × intent closeness to conversion × feasibility (can we answer better than current results, with real expertise/examples?).
+- **Briefs** per piece (see step 9) + an expert source (the client) for facts and photos — E-E-A-T comes from real experience, not volume.
+- **Editorial calendar**: a simple table `month | piece | target query | intent | owner | status | internal links to add` — realistic cadence (e.g. 2/month) beats a 50-post plan nobody writes.
+- **Refresh > new**: review top pages every 6–12 months (facts, prices, screenshots, dates); update and keep URLs.
+- **Prune**: merge/redirect thin or overlapping posts (see cannibalization check).
+
 ## Content gap & cannibalization check (existing sites)
 
 - List all indexable URLs + their title/H1 → group by primary query → >1 URL per group = cannibalization (merge, differentiate, or canonicalize).
