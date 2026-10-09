@@ -3,6 +3,7 @@
     "motion": "^13.1.1"
   },
   "devDependencies": {
-    "@playwright/mcp": "0.0.81"
+    "@playwright/mcp": "0.0.81",
+    "chrome-devtools-mcp": "1.10.1"
   }
 }
