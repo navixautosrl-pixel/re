@@ -42,3 +42,5 @@ next-env.d.ts
 
 # QA artifacts (screenshots, Lighthouse JSON)
 /qa-report/
+/test-results/
+/playwright-report/

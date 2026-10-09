@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "prebuild": "node scripts/collect-skills.mjs",
-    "qa": "node ../.claude/skills/site-qa-playwright/scripts/site_qa.mjs --dir out --out qa-report"
+    "qa": "node ../.claude/skills/site-qa-playwright/scripts/site_qa.mjs --dir out --out qa-report",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "1.64.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

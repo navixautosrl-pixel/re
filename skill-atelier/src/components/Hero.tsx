@@ -21,10 +21,10 @@ export function Hero() {
           <h1 id="hero-title" className="display text-[length:var(--step-5)]">
             <span className="line-mask hero-line" style={{ "--i": 0 } as React.CSSProperties}>
               <span>A shadow board</span>
-            </span>
+            </span>{" "}
             <span className="line-mask hero-line" style={{ "--i": 1 } as React.CSSProperties}>
               <span>for building</span>
-            </span>
+            </span>{" "}
             <span className="line-mask hero-line" style={{ "--i": 2 } as React.CSSProperties}>
               <span>websites.</span>
             </span>
