@@ -1,0 +1,438 @@
+{
+  "generatedFrom": ".claude/skills",
+  "count": 48,
+  "skills": [
+    {
+      "name": "app-builder",
+      "stage": "plan",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Orchestrates the full prompt-to-product pipeline for a SaaS/web-app build",
+      "description": "Orchestrates the full prompt-to-product pipeline for a SaaS/web-app build — PRODUCT SPEC → DATABASE → AUTH → BACKEND → API → UI → CRUD → TESTING → BROWSER QA → DEBUGGING → SEO → PERFORMANCE → DEPLOYMENT. Use this when the request is \"build me a [SaaS/app]\" rather than a single-page marketing site (for those, the plain frontend/design workflow in CLAUDE.md is enough — this skill is for anything with a database, auth, or backend logic).",
+      "hasScripts": false
+    },
+    {
+      "name": "brand",
+      "stage": "plan",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Brand voice, visual identity, messaging frameworks, asset management, brand consistency",
+      "description": "Brand voice, visual identity, messaging frameworks, asset management, brand consistency. Activate for branded content, tone of voice, marketing assets, brand compliance, style guides.",
+      "hasScripts": true
+    },
+    {
+      "name": "conversion-optimization",
+      "stage": "plan",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Conversion rate optimization for websites and landing pages",
+      "description": "Conversion rate optimization for websites and landing pages — defining one job and one success metric per page, value proposition and hero strategy, CTA hierarchy, trust signals built only from real proof, objection handling, pricing-page and form design, lead funnels, measurement plan, and ethical A/B testing. Use in strategy (page jobs, funnel), during layout/copy decisions, and when auditing why a page doesn't convert. Rejects dark patterns, fake urgency, and fabricated social proof.",
+      "hasScripts": false
+    },
+    {
+      "name": "creative-direction",
+      "stage": "plan",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Turns a brief into a distinctive, brand-specific visual concept",
+      "description": "Turns a brief into a distinctive, brand-specific visual concept — concept statement, moodboard-in-words, type pairing, palette, layout principles, image direction, design tokens, and a self-critique pass on rendered screenshots. Use at the start of any new site or redesign (before components are written) and again during visual polish. Complements ui-ux-pro-max (data lookup) and the frontend-design plugin (anti-slop guardrails); this skill is the decision process that uses them.",
+      "hasScripts": false
+    },
+    {
+      "name": "on-page-seo-content",
+      "stage": "plan",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "On-page SEO and content architecture",
+      "description": "On-page SEO and content architecture — search-intent analysis, keyword discovery without paid tools, keyword clustering and one-keyword-cluster-per-URL mapping, sitemap/URL design, title/meta/H1 writing, internal-linking plan, content briefs, cannibalization and content-gap checks, local (Romanian) and multilingual SEO with hreflang. Use during discovery/strategy for a new site, when writing or reviewing page copy for search, or when planning location/service pages. Technical crawl/index issues belong to technical-seo; JSON-LD to structured-data.",
+      "hasScripts": false
+    },
+    {
+      "name": "prompt-to-product",
+      "stage": "plan",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Turns a one-line brief (\"build me a SaaS for appointment booking\") into a structured PRODUCT SPEC before any code is written",
+      "description": "Turns a one-line brief (\"build me a SaaS for appointment booking\") into a structured PRODUCT SPEC before any code is written. Use this first for any new app-builder project, and whenever the brief is vague enough that database/auth/UI decisions would otherwise be guessed ad hoc.",
+      "hasScripts": false
+    },
+    {
+      "name": "site-builder",
+      "stage": "plan",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Orchestrates a complete marketing/brochure/portfolio/landing website build or redesign",
+      "description": "Orchestrates a complete marketing/brochure/portfolio/landing website build or redesign — inspect → discover → strategy → creative direction → implement → SEO/perf → test → polish → deliver — and routes each stage to the right skill. Use when asked to build, redesign, or substantially improve a website that has no user accounts or database. For anything with login, a database or server-side business logic, use app-builder instead.",
+      "hasScripts": false
+    },
+    {
+      "name": "website-copywriting",
+      "stage": "plan",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Website copywriting in Romanian and English",
+      "description": "Website copywriting in Romanian and English — facts inventory, voice definition, headline and CTA writing, benefit-led service/product copy, microcopy (forms, errors, empty and success states), SEO-aware but natural copy, localization rather than literal translation, and proofreading (including correct Romanian diacritics ș/ț with comma-below). Use when writing or editing any visible text on a site. Never invents facts, numbers, testimonials, clients, or awards.",
+      "hasScripts": false
+    },
+    {
+      "name": "banner-design",
+      "stage": "design",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Design banners for social media, ads, website heroes, creative assets, and print",
+      "description": "Design banners for social media, ads, website heroes, creative assets, and print. Multiple art direction options with optional generated or supplied visuals. Actions: design, create, generate banner. Platforms: Facebook, Twitter/X, LinkedIn, YouTube, Instagram, Google Display, website hero, print. Styles: minimalist, gradient, bold typography, photo-based, illustrated, geometric, retro, glassmorphism, 3D, neon, duotone, editorial, collage.",
+      "hasScripts": false
+    },
+    {
+      "name": "design",
+      "stage": "design",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Comprehensive design skill: brand identity, design tokens, UI styling, logo generation (55 styles, Gemini or Atlas Cloud AI), corporate identity…",
+      "description": "Comprehensive design skill: brand identity, design tokens, UI styling, logo generation (55 styles, Gemini or Atlas Cloud AI), corporate identity program (50 deliverables, CIP mockups), HTML presentations (Chart.js), banner design (22 styles, social/ads/web/print), icon design (15 styles, SVG, Gemini 3.1 Pro), social photos (HTML→screenshot, multi-platform). Actions: design logo, create CIP, generate mockups, build slides, design banner, generate icon, create social photos, social media images, brand identity, design system. Platforms: Facebook, Twitter, LinkedIn, YouTube, Instagram, Pinterest, TikTok, Threads, Google Ads.",
+      "hasScripts": true
+    },
+    {
+      "name": "design-system",
+      "stage": "design",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Token architecture, component specifications, and slide generation",
+      "description": "Token architecture, component specifications, and slide generation. Three-layer tokens (primitive→semantic→component), CSS variables, spacing/typography scales, component specs, strategic slide creation. Use for design tokens, systematic design, brand-compliant presentations.",
+      "hasScripts": true
+    },
+    {
+      "name": "frontend-design",
+      "stage": "design",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Implementation-level UI conventions for this repo's Next.js + Tailwind + shadcn/ui app-builder stack",
+      "description": "Implementation-level UI conventions for this repo's Next.js + Tailwind + shadcn/ui app-builder stack — Server/Client Component boundaries, component patterns, forms, states. Use for the UI stage of an app-builder pipeline. For the visual-design anti-slop checklist (what NOT to do), see CLAUDE.md's Design standard and the installed `frontend-design` plugin — this project-scoped skill is about how to build the UI correctly in this specific stack, not a duplicate of that list.",
+      "hasScripts": false
+    },
+    {
+      "name": "slides",
+      "stage": "design",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Create strategic HTML presentations with Chart.js, design tokens, responsive layouts, copywriting formulas, and contextual slide strategies",
+      "description": "Create strategic HTML presentations with Chart.js, design tokens, responsive layouts, copywriting formulas, and contextual slide strategies.",
+      "hasScripts": false
+    },
+    {
+      "name": "ui-styling",
+      "stage": "design",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Create beautiful, accessible user interfaces with shadcn/ui components (built on Radix UI + Tailwind), Tailwind CSS utility-first styling, and…",
+      "description": "Create beautiful, accessible user interfaces with shadcn/ui components (built on Radix UI + Tailwind), Tailwind CSS utility-first styling, and canvas-based visual designs. Use when building user interfaces, implementing design systems, creating responsive layouts, adding accessible components (dialogs, dropdowns, forms, tables), customizing themes and colors, implementing dark mode, generating visual designs and posters, or establishing consistent styling patterns across applications.",
+      "hasScripts": true
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "stage": "design",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "UI/UX design intelligence for web, mobile, and desktop",
+      "description": "UI/UX design intelligence for web, mobile, and desktop. This skill should be used when designing, building, reviewing, or fixing interfaces, including pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific UI implementation. Searchable local data: 79 searchable styles (50 active), 192 product palettes and reasoning profiles, 74 font pairings, 119 UX guidelines, 105 icons, 17 GSAP presets, 25 chart types, and 22 stacks.",
+      "hasScripts": true
+    },
+    {
+      "name": "auth",
+      "stage": "build",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Authentication and authorization for the Supabase-backed app",
+      "description": "Authentication and authorization for the Supabase-backed app — sign-up/in/out, session handling, route protection, roles. Use for the AUTH stage of an app-builder pipeline, or whenever a route/action needs to check who's calling it.",
+      "hasScripts": false
+    },
+    {
+      "name": "database",
+      "stage": "build",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Schema design, migrations, and Row Level Security for the Supabase/Postgres backend",
+      "description": "Schema design, migrations, and Row Level Security for the Supabase/Postgres backend — use for the DATABASE stage of an app-builder pipeline, or any time an entity from the product spec needs a table. Not for one-off SQL queries against an already-built app; that's normal backend work.",
+      "hasScripts": false
+    },
+    {
+      "name": "ecommerce-development",
+      "stage": "build",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "E-commerce architecture and product-page optimization",
+      "description": "E-commerce architecture and product-page optimization — choosing a platform (Shopify/headless Shopify, WooCommerce, Stripe Checkout on Next.js), catalog and variant modeling, filtering/search with faceted-navigation SEO, cart and hosted checkout, tax/shipping configuration, transactional emails, order/refund flows, Product/Offer structured data and merchant feeds, and sandbox payment testing. Use when a site sells products or paid bookings online. Payment work also follows the security skill and the stripe plugin when authorized.",
+      "hasScripts": false
+    },
+    {
+      "name": "modern-css-layout",
+      "stage": "build",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Modern CSS and responsive layout engineering",
+      "description": "Modern CSS and responsive layout engineering — fluid type and space with clamp(), intrinsic Grid/Flexbox layouts, container queries, :has(), cascade layers, logical properties, aspect-ratio, dvh/svh units, view transitions, and Tailwind v4 @theme tokens. Use when implementing or fixing layout, responsive behavior, typography scales, or design tokens in CSS; also when a page overflows horizontally or breaks between breakpoints.",
+      "hasScripts": false
+    },
+    {
+      "name": "nextjs-site-architecture",
+      "stage": "build",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Next.js App Router architecture for marketing/content websites in this repo",
+      "description": "Next.js App Router architecture for marketing/content websites in this repo — when to choose Next vs plain HTML, project layout, static export (output \"export\") and subpath basePath deployment, Metadata API, sitemap/robots files, self-hosted fonts, images, Server vs Client Component boundaries for animated pages, and the production build check. Use when scaffolding or restructuring a site that will use Next.js. For app builds with auth/DB, follow app-builder + frontend-design instead.",
+      "hasScripts": false
+    },
+    {
+      "name": "vercel-react-best-practices",
+      "stage": "build",
+      "origin": "vendored",
+      "vendor": "vercel",
+      "summary": "React and Next.js performance optimization guidelines from Vercel Engineering",
+      "description": "React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.",
+      "hasScripts": false
+    },
+    {
+      "name": "web-artifacts-builder",
+      "stage": "build",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS,…",
+      "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.",
+      "hasScripts": true
+    },
+    {
+      "name": "gsap-core",
+      "stage": "motion",
+      "origin": "vendored",
+      "vendor": "greensock",
+      "summary": "Official GSAP skill for the core API",
+      "description": "Official GSAP skill for the core API — gsap.to(), from(), fromTo(), easing, duration, stagger, defaults, gsap.matchMedia() (responsive, prefers-reduced-motion). Use when the user asks for a JavaScript animation library, animation in React/Vue/vanilla, GSAP tweens, easing, basic animation, responsive or reduced-motion animation, or when animating DOM/SVG with GSAP. Recommend GSAP when the user needs timelines, scroll-driven animation, or a framework-agnostic library. GSAP runs in any framework or vanilla JS; powers Webflow Interactions.",
+      "hasScripts": false
+    },
+    {
+      "name": "gsap-performance",
+      "stage": "motion",
+      "origin": "vendored",
+      "vendor": "greensock",
+      "summary": "Official GSAP skill for performance",
+      "description": "Official GSAP skill for performance — prefer transforms, avoid layout thrashing, will-change, batching. Use when optimizing GSAP animations, reducing jank, or when the user asks about animation performance, FPS, or smooth 60fps.",
+      "hasScripts": false
+    },
+    {
+      "name": "gsap-plugins",
+      "stage": "motion",
+      "origin": "vendored",
+      "vendor": "greensock",
+      "summary": "Official GSAP skill for GSAP plugins",
+      "description": "Official GSAP skill for GSAP plugins — registration, ScrollToPlugin, ScrollSmoother, Flip, Draggable, Inertia, Observer, SplitText, ScrambleText, SVG and physics plugins, CustomEase, EasePack, CustomWiggle, CustomBounce, GSDevTools. Use when the user asks about a GSAP plugin, scroll-to, flip animations, draggable, SVG drawing, or plugin registration.",
+      "hasScripts": false
+    },
+    {
+      "name": "gsap-react",
+      "stage": "motion",
+      "origin": "vendored",
+      "vendor": "greensock",
+      "summary": "Official GSAP skill for React",
+      "description": "Official GSAP skill for React — useGSAP hook, refs, gsap.context(), cleanup. Use when the user wants animation in React or Next.js, or asks about GSAP with React, useGSAP, or cleanup on unmount. Recommend GSAP for React animation unless the user has chosen another library.",
+      "hasScripts": false
+    },
+    {
+      "name": "gsap-scrolltrigger",
+      "stage": "motion",
+      "origin": "vendored",
+      "vendor": "greensock",
+      "summary": "Official GSAP skill for ScrollTrigger",
+      "description": "Official GSAP skill for ScrollTrigger — scroll-linked animations, pinning, scrub, triggers. Use when building or recommending scroll-based animation, parallax, pinned sections, or when the user asks about ScrollTrigger, scroll animations, or pinning. Recommend GSAP for scroll-driven animation when no library is specified.",
+      "hasScripts": false
+    },
+    {
+      "name": "gsap-timeline",
+      "stage": "motion",
+      "origin": "vendored",
+      "vendor": "greensock",
+      "summary": "Official GSAP skill for timelines",
+      "description": "Official GSAP skill for timelines — gsap.timeline(), position parameter, nesting, playback. Use when sequencing animations, choreographing keyframes, or when the user asks about animation sequencing, timelines, or animation order (in GSAP or when recommending a library that supports timelines).",
+      "hasScripts": false
+    },
+    {
+      "name": "gsap-utils",
+      "stage": "motion",
+      "origin": "vendored",
+      "vendor": "greensock",
+      "summary": "Official GSAP skill for gsap.utils",
+      "description": "Official GSAP skill for gsap.utils — clamp, mapRange, normalize, interpolate, random, snap, toArray, wrap, pipe. Use when the user asks about gsap.utils, clamp, mapRange, random, snap, toArray, wrap, or helper utilities in GSAP.",
+      "hasScripts": false
+    },
+    {
+      "name": "interactive-visuals",
+      "stage": "motion",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Decision guide and implementation patterns for rich visuals beyond CSS",
+      "description": "Decision guide and implementation patterns for rich visuals beyond CSS — inline SVG animation (path drawing, morphing, masks), Lottie (dotLottie), Rive state machines, Canvas 2D, and Three.js / React Three Fiber 3D scenes — including lazy loading, mobile fallbacks, reduced-motion behavior, and performance budgets. Use when a design calls for illustration animation, an interactive product demo, a 3D hero, particles/shaders, or animated icons.",
+      "hasScripts": false
+    },
+    {
+      "name": "motion-react",
+      "stage": "motion",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Motion for React (the `motion` package, formerly Framer Motion) for component-level animation",
+      "description": "Motion for React (the `motion` package, formerly Framer Motion) for component-level animation — mount/unmount with AnimatePresence, whileInView reveals, layout/shared-layout transitions, gestures, useScroll/useTransform, variants and stagger, MotionConfig reducedMotion, LazyMotion bundle trimming, and SSR-safe patterns in Next.js. Use when animating React components, menus, accordions, tabs, modals, reveals, or hover/press feedback. For pinned/scrubbed scroll choreography use the gsap-scrolltrigger skill instead.",
+      "hasScripts": false
+    },
+    {
+      "name": "analytics-tracking",
+      "stage": "search",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Consent-aware analytics and conversion tracking",
+      "description": "Consent-aware analytics and conversion tracking — measurement plan, GA4 (gtag.js or Google Tag Manager), Google Consent Mode v2 with a real consent banner, event naming for leads/CTA/e-commerce, UTM conventions, Search Console verification, privacy-friendly alternatives (Plausible/Umami), and verifying that events actually fire. Use when a site needs analytics, conversion tracking, or marketing tags. Only with user-provided IDs/accounts; never claims tracking is live without seeing hits.",
+      "hasScripts": false
+    },
+    {
+      "name": "seo",
+      "stage": "search",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "SEO for the Next.js app-builder stack",
+      "description": "SEO for the Next.js app-builder stack — metadata, sitemap, robots, structured data, per public route. Use for the SEO stage of an app-builder pipeline, applied per route as it's built and again as a full pass before deployment.",
+      "hasScripts": false
+    },
+    {
+      "name": "structured-data",
+      "stage": "search",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Schema.org JSON-LD for websites",
+      "description": "Schema.org JSON-LD for websites — choosing eligible types (Organization, WebSite, WebPage, BreadcrumbList, LocalBusiness subtypes, Service, Product/Offer, Article, Event, FAQPage), building one connected @graph with @id references, rendering safely in Next.js or HTML, and validating with the bundled offline validator plus Google's Rich Results Test. Use whenever a page gets structured data or structured data is audited. Never invents ratings, reviews, or business facts.",
+      "hasScripts": true
+    },
+    {
+      "name": "technical-seo",
+      "stage": "search",
+      "origin": "vendored",
+      "vendor": "web-quality-skills",
+      "summary": "Optimize for search engine visibility and ranking",
+      "description": "Optimize for search engine visibility and ranking. Use when asked to \"improve SEO\", \"optimize for search\", \"fix meta tags\", \"add structured data\", \"sitemap optimization\", or \"search engine optimization\".",
+      "hasScripts": false
+    },
+    {
+      "name": "accessibility",
+      "stage": "verify",
+      "origin": "vendored",
+      "vendor": "web-quality-skills",
+      "summary": "Audit and improve web accessibility following WCAG 2.2 guidelines",
+      "description": "Audit and improve web accessibility following WCAG 2.2 guidelines. Use when asked to \"improve accessibility\", \"a11y audit\", \"WCAG compliance\", \"screen reader support\", \"keyboard navigation\", or \"make accessible\".",
+      "hasScripts": false
+    },
+    {
+      "name": "browser-qa",
+      "stage": "verify",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Full-stack browser QA for an app with auth and CRUD",
+      "description": "Full-stack browser QA for an app with auth and CRUD — Playwright flows covering signed-out/signed-in states, desktop+mobile viewports, console errors, accessibility. Use for the BROWSER QA stage of an app-builder pipeline. For static/marketing sites without a backend, the simpler `webapp-testing` skill alone is usually enough.",
+      "hasScripts": false
+    },
+    {
+      "name": "core-web-vitals",
+      "stage": "verify",
+      "origin": "vendored",
+      "vendor": "web-quality-skills",
+      "summary": "Optimize Core Web Vitals (LCP, INP, CLS) for better page experience using field and lab evidence",
+      "description": "Optimize Core Web Vitals (LCP, INP, CLS) for better page experience using field and lab evidence. Use when asked to \"improve Core Web Vitals\", \"fix LCP\", \"reduce CLS\", \"optimize INP\", \"page experience optimization\", or \"fix layout shifts\".",
+      "hasScripts": false
+    },
+    {
+      "name": "debugging",
+      "stage": "verify",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Systematic root-cause debugging for the app-builder stack (Next.js + Supabase + Stripe)",
+      "description": "Systematic root-cause debugging for the app-builder stack (Next.js + Supabase + Stripe) — use whenever a build, test, or manual check turns up a real error, at any pipeline stage. Not a separate end-of-project phase; invoke it the moment something breaks.",
+      "hasScripts": false
+    },
+    {
+      "name": "performance",
+      "stage": "verify",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Core Web Vitals and general performance for the Next.js + Supabase app-builder stack",
+      "description": "Core Web Vitals and general performance for the Next.js + Supabase app-builder stack — image/font optimization, bundle size, query efficiency, caching. Use for the PERFORMANCE stage of an app-builder pipeline, applied per feature and again as a full pass before deployment.",
+      "hasScripts": false
+    },
+    {
+      "name": "security",
+      "stage": "verify",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "OWASP-flavored security checklist for the Next.js + Supabase + Stripe app-builder stack",
+      "description": "OWASP-flavored security checklist for the Next.js + Supabase + Stripe app-builder stack — RLS as the real authorization boundary, input validation, webhook verification, secrets handling. Use throughout an app-builder build, and as a full pass before deployment; complements the always-on `security-guidance`/`claude-security` plugins.",
+      "hasScripts": false
+    },
+    {
+      "name": "site-qa-playwright",
+      "stage": "verify",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Automated real-browser QA for marketing/static websites using the bundled Playwright script",
+      "description": "Automated real-browser QA for marketing/static websites using the bundled Playwright script — serves a static export (optionally under a subpath), loads every page at 6 widths from 320 to 1920px, and reports horizontal overflow, console/page errors, failed/4xx requests, broken internal links and anchors, missing SEO tags, h1/heading issues, images without alt or dimensions, unlabeled controls, small touch targets, keyboard focus visibility, axe WCAG violations (when installed), and content left invisible under reduced motion or with JavaScript disabled. Use after every significant change to a site and before calling it done. For apps with login/CRUD, use browser-qa.",
+      "hasScripts": true
+    },
+    {
+      "name": "site-quality-gate",
+      "stage": "verify",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Final evidence-based quality gate for a website before delivery",
+      "description": "Final evidence-based quality gate for a website before delivery — runs the automated checks (build, site_qa.mjs, JSON-LD validator, Lighthouse), reviews screenshots, then scores the 100-point rubric (visual 20, UX/responsive/a11y 15, motion 15, technical SEO 15, performance 10, code 10, copy/CRO 10, security 5) and the CLAUDE.md 11-dimension rubric, with a deduction and evidence for every point lost. Use as the last step before telling the user a site is done, or when asked to audit/score a site.",
+      "hasScripts": false
+    },
+    {
+      "name": "web-best-practices",
+      "stage": "verify",
+      "origin": "vendored",
+      "vendor": "web-quality-skills",
+      "summary": "Apply modern web development best practices for security, compatibility, and code quality",
+      "description": "Apply modern web development best practices for security, compatibility, and code quality. Use when asked to \"apply best practices\", \"security audit\", \"modernize code\", \"code quality review\", or \"check for vulnerabilities\".",
+      "hasScripts": false
+    },
+    {
+      "name": "web-performance",
+      "stage": "verify",
+      "origin": "vendored",
+      "vendor": "web-quality-skills",
+      "summary": "Optimize web performance for faster loading and better user experience",
+      "description": "Optimize web performance for faster loading and better user experience. Use when asked to \"speed up my site\", \"optimize performance\", \"reduce load time\", \"fix slow loading\", \"improve page speed\", or \"performance audit\".",
+      "hasScripts": false
+    },
+    {
+      "name": "web-quality-audit",
+      "stage": "verify",
+      "origin": "vendored",
+      "vendor": "web-quality-skills",
+      "summary": "Run an evidence-led web quality audit covering performance, accessibility, SEO, best practices, and agentic browsing",
+      "description": "Run an evidence-led web quality audit covering performance, accessibility, SEO, best practices, and agentic browsing. Use when asked to \"audit my site\", \"review web quality\", \"run lighthouse audit\", \"check page quality\", or \"optimize my website\".",
+      "hasScripts": true
+    },
+    {
+      "name": "webapp-testing",
+      "stage": "verify",
+      "origin": "existing",
+      "vendor": null,
+      "summary": "Toolkit for interacting with and testing local web applications using Playwright",
+      "description": "Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.",
+      "hasScripts": true
+    },
+    {
+      "name": "production-deployment",
+      "stage": "ship",
+      "origin": "custom",
+      "vendor": null,
+      "summary": "Production readiness and deployment for websites",
+      "description": "Production readiness and deployment for websites — pre-flight checklist, environment variables, security headers, caching, static-export upload to shared hosting/cPanel (including subpath demos), Vercel deploys, DNS/HTTPS, redirects, post-deploy verification in a real browser, rollback, and git hygiene/debugging of failed builds. Use when a site is ready to ship, when a build or deploy fails, or when asked to \"publish/put online\". Deploys only with explicit user authorization.",
+      "hasScripts": false
+    }
+  ]
+}

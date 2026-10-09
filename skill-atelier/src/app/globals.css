@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+/*
+  Creative direction: a workshop shadow board. Every tool hangs on its painted
+  outline; an empty outline means a tool that is missing. Galvanised steel
+  ground, blueprint ink, safety-orange tags. Archivo's width axis does the
+  typographic work: expanded and heavy for headlines, condensed for tag labels.
+
+  Motion storyboard (one easing family: --ease-out for entrances, --ease-io for scrub)
+  1 Load: SSR HTML is final layout; self-hosted font, swap; no loader.
+  2 Hero entrance [PRIMARY, ~1.2s]: headline lines rise out of a mask
+    (stagger 80ms); tags drop onto their hooks with one damped swing. CSS-only,
+    so it also runs without JS. The CTAs are never animated and work from t=0.
+  3 Type reveals: hero headline only.
+  4 Scroll [PRIMARY #2]: the pipeline wire draws itself as you scroll, and each
+    stage lights up when the wire reaches it (GSAP ScrollTrigger scrub, ≥768px only).
+  5 Nav: header gains a rule after scrolling; mobile menu fades/slides 240ms.
+  6 Images: none; the only illustration is SVG tool outlines.
+  7 Hover/focus [AMBIENT 150ms]: cards lift 2px and their outline goes solid; focus ring 2px blue.
+  8 Sections: no section-level entrance animations; content is static.
+  9 Filter [SECONDARY 320ms]: tool grid re-flows with a layout animation.
+  Mobile: no scrub/pin; markers are static. Reduced motion: everything final, instantly.
+*/
+
+@theme inline {
+  --color-ground: oklch(95.6% 0.006 230);
+  --color-board: oklch(91.5% 0.011 230);
+  --color-ink: oklch(23% 0.045 262);
+  --color-ink-2: oklch(41% 0.03 258);
+  --color-line: oklch(76% 0.02 240);
+  --color-blue: oklch(47% 0.14 256);
+  --color-signal: oklch(72% 0.165 58);
+  --color-signal-ink: oklch(30% 0.08 50);
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-slot: 3px;
+  --radius-chip: 999px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+:root {
+  --step--1: clamp(0.84rem, 0.8rem + 0.15vw, 0.92rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.45vw, 1.45rem);
+  --step-3: clamp(1.9rem, 1.4rem + 2.2vw, 3.1rem);
+  --step-5: clamp(2.6rem, 1.5rem + 5.4vw, 6.4rem);
+  --space-section: clamp(4rem, 2.6rem + 6vw, 9rem);
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  background: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
+.display {
+  font-stretch: 125%;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+.stamp {
+  font-stretch: 72%;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Pegboard: a real hole grid, drawn with one gradient (no image request). */
+.pegboard {
+  background-color: var(--color-board);
+  background-image: radial-gradient(circle at center, oklch(70% 0.015 235) 0 2.2px, transparent 2.6px);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+}
+
+/* ---------- Hero entrance (CSS keyframes: runs with JS disabled too) ---------- */
+.line-mask { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+.line-mask > span { display: block; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-line > span {
+    animation: rise 0.75s var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 80ms);
+  }
+  .hero-tag {
+    transform-origin: 50% -14px;
+    animation: hang 1s var(--ease-out) both;
+    animation-delay: calc(300ms + var(--i, 0) * 90ms);
+  }
+}
+@keyframes rise {
+  from { transform: translateY(105%); }
+  to { transform: translateY(0); }
+}
+@keyframes hang {
+  0% { transform: translateY(-46px) rotate(-7deg); opacity: 0; }
+  45% { transform: translateY(0) rotate(4deg); opacity: 1; }
+  70% { transform: rotate(-1.6deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* ---------- Tool cards ---------- */
+.slot {
+  border: 1.5px dashed var(--color-line);
+  border-radius: var(--radius-slot);
+  transition: border-color 150ms var(--ease-out), transform 150ms var(--ease-out), background-color 150ms;
+}
+@media (hover: hover) {
+  .slot-hover:hover { transform: translateY(-2px); border-style: solid; border-color: var(--color-ink-2); background-color: white; }
+}
+.slot-hover:focus-within { border-style: solid; border-color: var(--color-blue); }
+
+/* Pipeline stages: lit by default (no-JS / reduced motion); GSAP toggles data-lit on wide screens. */
+.stage-dot { transition: background-color 200ms, color 200ms, border-color 200ms; }
+.stage[data-lit="false"] .stage-dot { background: var(--color-ground); color: var(--color-ink-2); border-color: var(--color-line); }
