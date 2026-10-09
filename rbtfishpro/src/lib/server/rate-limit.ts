@@ -44,7 +44,9 @@ export function clientIp(req: Request) {
  * Per-IP limit first; only requests that pass it count toward the per-route backstop
  * (RATE_LIMIT_GLOBAL per minute, default 60 — ample for a small shop's orders and messages).
  */
-export function allow(route: string, req: Request, perIp = 5, global = Number(process.env.RATE_LIMIT_GLOBAL) || 60) {
+// In-process limits can't stop a distributed attack (many real IPs) — put an edge/WAF rule in
+// front for that. The backstop is clamped so a typo in RATE_LIMIT_GLOBAL can't lock the forms.
+export function allow(route: string, req: Request, perIp = 5, global = Math.max(perIp * 10, Number(process.env.RATE_LIMIT_GLOBAL) || 60)) {
   return rateLimit(`${route}:${clientIp(req)}`, perIp) && rateLimit(`${route}:*`, global);
 }
 
