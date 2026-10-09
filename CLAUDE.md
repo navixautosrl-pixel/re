@@ -153,6 +153,44 @@ Default recipe for a premium, animated, production-ready marketing site — prov
 
 **Browser QA**: use `mcp__playwright-local__*` (see MCP servers above) once available in a fresh session; until then, drive `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` directly via the Python `playwright` package from Bash — launch headless, hit every breakpoint from 320px to 1920px, assert `window.scrollX` after `scrollTo(9999,0)` is `0` (real overflow check, not just a visual guess), capture full-page and per-section screenshots, and check `console` + failed/4xx network requests. This is how the subpath bug above was actually caught — a mid-build screenshot at the wrong breakpoint or without simulating the real deployment path would have missed it.
 
+## Motion standard (every website project)
+
+First decide whether this site *deserves* a sophisticated motion system — an immersive brand, product launch, or studio/portfolio brief usually does; a utility page, docs, or a dense app screen usually doesn't. Record the call and the reason. A brief that asks for an immersive experience never ships static and lifeless; no brief ships with movement that drowns the content. This refines, not replaces, the Design standard's "one orchestrated moment beats fade-and-slide-up on every section".
+
+**Storyboard before code.** Write a short motion storyboard (in the plan, or as a comment block in the motion module) covering:
+1. initial load — what's shown before fonts/hero media are ready, and how it hands off (no blank flash, no loader that delays LCP for show)
+2. hero entrance — the single primary moment: order, stagger, duration, easing
+3. typography reveals — line/word masks for headlines only, never body copy
+4. scroll transitions — which sections (if any) pin, scrub, or parallax, and why that section's content benefits
+5. navigation — header hide/show on scroll, menu open/close, active-state transitions
+6. image treatments — clip/mask reveals, subtle scale-on-scroll, hover zoom
+7. hover/focus states — buttons, links, cards; focus gets the same care as hover
+8. section transitions — how one section hands off to the next
+9. mobile — what's simplified or removed (no pinning on small screens by default, no hover-only meaning, touch-friendly timing)
+
+**Hierarchy** — tag every animation in the storyboard as one of:
+- **Primary** (1–2 per page): the hero entrance and at most one scroll-driven set piece. Longest durations (~0.8–1.4s), most layered.
+- **Secondary**: section reveals, nav, image reveals. Shorter (~0.4–0.7s), shared easing, consistent distance.
+- **Ambient**: hover/focus, micro-feedback, slow background drift. Short (~150–300ms) or very slow and low-amplitude; never competes with content.
+
+One easing family per project (e.g. a custom `cubic-bezier`/`power3.out`-style curve for entrances, a softer in-out for scrubs), defined once as tokens and reused — not per-component guesses.
+
+**Tool per job** (pick the lightest that does it cleanly):
+- **CSS** — hover/focus, simple transitions, keyframed ambient loops.
+- **Motion for React** (`motion` / `framer-motion`) — component state, mount/unmount (`AnimatePresence`), layout transitions, simple `whileInView` reveals.
+- **GSAP + ScrollTrigger** — choreographed multi-element timelines, pinning, scrubbing, scroll-driven storytelling. Register plugins once, scope with `gsap.context()`/`useGSAP` and clean up on unmount; use `ScrollTrigger.matchMedia`/`gsap.matchMedia` for the mobile and reduced-motion variants.
+- **Three.js / R3F** — only when the concept is genuinely three-dimensional (see Premium site build stack). Lazy-load it, never on the LCP path.
+- Lenis only when the storyboard calls for inertia scroll, and wired to ScrollTrigger's update loop if both are present.
+
+**Non-negotiables:**
+- Animate `transform`/`opacity` (and `clip-path` sparingly); never animate layout properties on scroll.
+- `prefers-reduced-motion: reduce` → content appears immediately in its final state, no pinning/scrub/parallax/smooth-scroll; essential state changes become instant or simple fades.
+- Content is readable and in its final layout with JS disabled or before animation init — no `opacity:0` content that depends on a script to ever become visible, and no CLS from entrance offsets.
+- Animations never block input or delay the primary CTA; the CTA is visible and clickable during the hero entrance.
+- Respect INP: no heavy scroll handlers — use ScrollTrigger/IntersectionObserver, not raw `scroll` listeners.
+
+**Verification** (part of Browser QA, not optional): every animation in the storyboard is implemented in working code and checked in the real browser — screenshot/inspect hero mid-entrance and settled, scroll through every ScrollTrigger section at desktop and 375px, verify pinned sections release correctly on fast scroll, run once with `reducedMotion: 'reduce'` emulated to confirm everything is visible, and check the console for GSAP warnings (missing targets, unkilled triggers). A Chrome performance trace or Lighthouse run on the hero should show no long tasks from animation init and no regression in LCP/CLS.
+
 ## UX
 
 For every page, answer implicitly:
@@ -202,7 +240,7 @@ When browser access is available: open the result and actually look at it. Check
 
 ## Self-critique before calling anything done
 
-Score out of 10: Visual Design, UX, Responsive Design, Accessibility, SEO, Performance, Code Quality, Security, Conversion, Overall Polish. Anything under 8 gets fixed before wrapping up, not noted for later. For an app build, the `reviewer` agent runs this rubric formally before DEPLOYMENT.
+Score out of 10: Visual Design, Motion (storyboarded, purposeful, reduced-motion safe), UX, Responsive Design, Accessibility, SEO, Performance, Code Quality, Security, Conversion, Overall Polish. Anything under 8 gets fixed before wrapping up, not noted for later. For an app build, the `reviewer` agent runs this rubric formally before DEPLOYMENT.
 
 ## Git
 
