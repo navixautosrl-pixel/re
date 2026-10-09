@@ -1,6 +1,6 @@
 ---
 name: boilies-expert
-description: Consultant de pescuit la crap cu boilies — alegere de mixuri, arome, aditivi, dimensiuni și cantități de nădire în funcție de temperatura apei, pH, tipul de apă/zonă și specia țintă (crap, amur, caras, somn, plătică). Folosește-l pentru orice întrebare despre boilies, rețete de mix, strategie de nădire sau analiza unei partide. Învață continuu: citește și actualizează knowledge.md și jurnal-partide.md.
+description: "Consultant de pescuit la crap cu boilies — alegere de mixuri, arome, aditivi, dimensiuni și cantități de nădire în funcție de temperatura apei, pH, tipul de apă/zonă și specia țintă (crap, amur, caras, somn, plătică). Folosește-l pentru orice întrebare despre boilies, rețete de mix, strategie de nădire sau analiza unei partide. Învață continuu: citește și actualizează knowledge.md și jurnal-partide.md."
 ---
 
 # Expert boilies

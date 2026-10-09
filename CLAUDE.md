@@ -3,7 +3,7 @@
 This file configures Claude Code to act as a full-stack web development agency for this repository — a Bolt.new/Lovable-class AI app builder, not a code generator. Read this before starting any new site, page, or app.
 
 Two workflows live in this repo:
-- **Site workflow** — a single marketing/landing page or small static site (no database, no accounts). Follow the Design/Frontend/UX/etc. sections below directly. This is what built `website/`, `website-robixhost/`, `website-rbtpro/`, `website-v2/`.
+- **Site workflow** — a marketing/landing/portfolio/brochure site (no database, no accounts). Run it through `.claude/skills/site-builder/SKILL.md` (inspect → discover → strategy → creative direction → implement → SEO/perf → QA → polish → gate → deliver); the Design/Frontend/UX/etc. sections below are the rules that pipeline enforces. This is what built `website/`, `website-robixhost/`, `website-rbtpro/`, `website-v2/`.
 - **App workflow** — anything with a database, user accounts, or server-side logic ("SaaS", "dashboard", "booking system", "an app where users log in and..."). Use the `.claude/skills/app-builder/SKILL.md` pipeline and the `.claude/agents/` subagents — see "App Builder Pipeline" below.
 
 ## Role
@@ -44,6 +44,40 @@ When building or improving a site or app, act simultaneously as:
 | `webapp-testing` | Python Playwright toolkit for testing running apps or static HTML, with a server-lifecycle helper — `browser-qa` builds on this for full-stack apps. |
 | `design`, `design-system`, `brand`, `banner-design`, `slides`, `ui-styling` | Logo/brand/CIP/banner/slide generation, design tokens |
 
+*Site-workflow skills (custom, written for this repo):*
+
+| Skill | Use for |
+|---|---|
+| `site-builder` | **Entry point for any website build/redesign.** Orchestrates the stages and routes each one to the skills below. |
+| `creative-direction` | Brief → concept, type, palette, layout principles, image direction, tokens; also the screenshot-critique pass during polish. |
+| `modern-css-layout` | Fluid type/space, intrinsic Grid, container queries, `svh`, Tailwind v4 `@theme` tokens, fixing overflow. |
+| `nextjs-site-architecture` | Next vs plain HTML decision, static export + `basePath`, Metadata API, fonts, Server/Client boundary for animated pages. |
+| `motion-react` | Motion for React: AnimatePresence, reveals that are safe without JS, layout animations, `MotionConfig reducedMotion`. |
+| `interactive-visuals` | SVG / Lottie / Rive / Canvas / Three.js–R3F: when each is justified, lazy loading, fallbacks, budgets. |
+| `on-page-seo-content` | Intent, keyword clustering → one cluster per URL, titles/meta/H1, internal linking, local RO + hreflang. |
+| `structured-data` | JSON-LD @graph patterns + `scripts/validate_jsonld.mjs` offline validator (flags invented-looking reviews and placeholders). |
+| `site-qa-playwright` | `scripts/site_qa.mjs`: serves the export (optionally under a subpath) and checks 6 widths for overflow, console/network errors, SEO tags, a11y heuristics, keyboard focus, axe, and content hidden under reduced motion / no-JS. |
+| `conversion-optimization` | One job per page, CTA hierarchy, real-only trust signals, forms, ethical testing. |
+| `website-copywriting` | RO/EN copy from a facts inventory, microcopy, diacritics (ș ț comma-below), placeholder convention. |
+| `ecommerce-development` | Platform choice, catalog/variants, faceted-nav SEO, hosted checkout, signed webhooks, sandbox tests, RO/EU legal flags. |
+| `analytics-tracking` | GA4/GTM with Consent Mode v2 default-denied, event plan, verifying hits in the network log. |
+| `production-deployment` | Pre-flight, cPanel/static upload with `.htaccess`, Vercel, live verification, rollback, build debugging. |
+| `site-quality-gate` | Runs the evidence commands and scores the 100-point rubric + the self-critique rubric below. |
+
+*Vendored third-party skills (pinned and reviewed. Provenance and local patches are in `.claude/THIRD_PARTY_SKILLS.md`):*
+
+| Skill | Source | Use for |
+|---|---|---|
+| `gsap-core`, `gsap-timeline`, `gsap-scrolltrigger`, `gsap-react`, `gsap-plugins`, `gsap-utils`, `gsap-performance` | GreenSock (official) | All GSAP work: tweens, timelines, ScrollTrigger pin/scrub, `useGSAP` cleanup, SplitText/DrawSVG/Flip, perf. |
+| `accessibility` | Addy Osmani web-quality-skills | WCAG 2.2 audit + fixes. |
+| `core-web-vitals`, `web-performance` | same | LCP/INP/CLS diagnosis with field-vs-lab discipline; general loading/runtime perf. |
+| `technical-seo` | same | Crawl/index, canonical, robots, sitemaps, mobile and international SEO. |
+| `web-best-practices` | same | Security headers/CSP, deprecated APIs, console hygiene, compatibility. |
+| `web-quality-audit` | same | Category-by-category evidence-led audit + `scripts/analyze.sh` static smoke test. |
+| `vercel-react-best-practices` | Vercel | 70 React/Next.js performance rules (waterfalls, bundle, RSC serialization, re-renders). |
+
+`seo` / `performance` / `security` above remain the **app-builder-specific** versions. For marketing sites use `technical-seo` / `web-performance` / `web-best-practices`.
+
 **Agents** (`.claude/agents/`, project-scoped subagents for the app-builder pipeline):
 
 | Agent | Use for |
@@ -53,7 +87,9 @@ When building or improving a site or app, act simultaneously as:
 | `qa` | TESTING, BROWSER QA — runs the app in a real browser, reports or fixes bugs. |
 | `reviewer` | Final gate before DEPLOYMENT — scores the self-critique rubric, checks security, routes findings back to the owning agent. Read-only by design. |
 
-**Plugins** (`claude plugin list`, user-scoped, installed from `anthropics/claude-plugins-official`):
+**Plugins, project-scoped** (`.claude/settings.json` → `enabledPlugins` + the `claude-plugins-official` marketplace, so everyone who opens the repo is offered them): `frontend-design`, `security-guidance` (hooks: pip-installs the Agent SDK at session start and sends diffs to the Claude API for review on Stop/commit; disable with `SECURITY_GUIDANCE_DISABLE=1`), `typescript-lsp` (needs `npm i -g typescript-language-server typescript` on the machine). The official `playwright` plugin is deliberately **not** enabled, because `playwright-local` below replaces it.
+
+**Plugins, user-scoped on the original workstation** (not present in fresh cloud containers. `claude plugin list` shows what is actually installed on the current machine, so check it rather than assuming):
 
 | Plugin | Use for |
 |---|---|
@@ -232,7 +268,7 @@ Run whatever the project actually has — lint, typecheck, tests, production bui
 - broken images/links
 - obvious accessibility issues
 
-A green build is not "done." This repo's static sites have no lint/build step — the equivalent there is a headless Playwright pass (`webapp-testing`, or the `playwright-core` npm pattern already used throughout this repo's history) checking for console/page errors, layout overflow, and a real screenshot review — before publishing, not after a bug report. For an app build, `.claude/skills/browser-qa/SKILL.md` extends this with signed-in state and a full CRUD cycle exercised end to end, not just static pages.
+A green build is not "done." For any website, the standard automated pass is `node .claude/skills/site-qa-playwright/scripts/site_qa.mjs --dir <out> [--base-path <subpath>]` plus `node .claude/skills/structured-data/scripts/validate_jsonld.mjs <out>`. Quote their output in the delivery report and never paraphrase it into a pass. This repo's static sites have no lint/build step — the equivalent there is a headless Playwright pass (`webapp-testing`, or the `playwright-core` npm pattern already used throughout this repo's history) checking for console/page errors, layout overflow, and a real screenshot review — before publishing, not after a bug report. For an app build, `.claude/skills/browser-qa/SKILL.md` extends this with signed-in state and a full CRUD cycle exercised end to end, not just static pages.
 
 ## Visual QA
 
