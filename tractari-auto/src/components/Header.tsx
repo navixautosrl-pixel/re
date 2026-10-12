@@ -8,8 +8,10 @@ import { site } from "@/config/site";
 export const NAV = [
   { href: "/calculator/", label: "Calculator" },
   { href: "/tarife-tractari/", label: "Tarife" },
-  { href: "/servicii/", label: "Servicii" },
+  { href: "/tractari-chiajna/", label: "Chiajna" },
+  { href: "/tractari-militari/", label: "Militari" },
   { href: "/zone-deservite/", label: "Zone" },
+  { href: "/servicii/", label: "Servicii" },
   { href: "/contact/", label: "Contact" },
 ];
 
@@ -53,14 +55,14 @@ export function Header() {
     >
       <div className="wrap flex h-16 items-center justify-between gap-4">
         <Logo />
-        <nav aria-label="Navigare principală" className="hidden md:block">
+        <nav aria-label="Navigare principală" className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {NAV.map((n) => (
               <li key={n.href}>
                 <Link
                   href={n.href}
                   aria-current={active(n.href) ? "page" : undefined}
-                  className="inline-flex min-h-11 items-center rounded-full px-3.5 font-semibold opacity-85 transition hover:opacity-100 aria-[current=page]:bg-sign aria-[current=page]:text-white aria-[current=page]:opacity-100"
+                  className="inline-flex min-h-11 items-center rounded-full px-3 font-semibold opacity-85 transition hover:opacity-100 aria-[current=page]:bg-sign aria-[current=page]:text-white aria-[current=page]:opacity-100"
                 >
                   {n.label}
                 </Link>
@@ -69,12 +71,12 @@ export function Header() {
           </ul>
         </nav>
         <div className="flex items-center gap-2">
-          <Link href="/calculator/" className="btn btn-beacon hidden min-h-11 px-4 lg:inline-flex">
+          <Link href="/calculator/" className="btn btn-beacon hidden min-h-11 px-4 xl:inline-flex">
             Află prețul
           </Link>
           <button
             type="button"
-            className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 font-semibold md:hidden"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 font-semibold lg:hidden"
             aria-haspopup="dialog"
             aria-expanded={open}
             onClick={() => dialog.current?.showModal()}

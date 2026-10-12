@@ -1,19 +1,27 @@
 # Harta cuvintelor cheie (SEO)
 
+★ = zonele principale ale clientului (Chiajna, Militari, A1 București–Pitești, Centura București):
+apar primele în meniu, pe prima pagină, în pagina de zone și în footer, și primesc cele mai multe
+linkuri interne.
+
 O singură pagină pentru fiecare grup de căutări, ca paginile să nu concureze între ele
 (canibalizare). Cuvintele apar natural în titlu, H1, prima frază, subtitluri, texte de link și
 FAQ — nu înghesuite. `meta keywords` nu e folosit: Google îl ignoră din 2009.
 
 | Pagină | Cuvânt principal | Variante acoperite în pagină |
 |---|---|---|
-| `/` | tractări auto București non-stop | tractare auto București, platformă auto București, tractări București Ilfov, tractare mașină București preț |
+| `/` | tractări auto Chiajna, Militari, A1, Centura (non-stop) | tractare auto București, platformă auto București, tractări București Ilfov, tractare mașină București preț |
 | `/tractari-non-stop-bucuresti/` | tractări non-stop București | tractări 24/7, tractare noaptea, tractare weekend, tractare de sărbători |
 | `/tractari-centura-bucuresti/` | tractări Centura București | tractare Centură, DNCB, tractări Chitila, Otopeni, Voluntari, Pantelimon, Popești-Leordeni, Jilava, Bragadiru, Chiajna |
 | `/tractari-autostrada-bucuresti-pitesti/` | tractări A1 București–Pitești | tractare autostrada A1, tractări autostrada București Pitești, tractare Bolintin, Găești, Pitești, mașină defectă A1 |
 | `/tractari-ilfov/` | tractări auto Ilfov | tractare Otopeni, Voluntari, Chiajna, Bragadiru, Buftea, Măgurele, Mogoșoaia, Domnești, Snagov, Corbeanca… |
 | `/tractari-otopeni/` | tractări Otopeni | tractare DN1, tractare aeroport Henri Coandă, Tunari, Corbeanca |
 | `/tractari-voluntari/` | tractări Voluntari / Pipera | tractare Pipera, Bulevardul Pipera, A3, DN2 Afumați |
-| `/tractari-chiajna/` | tractări Chiajna / Militari | tractare intrare A1, Iuliu Maniu, Militari Residence |
+| `/tractari-chiajna/` ★ | tractări Chiajna | tractare Militari Residence, Roșu, Dudu, strada Rezervelor, intrare A1, Centura vest |
+| `/tractari-militari/` ★ | tractări Militari | tractare Iuliu Maniu, Preciziei, Pacii, Gorjului, Lujerului, Apusului, Uverturii, Valea Cascadelor |
+| `/tractari-dragomiresti-vale/` | tractări Dragomirești-Vale | tractare vest București, lângă Chiajna |
+| `/tractari-ciorogarla/` | tractări Ciorogârla | tractare primii km A1 |
+| `/tractari-domnesti/` | tractări Domnești | tractare între A1 și Centură |
 | `/tractari-bragadiru/` | tractări Bragadiru | tractare DN6, Șoseaua Alexandriei, Măgurele, Domnești |
 | `/tractari-popesti-leordeni/` | tractări Popești-Leordeni | tractare Calea Olteniței, DN4, Berceni |
 | `/tractari-pantelimon/` | tractări Pantelimon | tractare DN3, tractare A2, Cernica |

@@ -1,6 +1,6 @@
 # Tractări auto — site cu calculator de preț
 
-Static site (Next.js 16 export), 33 indexable pages (8 Ilfov localities, 6 sectors, 4 guides, non-stop page added on 2026-10-12): home (tractări auto București), calculator,
+Static site (Next.js 16 export), 37 indexable pages (main areas Chiajna, Militari, A1, Centura; 10 nearby localities, 6 sectors, 4 guides, non-stop page): home (tractări auto București), calculator,
 tarife, servicii and zone hubs, 8 landing pages (Centura București, A1 București–Pitești, Ilfov,
 sectoarele 1–6, transport pe platformă, moto, mașini avariate, microbuze/autoutilitare), one guide,
 contact, legal drafts. Page copy for landings: `src/data/landings.tsx`; keyword → URL map:

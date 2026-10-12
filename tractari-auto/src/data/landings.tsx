@@ -84,7 +84,7 @@ const BASE_LANDINGS: Landing[] = [
       { q: "Pot duce mașina direct la un service din București?", a: "Da. Introdu în calculator distanța până la service; prețul se calculează pe kilometrii reali ai traseului." },
       { q: "Ce se întâmplă dacă trebuie să așteptați la încărcare?", a: "Primele 30 de minute de staționare sunt gratuite, apoi tariful este de 100 lei pe oră." },
     ],
-    related: ["tractari-ilfov", "tractari-autostrada-bucuresti-pitesti", "tractari-sectoare-bucuresti", "tractari-masini-avariate"],
+    related: ["tractari-chiajna", "tractari-militari", "tractari-autostrada-bucuresti-pitesti", "tractari-ilfov"],
   },
   {
     slug: "tractari-autostrada-bucuresti-pitesti",
@@ -132,7 +132,7 @@ const BASE_LANDINGS: Landing[] = [
       { q: "Pasagerii pot merge cu platforma?", a: "Spune-ne la telefon câte persoane sunt, ca să ne organizăm; numărul de locuri din cabină diferă de la o platformă la alta." },
       { q: "Ce documente trebuie să am?", a: "Talonul mașinii și actul de identitate; dacă mașina a fost cumpărată de la un dealer sau parc auto, și factura de achiziție." },
     ],
-    related: ["tractari-centura-bucuresti", "transport-auto-pe-platforma", "tractari-masini-avariate", "ghid/masina-defecta-pe-autostrada"],
+    related: ["tractari-chiajna", "tractari-militari", "tractari-centura-bucuresti", "ghid/masina-defecta-pe-autostrada"],
   },
   {
     slug: "tractari-ilfov",
@@ -401,6 +401,9 @@ const BASE_LANDINGS: Landing[] = [
   },
 ];
 
-export const LANDINGS: Landing[] = [...BASE_LANDINGS, ...LOCAL_LANDINGS];
+/** The client's main areas (2026-10-12): shown first, everywhere zones are listed. */
+export const PRIMARY_ZONES = ["tractari-chiajna", "tractari-militari", "tractari-autostrada-bucuresti-pitesti", "tractari-centura-bucuresti"];
+const rank = (slug: string) => (PRIMARY_ZONES.includes(slug) ? PRIMARY_ZONES.indexOf(slug) : 99);
+export const LANDINGS: Landing[] = [...BASE_LANDINGS, ...LOCAL_LANDINGS].sort((a, b) => rank(a.slug) - rank(b.slug));
 
 export const landingBySlug = (slug: string) => LANDINGS.find((l) => l.slug === slug);

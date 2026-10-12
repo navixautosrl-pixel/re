@@ -8,6 +8,7 @@ import { Reveal } from "@/components/Reveal";
 import { CallButtons } from "@/components/CallButtons";
 import { FaqList } from "@/data/faq";
 import { pageMeta } from "@/lib/seo";
+import { PRIMARY_ZONES } from "@/data/landings";
 import { LandingCards } from "@/components/LandingCards";
 import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/config/site";
@@ -30,9 +31,9 @@ import { site } from "@/config/site";
  */
 
 export const metadata = pageMeta({
-  title: "Tractări auto București non-stop | Preț calculat online",
+  title: "Tractări auto Chiajna, Militari, A1 și Centura București",
   absolute: true,
-  description: "Tractări auto non-stop în București, Ilfov, pe Centură și pe A1 București–Pitești. Calculezi online prețul pe km pentru moto, autoturism, SUV sau dubă.",
+  description: "Tractări auto non-stop în Chiajna, Militari, pe A1 București–Pitești și pe Centura București. Calculezi online prețul pe km, înainte să suni.",
   path: "/",
 });
 
@@ -53,12 +54,17 @@ export default function Home() {
 
       <section aria-labelledby="zone-title" className="wrap pt-20 md:pt-28">
         <Reveal>
-          <h2 id="zone-title" className="text-[length:var(--step-3)]">Unde venim</h2>
+          <h2 id="zone-title" className="text-[length:var(--step-3)]">Zonele noastre principale</h2>
           <p className="mt-3 max-w-[62ch] text-[length:var(--step-1)] text-ink-2">
-            Tractări auto în toate sectoarele Bucureștiului și în Ilfov, de pe Centura București și de pe Autostrada A1 București–Pitești, pe ambele sensuri.
+            Chiajna, Militari, Autostrada A1 București–Pitești și Centura București — non-stop. Venim și în zonele din jur.
           </p>
         </Reveal>
-        <div className="mt-8"><LandingCards group="zona" /></div>
+        <div className="mt-8"><LandingCards slugs={PRIMARY_ZONES} /></div>
+        <h3 className="mt-12 text-[length:var(--step-2)]">Și în zonele din jur</h3>
+        <div className="mt-6">
+          <LandingCards slugs={["tractari-dragomiresti-vale", "tractari-ciorogarla", "tractari-domnesti", "tractari-sector-6", "tractari-bragadiru", "tractari-ilfov", "tractari-sectoare-bucuresti", "tractari-otopeni"]} />
+        </div>
+        <p className="mt-6"><Link className="link font-[700]" href="/zone-deservite/">Toate zonele</Link></p>
       </section>
 
       <section aria-labelledby="serv-title" className="wrap pt-20">
@@ -85,7 +91,7 @@ export default function Home() {
         <FaqList />
       </section>
 
-      <JsonLd data={{ "@context": "https://schema.org", "@type": "Service", name: "Tractări auto București", description: "Tractări auto și transport pe platformă în București, Ilfov, pe Centura București și pe A1 București–Pitești, cu preț calculat online.", serviceType: "Tractări auto", url: `${site.url}/`, provider: { "@id": `${site.url}/#org` }, areaServed: ["București", "Ilfov", "Centura București", "Autostrada A1 București–Pitești"].map((name) => ({ "@type": "Place", name })) }} />
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "Service", name: "Tractări auto Chiajna, Militari, A1 și Centura București", description: "Tractări auto non-stop și transport pe platformă în Chiajna, Militari, pe A1 București–Pitești, pe Centura București și în zonele din jur, cu preț calculat online.", serviceType: "Tractări auto", url: `${site.url}/`, provider: { "@id": `${site.url}/#org` }, areaServed: ["Chiajna", "Militari", "Autostrada A1 București–Pitești", "Centura București", "București", "Ilfov"].map((name) => ({ "@type": "Place", name })) }} />
 
       <section aria-labelledby="cta-title" className="on-dark bg-sign text-white">
         <div className="wrap flex flex-col items-start gap-6 py-16 md:flex-row md:items-center md:justify-between">

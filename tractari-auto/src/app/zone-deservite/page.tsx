@@ -4,8 +4,8 @@ import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Zone deservite: București, Ilfov, Centura, A1",
-  description: "Tractări auto în București (sectoarele 1–6), Ilfov, pe Centura București și pe Autostrada A1 București–Pitești. Alege zona și vezi prețul.",
+  title: "Zone deservite: Chiajna, Militari, A1, Centura",
+  description: "Tractări auto non-stop în Chiajna, Militari, pe A1 București–Pitești, pe Centura București și în zonele din jur: Ilfov și sectoarele 1–6.",
   path: "/zone-deservite/",
 });
 

@@ -41,14 +41,34 @@ const PLACES: Place[] = [
     related: ["tractari-otopeni", "tractari-pantelimon", "tractari-sector-2", "tractari-centura-bucuresti"],
   },
   {
-    slug: "tractari-chiajna",
-    name: "Chiajna și Militari",
-    where: "la vest de București, lângă cartierul Militari și capătul A1",
-    roads: ["Autostrada A1 București–Pitești, capătul dinspre București", "Bulevardul Iuliu Maniu", "Centura București, tronsonul de vest"],
-    context: <p>Chiajna e prima localitate în care ajungi ieșind din București spre A1, așa că multe tractări de pe autostradă se termină aici sau trec pe aici. Zona are și multe ansambluri noi cu parcări pe mai multe niveluri.</p>,
-    tips: ["Dacă ai rămas chiar la intrarea pe A1, spune-ne sensul de mers.", "Pentru ansambluri rezidențiale, dă-ne numărul blocului și intrarea în parcare."],
-    examples: [8, 20, 40],
-    related: ["tractari-autostrada-bucuresti-pitesti", "tractari-sector-6", "tractari-bragadiru", "tractari-centura-bucuresti"],
+    slug: "tractari-dragomiresti-vale",
+    name: "Dragomirești-Vale",
+    where: "la vest de București, la nord de Chiajna",
+    roads: ["drumurile spre Chiajna și Militari", "legătura cu Centura București, tronsonul de vest", "drumurile spre Chitila"],
+    context: <p>Dragomirești-Vale e vecină cu Chiajna, cu multe cartiere noi de case. Mașinile de aici ajung de obicei la service-uri din Militari sau din Chiajna, la câțiva kilometri distanță.</p>,
+    tips: ["Pe străzile noi fără nume oficial, trimite-ne locația pe WhatsApp.", "Spune-ne dacă accesul e pe drum nepietruit."],
+    examples: [8, 15, 30],
+    related: ["tractari-chiajna", "tractari-militari", "tractari-ciorogarla", "tractari-centura-bucuresti"],
+  },
+  {
+    slug: "tractari-ciorogarla",
+    name: "Ciorogârla",
+    where: "la vest de București, lângă A1 București–Pitești",
+    roads: ["Autostrada A1 București–Pitești, primii kilometri", "drumurile spre Chiajna și Domnești", "drumurile spre Dragomirești-Vale"],
+    context: <p>Ciorogârla e aproape de primii kilometri ai A1, așa că aici ajung des mașini rămase pe autostradă la ieșirea din București. Din Ciorogârla, Militari și Chiajna sunt aproape.</p>,
+    tips: ["Dacă ai rămas pe A1 lângă Ciorogârla, spune-ne sensul și kilometrul.", "Pentru curți private, spune-ne dacă poarta e îngustă."],
+    examples: [10, 20, 35],
+    related: ["tractari-autostrada-bucuresti-pitesti", "tractari-chiajna", "tractari-domnesti", "tractari-militari"],
+  },
+  {
+    slug: "tractari-domnesti",
+    name: "Domnești",
+    where: "la sud-vest de București, între A1 și Centura București",
+    roads: ["Centura București, tronsonul de sud-vest", "drumurile spre Chiajna și Ciorogârla", "drumurile spre Bragadiru"],
+    context: <p>Domnești e la câțiva kilometri de Chiajna și de Centură, între A1 și Șoseaua Alexandriei. Tractările de aici merg de obicei spre Militari, Chiajna sau spre service-uri din vestul Bucureștiului.</p>,
+    tips: ["Spune-ne cea mai apropiată intersecție sau un reper (benzinărie, magazin).", "Pe Centură, oprește în afara benzii și pune triunghiul."],
+    examples: [10, 20, 35],
+    related: ["tractari-chiajna", "tractari-bragadiru", "tractari-ciorogarla", "tractari-centura-bucuresti"],
   },
   {
     slug: "tractari-bragadiru",
@@ -109,7 +129,111 @@ const SECTORS: Sector[] = [
   { n: 3, areas: "Titan, Dristor, Vitan, Balta Albă, Centrul Civic, Unirii, Văcărești", roads: ["Bulevardul Unirii", "Bulevardul Basarabia", "Calea Vitan", "drumul spre A2"], context: "Sectorul 3 e cel mai populat, cu blocuri dese și parcări pline — spune-ne cum se ajunge la mașină.", related: ["tractari-pantelimon", "tractari-sector-2", "tractari-sector-4", "tractari-popesti-leordeni"] },
   { n: 4, areas: "Berceni, Tineretului, Văcărești, Olteniței, Giurgiului", roads: ["Calea Văcărești", "Șoseaua Giurgiului", "Bulevardul Constantin Brâncoveanu", "ieșirile spre DN4 și DN5"], context: "Sectorul 4 iese spre sud, pe Calea Olteniței și Șoseaua Giurgiului, adică spre Popești-Leordeni și Jilava.", related: ["tractari-popesti-leordeni", "tractari-jilava", "tractari-sector-3", "tractari-sector-5"] },
   { n: 5, areas: "Rahova, Ferentari, Cotroceni, 13 Septembrie, Panduri, Berceni-Vest", roads: ["Calea Rahovei", "Șoseaua Alexandriei", "Calea 13 Septembrie", "ieșirea spre DN6 și Bragadiru"], context: "Sectorul 5 face legătura cu Bragadiru și DN6; în zonele vechi străzile sunt înguste și parcările aglomerate.", related: ["tractari-bragadiru", "tractari-sector-4", "tractari-sector-6", "tractari-jilava"] },
-  { n: 6, areas: "Drumul Taberei, Militari, Crângași, Giulești, Grozăvești, Ghencea", roads: ["Bulevardul Iuliu Maniu", "Drumul Taberei", "Calea Giulești", "ieșirea spre A1 și Chiajna"], context: "Din Sectorul 6 pleacă A1 spre Pitești, prin Bulevardul Iuliu Maniu și Chiajna — multe tractări de pe autostradă ajung aici.", related: ["tractari-chiajna", "tractari-autostrada-bucuresti-pitesti", "tractari-sector-5", "tractari-sector-1"] },
+  { n: 6, areas: "Drumul Taberei, Militari, Crângași, Giulești, Grozăvești, Ghencea", roads: ["Bulevardul Iuliu Maniu", "Drumul Taberei", "Calea Giulești", "ieșirea spre A1 și Chiajna"], context: "Din Sectorul 6 pleacă A1 spre Pitești, prin Bulevardul Iuliu Maniu și Chiajna — multe tractări de pe autostradă ajung aici.", related: ["tractari-militari", "tractari-chiajna", "tractari-autostrada-bucuresti-pitesti", "tractari-sector-5"] },
+];
+
+const primaryPages: Landing[] = [
+  {
+    slug: "tractari-chiajna",
+    group: "zona",
+    nav: "Chiajna",
+    title: "Tractări auto Chiajna non-stop — preț pe km",
+    description: "Tractare auto non-stop în Chiajna, Roșu, Dudu și Militari Residence, la intrarea pe A1 și pe Centura de vest. Prețul pe km îl afli online.",
+    h1: "Tractări auto în Chiajna, non-stop",
+    lead: "Chiajna e zona noastră de bază: Roșu, Dudu, Militari Residence, intrarea pe A1 și Centura de vest. Prețul îl afli înainte să suni.",
+    examples: [5, 10, 25],
+    areaServed: ["Chiajna", "Roșu", "Dudu", "Militari Residence", "Ilfov"],
+    serviceType: "Tractări auto",
+    sections: [
+      {
+        h2: "Unde venim în Chiajna",
+        body: (
+          <>
+            <p>Comuna Chiajna, la vest de București, cuprinde satele Chiajna, Roșu și Dudu, plus ansamblul Militari Residence. Venim oriunde în comună, la orice oră:</p>
+            <ul>
+              <li><strong>Militari Residence</strong> și zona străzii Rezervelor — blocuri dese, parcări subterane și supraterane;</li>
+              <li><strong>Roșu</strong> și <strong>Dudu</strong> — cartiere de case, străzi noi, uneori fără asfalt;</li>
+              <li><strong>Bulevardul Iuliu Maniu</strong> spre ieșirea din oraș și zona comercială de la intrarea în Chiajna;</li>
+              <li><strong>intrarea pe A1</strong> și <strong>Centura de vest</strong>, unde se strică cele mai multe mașini în trafic.</li>
+            </ul>
+          </>
+        ),
+      },
+      {
+        h2: "Situațiile pe care le întâlnim cel mai des",
+        body: (
+          <ul>
+            <li>mașina nu pornește dimineața în parcarea blocului — vezi <L href="/ghid/masina-nu-porneste/">ce poți verifica singur</L>;</li>
+            <li>pană sau accident la intrarea pe A1 ori pe Centură — <L href="/ghid/masina-defecta-pe-autostrada/">ce faci până ajungem</L>;</li>
+            <li>mașină cumpărată de la un dealer și dusă acasă pe platformă;</li>
+            <li>transport la un service din Militari, Chiajna sau oriunde în București.</li>
+          </ul>
+        ),
+      },
+      {
+        h2: "Ce ne ajută să ajungem repede",
+        body: (
+          <ul>
+            <li>locația trimisă pe WhatsApp — în Militari Residence și în Roșu numerele de stradă sunt greu de găsit noaptea;</li>
+            <li>numărul blocului, scara și nivelul parcării, dacă mașina e într-o parcare subterană;</li>
+            <li>pe A1 sau pe Centură: sensul de mers și cel mai apropiat reper.</li>
+          </ul>
+        ),
+      },
+      { h2: "Cât costă o tractare în Chiajna", body: <p>Distanțele sunt mici: până în Militari sunt câțiva kilometri. Prețul se calculează pe kilometrii reali, cu tarifele din <L href="/tarife-tractari/">grila noastră</L>.</p> },
+    ],
+    faq: [
+      { q: "Veniți noaptea în Militari Residence?", a: "Da, lucrăm non-stop, inclusiv în weekend și de sărbători." },
+      { q: "Puteți scoate mașina din parcarea subterană?", a: "Depinde de înălțimea de acces. Spune-ne înălțimea și nivelul; dacă platforma nu intră, găsim împreună o soluție." },
+      { q: "Ce costă cel mai puțin: service în Chiajna sau în Militari?", a: "Plătești doar kilometrii traseului. Pune ambele variante în calculator și compară." },
+    ],
+    related: ["tractari-militari", "tractari-autostrada-bucuresti-pitesti", "tractari-centura-bucuresti", "tractari-dragomiresti-vale"],
+  },
+  {
+    slug: "tractari-militari",
+    group: "zona",
+    nav: "Militari",
+    title: "Tractări auto Militari non-stop — Sector 6",
+    description: "Tractare auto non-stop în Militari: Iuliu Maniu, Preciziei, Pacii, Gorjului, Lujerului, Apusului, Uverturii. Preț pe km calculat online, înainte să suni.",
+    h1: "Tractări auto în Militari, non-stop",
+    lead: "De la Lujerului până la Preciziei și ieșirea spre A1: venim oricând și îți spunem prețul dinainte.",
+    examples: [3, 8, 20],
+    areaServed: ["Militari", "Sector 6", "București"],
+    serviceType: "Tractări auto",
+    sections: [
+      {
+        h2: "Zonele din Militari unde venim",
+        body: (
+          <ul>
+            <li>de-a lungul <strong>Bulevardului Iuliu Maniu</strong>, de la Lujerului la Preciziei;</li>
+            <li>cartierele din jurul stațiilor de metrou <strong>Lujerului, Gorjului, Pacii și Preciziei</strong>;</li>
+            <li><strong>Apusului, Uverturii, Valea Cascadelor, Rezervelor</strong> spre Chiajna;</li>
+            <li>zona industrială <strong>Preciziei</strong>, cu service-uri și depozite.</li>
+          </ul>
+        ),
+      },
+      {
+        h2: "Militari, A1 și Centura",
+        body: <p>Militari e poarta de vest a Bucureștiului: Bulevardul Iuliu Maniu continuă spre Chiajna, intrarea pe A1 București–Pitești și Centura de vest. Multe mașini rămase pe <L href="/tractari-autostrada-bucuresti-pitesti/">A1</L> sau pe <L href="/tractari-centura-bucuresti/">Centură</L> ajung la un service din Militari.</p>,
+      },
+      {
+        h2: "Ce ne ajută să ajungem repede",
+        body: (
+          <ul>
+            <li>pe Iuliu Maniu: sensul de mers și cea mai apropiată stație de metrou;</li>
+            <li>în parcările dintre blocuri: scara și cum se intră cu o mașină mare;</li>
+            <li>dacă mașina are roțile blocate, bifează opțiunea în calculator.</li>
+          </ul>
+        ),
+      },
+      { h2: "Cât costă o tractare în Militari", body: <p>În cartier, distanțele sunt de câțiva kilometri, deci se aplică tariful pentru primii 30 km din <L href="/tarife-tractari/">grilă</L>. Vezi exemplele de mai jos sau calculează exact.</p> },
+    ],
+    faq: [
+      { q: "Veniți și noaptea în Militari?", a: "Da, lucrăm non-stop, 24 de ore din 24." },
+      { q: "Puteți duce mașina la un service din Preciziei?", a: "Da, destinația o alegi tu; prețul se calculează pe kilometrii reali." },
+    ],
+    related: ["tractari-chiajna", "tractari-sector-6", "tractari-autostrada-bucuresti-pitesti", "tractari-centura-bucuresti"],
+  },
 ];
 
 const placePages: Landing[] = PLACES.map((p) => ({
@@ -246,4 +370,4 @@ const extraPages: Landing[] = [
   },
 ];
 
-export const LOCAL_LANDINGS: Landing[] = [...placePages, ...sectorPages, ...extraPages];
+export const LOCAL_LANDINGS: Landing[] = [...primaryPages, ...placePages, ...sectorPages, ...extraPages];

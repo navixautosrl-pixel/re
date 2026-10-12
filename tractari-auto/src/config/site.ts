@@ -15,8 +15,8 @@ export const site = {
   phoneDisplay: null as string | null,
   whatsapp: null as string | null, // international digits, e.g. "40722123456"
   email: null as string | null,
-  /** From the client's brief (2026-10-12): București, Centura, A1 București–Pitești. Edit if it changes. */
-  serviceArea: "București, Ilfov, Centura București și A1 București–Pitești" as string | null,
+  /** From the client (2026-10-12): main areas Chiajna, Militari, A1, Centura + adjacent. */
+  serviceArea: "Chiajna, Militari, A1 București–Pitești, Centura București și zonele din jur" as string | null,
   /** Confirmed by the client (2026-10-12): non-stop, 7 days a week. */
   hours: "Non-stop, 24/7" as string | null,
   /** schema.org openingHours for the hours above. */

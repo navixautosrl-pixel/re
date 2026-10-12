@@ -15,17 +15,20 @@ export function Hero() {
     <section aria-labelledby="hero-title" className="on-dark relative isolate overflow-hidden bg-asphalt pt-28 text-paint md:pt-32">
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(70%_60%_at_80%_20%,color-mix(in_oklch,var(--sign)_35%,transparent),transparent_70%)]" />
       <div className="wrap rise">
-        <p className="inline-flex items-center gap-2 rounded-full bg-asphalt-2 px-3 py-1 text-[length:var(--step--1)] font-[650] text-paint/85">
-          <span aria-hidden="true" className="size-2 rounded-full bg-beacon" />
-          {site.hours ?? <Placeholder field="hours">program (ex. non-stop)</Placeholder>}
-          {" · "}
-          {site.serviceArea ?? <Placeholder field="serviceArea">zona acoperită</Placeholder>}
+        <p className="flex flex-wrap gap-2 text-[length:var(--step--1)] font-[650]">
+          <span className="inline-flex items-center gap-2 rounded-full bg-beacon px-3 py-1 text-ink">
+            <span aria-hidden="true" className="size-2 rounded-full bg-ink" />
+            {site.hours ?? <Placeholder field="hours">program</Placeholder>}
+          </span>
+          <span className="inline-flex items-center rounded-full bg-asphalt-2 px-3 py-1 text-paint/85">
+            {site.serviceArea ?? <Placeholder field="serviceArea">zona acoperită</Placeholder>}
+          </span>
         </p>
-        <h1 id="hero-title" className="mt-5 max-w-[19ch] text-[length:var(--step-4)]">
-          Tractări auto București non-stop, cu prețul <span className="text-beacon">știut dinainte</span>
+        <h1 id="hero-title" className="mt-5 max-w-[20ch] text-[length:var(--step-4)]">
+          Tractări auto <span className="whitespace-nowrap">non-stop</span> în <span className="text-beacon">Chiajna, Militari</span>, pe A1 și Centura
         </h1>
         <p className="mt-5 max-w-[46ch] text-[length:var(--step-1)] text-paint/85">
-          În București, Ilfov, pe Centură și pe A1 București–Pitești. Alegi vehiculul și traseul, vezi totalul în câteva secunde, apoi suni sau scrii pe WhatsApp cu prețul deja calculat.
+          Pe Autostrada București–Pitești, pe Centura București și în zonele din jur. Alegi vehiculul și traseul, vezi prețul în câteva secunde, apoi suni sau scrii pe WhatsApp cu totul deja calculat.
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <Link href="#calculator" className="btn btn-beacon min-h-14 px-6 text-[length:var(--step-1)]">Calculează prețul</Link>
