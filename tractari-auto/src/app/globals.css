@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+/*
+ * Concept: road-sign language. Romanian national-road blue for information, reflective white
+ * for type, the amber of a tow truck's beacon for the one action that matters (get a price /
+ * call). Asphalt (blue-grey, not black) for the dramatic sections, concrete grey for reading.
+ * Typeface: Overpass — an open-source interpretation of Highway Gothic, the lettering of
+ * road signs — one variable family used at contrasting weights.
+ */
+/* Fonts are loaded with next/font/local in layout.tsx (Latin + a tiny Romanian-diacritics file). */
+
+:root {
+  --asphalt: oklch(23% 0.018 252);
+  --asphalt-2: oklch(28.5% 0.022 252);
+  --asphalt-3: oklch(36% 0.022 252);
+  --concrete: oklch(96.5% 0.004 250);
+  --concrete-2: oklch(92.5% 0.006 250);
+  --card: oklch(99.5% 0.002 250);
+  --ink: oklch(24% 0.02 255);
+  --ink-2: oklch(44% 0.02 255);
+  --rule: oklch(86% 0.008 250);
+  --sign: oklch(47% 0.15 258);
+  --sign-2: oklch(55% 0.15 258);
+  --beacon: oklch(81% 0.165 75);
+  --beacon-2: oklch(86% 0.14 80);
+  --go: oklch(55% 0.14 150);
+  --danger: oklch(55% 0.19 27);
+  --paint: oklch(97% 0.01 95);
+
+  --step--1: clamp(0.85rem, 0.83rem + 0.1vw, 0.92rem);
+  --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.1rem);
+  --step-1: clamp(1.18rem, 1.1rem + 0.4vw, 1.4rem);
+  --step-2: clamp(1.45rem, 1.25rem + 0.9vw, 2rem);
+  --step-3: clamp(1.9rem, 1.45rem + 2.1vw, 3.2rem);
+  --step-4: clamp(2.5rem, 1.6rem + 4.2vw, 5.2rem);
+
+  --ease-out: cubic-bezier(0.22, 0.8, 0.2, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --radius-s: 6px;
+  --radius-m: 12px;
+  --radius-l: 20px;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+}
+
+@theme inline {
+  --color-asphalt: var(--asphalt);
+  --color-asphalt-2: var(--asphalt-2);
+  --color-asphalt-3: var(--asphalt-3);
+  --color-concrete: var(--concrete);
+  --color-concrete-2: var(--concrete-2);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-rule: var(--rule);
+  --color-sign: var(--sign);
+  --color-sign-2: var(--sign-2);
+  --color-beacon: var(--beacon);
+  --color-beacon-2: var(--beacon-2);
+  --color-go: var(--go);
+  --color-danger: var(--danger);
+  --color-paint: var(--paint);
+  --font-sans: var(--ff-latin), var(--ff-ro), ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+html { background: var(--concrete); -webkit-text-size-adjust: 100%; scroll-padding-top: 5rem; }
+body { background: var(--concrete); color: var(--ink); font-family: var(--font-sans); font-size: var(--step-0); line-height: 1.6; overflow-x: clip; font-variant-numeric: lining-nums; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.05; letter-spacing: -0.02em; font-weight: 820; }
+p { text-wrap: pretty; }
+::selection { background: var(--beacon); color: var(--ink); }
+:focus-visible { outline: 3px solid var(--sign-2); outline-offset: 3px; border-radius: 4px; }
+.on-dark :focus-visible { outline-color: var(--beacon); }
+.tabular { font-variant-numeric: tabular-nums lining-nums; }
+/* Component classes live in the components layer so Tailwind utilities (hidden, lg:inline-flex…) can override them. */
+@layer components {
+.wrap { width: min(100% - 2 * var(--gutter), 76rem); margin-inline: auto; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 3.1rem; padding: .75rem 1.35rem; border-radius: 999px; font-weight: 750; line-height: 1; transition: background-color 200ms var(--ease-out), transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out); cursor: pointer; }
+.btn:active { transform: scale(.98); }
+.btn[aria-disabled="true"] { opacity: .55; cursor: not-allowed; }
+.btn-beacon { background: var(--beacon); color: var(--ink); box-shadow: 0 6px 20px -8px color-mix(in oklch, var(--beacon) 80%, transparent); }
+.btn-beacon:hover { background: var(--beacon-2); }
+.btn-sign { background: var(--sign); color: white; }
+.btn-sign:hover { background: var(--sign-2); }
+.btn-line { border: 2px solid currentColor; }
+.btn-line:hover { background: color-mix(in oklch, currentColor 10%, transparent); }
+.link { color: var(--sign); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .2em; }
+.link:hover { color: var(--sign-2); }
+.on-dark .link { color: var(--beacon-2); }
+
+/* Fields */
+.field { width: 100%; min-height: 3.2rem; padding: .7rem 1rem; background: var(--card); color: var(--ink); border: 1.5px solid var(--rule); border-radius: var(--radius-s); transition: border-color 150ms var(--ease-out), box-shadow 150ms var(--ease-out); }
+.field:hover { border-color: var(--ink-2); }
+.field:focus-visible { outline: none; border-color: var(--sign); box-shadow: 0 0 0 3px color-mix(in oklch, var(--sign) 25%, transparent); }
+.field[aria-invalid="true"] { border-color: var(--danger); }
+
+/* Placeholder convention */
+.ph { display: inline; -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: .05em .45em; border: 1.5px dashed #b7791f; border-radius: 4px; color: #8a5a10; background: #fff7e6; font-weight: 650; font-size: .92em; }
+.on-dark .ph { color: var(--beacon-2); background: transparent; border-color: var(--beacon); }
+}
+
+/* Road paint: dashed centre line, moving under the truck (ambient) */
+.lane { background-image: linear-gradient(90deg, var(--paint) 0 55%, transparent 55% 100%); background-size: 90px 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .lane { animation: lane 0.9s linear infinite; }
+  .beacon { animation: beacon 1.1s steps(2, jump-none) infinite; }
+  .truck-in { animation: truck-in 1.3s var(--ease-out) 0.15s both; }
+  .truck-in .wheel { animation: spin 1.3s var(--ease-out) 0.15s both; }
+  .rise > * { animation: rise .8s var(--ease-out) both; }
+  .veh-in { animation: veh-in .35s var(--ease-out) both; }
+  .rise > :nth-child(2) { animation-delay: 90ms; }
+  .rise > :nth-child(3) { animation-delay: 180ms; }
+  .rise > :nth-child(4) { animation-delay: 270ms; }
+}
+@keyframes lane { to { background-position: -90px 0; } }
+@keyframes beacon { 0% { fill: var(--beacon); filter: drop-shadow(0 0 6px var(--beacon)); } 100% { fill: #8a5a10; filter: none; } }
+@keyframes truck-in { from { transform: translateX(-60%); } to { transform: none; } }
+@keyframes spin { from { transform: rotate(-720deg); } to { transform: none; } }
+@keyframes veh-in { from { opacity: 0; transform: translateX(80px); } }
+@keyframes rise { from { opacity: .001; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+/* Section reveals: hidden only once JS is present and motion is allowed */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal]:not([data-in]) { opacity: 0; transform: translateY(22px); }
+  .js [data-reveal] { transition: opacity .6s var(--ease-out), transform .6s var(--ease-out); transition-delay: var(--d, 0ms); }
+}
+
+/* Page transitions (React ViewTransition) */
+::view-transition-old(page) { animation: vt-out 180ms var(--ease-inout) both; }
+::view-transition-new(page) { animation: vt-in 320ms var(--ease-out) both; }
+@keyframes vt-out { to { opacity: 0; transform: translateY(-8px); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(14px); } }
+
+.site-header { transition: background-color 250ms var(--ease-out), box-shadow 250ms var(--ease-out), color 250ms var(--ease-out); }
+.site-header[data-solid="true"] { background: color-mix(in oklch, var(--card) 94%, transparent); color: var(--ink); box-shadow: 0 1px 0 var(--rule); backdrop-filter: blur(10px); }
+
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .chev { transform: rotate(180deg); }
+.chev { transition: transform 200ms var(--ease-out); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
