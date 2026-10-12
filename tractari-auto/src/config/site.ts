@@ -7,13 +7,13 @@ export const site = {
   name: "Tractări Auto",
   nameConfirmed: false,
   legalName: null as string | null,
-  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://www.exemplu-tractari.ro").replace(/\/$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://tractariautobucuresti24.ro").replace(/\/$/, ""),
   indexable: process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true",
   /** International format, e.g. "+40722123456". Drives the call + WhatsApp buttons. */
-  phone: null as string | null,
+  phone: "+40773938355" as string | null,
   /** Shown to people, e.g. "0722 123 456". */
-  phoneDisplay: null as string | null,
-  whatsapp: null as string | null, // international digits, e.g. "40722123456"
+  phoneDisplay: "0773 938 355" as string | null,
+  whatsapp: "40773938355" as string | null, // same number as calls — change if WhatsApp is on another
   email: null as string | null,
   /** From the client (2026-10-12): main areas Chiajna, Militari, A1, Centura + adjacent. */
   serviceArea: "Chiajna, Militari, A1 București–Pitești, Centura București și zonele din jur" as string | null,
