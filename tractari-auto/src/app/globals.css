@@ -117,31 +117,33 @@ p { text-wrap: pretty; }
             settle, then idles "on the road" (wheels roll, body hums 0.4 px).
    HOVER    vehicle cards: wheels turn, the vehicle edges forward.
    Everything here is off under prefers-reduced-motion. */
+.beacon-dot { position: absolute; width: 3.93%; height: 4.5%; border-radius: 4px; background: var(--beacon); box-shadow: 0 0 10px 2px var(--beacon); will-change: opacity; }
 .wheel { transform-box: view-box; }
+/* Sections scrolled out of view get .is-off (IntersectionObserver): their loops stop costing CPU. */
+.is-off, .is-off * { animation-play-state: paused !important; }
 .veh-body { transform-box: fill-box; transform-origin: 50% 100%; }
 @media (prefers-reduced-motion: no-preference) {
   .lane { animation: lane 0.9s linear infinite; }
   .beacon { animation: beacon 0.9s steps(2, jump-none) infinite; }
+  .beacon-dot { animation: blink 0.9s steps(2, jump-none) infinite; }
   .beacon-b { animation-delay: -0.45s; }
   .truck-in { animation: truck-in 1.3s var(--ease-out) 0.15s both; }
-  .truck-in .wheel { animation: roll-in 1.3s var(--ease-out) 0.15s both, roll-r 0.7s linear 1.45s infinite; }
-  .truck-in .veh-hum, .truck-in > svg { animation: hum .28s ease-in-out 1.45s infinite alternate; }
+  .truck-in .wheel { animation: roll-in 1.3s var(--ease-out) 0.15s both; }
   .traffic { animation: traffic 11s linear 2.5s infinite both; }
-  .traffic .wheel { animation: roll-l .45s linear infinite; } /* the car is mirrored */
   .rise > * { animation: rise .8s var(--ease-out) both; }
   .rise > :nth-child(2) { animation-delay: 90ms; }
   .rise > :nth-child(3) { animation-delay: 180ms; }
   .rise > :nth-child(4) { animation-delay: 270ms; }
   .stage .drive-in { animation: drive-in .9s cubic-bezier(.2,.9,.25,1.05) both; }
-  .stage .drive-in .wheel { animation: roll-l .55s linear infinite; }
-  .stage .drive-in .veh-body { animation: settle .9s var(--ease-out) both, hum .3s ease-in-out .9s infinite alternate; }
+  .stage .drive-in .wheel { animation: roll-l .45s linear 2; }
+  .stage .drive-in .veh-body { animation: settle .9s var(--ease-out) both; }
   .veh-card .wheel { transition: transform .6s var(--ease-out); }
   .veh-card:hover .wheel { transform: rotate(-200deg); }
   .veh-card svg { transition: transform .45s var(--ease-out); }
   .veh-card:hover svg { transform: translateX(-6px); }
-  .beam { animation: beam 2.4s ease-in-out infinite alternate; }
   .skyline { animation: drift 60s linear infinite; }
 }
+@keyframes blink { from { opacity: 1; } to { opacity: .15; } }
 @keyframes lane { to { transform: translateX(-90px); } }
 @keyframes beacon { 0% { opacity: 1; } 100% { opacity: .25; } }
 @keyframes truck-in { from { transform: translateX(-70%); } to { transform: none; } }
@@ -169,7 +171,7 @@ p { text-wrap: pretty; }
 @keyframes vt-in { from { opacity: 0; transform: translateY(14px); } }
 
 .site-header { transition: background-color 250ms var(--ease-out), box-shadow 250ms var(--ease-out), color 250ms var(--ease-out); }
-.site-header[data-solid="true"] { background: color-mix(in oklch, var(--card) 94%, transparent); color: var(--ink); box-shadow: 0 1px 0 var(--rule); backdrop-filter: blur(10px); }
+.site-header[data-solid="true"] { background: color-mix(in oklch, var(--card) 94%, transparent); color: var(--ink); box-shadow: 0 1px 0 var(--rule); }
 
 details > summary { list-style: none; cursor: pointer; }
 details > summary::-webkit-details-marker { display: none; }
@@ -209,17 +211,25 @@ details[open] .chev { transform: rotate(180deg); }
   .glow-border::after { content: ""; position: absolute; inset: -2px; border-radius: inherit; padding: 2px; pointer-events: none;
     background: conic-gradient(from var(--angle), transparent 0 70%, var(--beacon) 80%, transparent 90%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
-    animation: spin-angle 4s linear infinite; }
+    opacity: 0; transition: opacity .3s var(--ease-out); }
+  .glow-border:hover::after, .glow-border:focus-visible::after { opacity: 1; animation: spin-angle 2.5s linear infinite; }
   .btn-beacon:not(.fixed) { position: relative; overflow: hidden; }
   .btn-beacon::after { content: ""; position: absolute; inset: 0; transform: translateX(-120%) skewX(-20deg); pointer-events: none;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); animation: shine 4.5s var(--ease-out) 2s infinite; }
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); }
+  .btn-beacon:not(.fixed):hover::after, .btn-beacon:not(.fixed):focus-visible::after { animation: shine .8s var(--ease-out); }
   .ticker { animation: tick 38s linear infinite; }
   .ticker-mask:hover .ticker { animation-play-state: paused; }
 }
 @keyframes grow { to { transform: scaleX(1); } }
-@keyframes sharpen { from { opacity: .2; filter: blur(8px); transform: translateY(24px); } to { opacity: 1; filter: none; transform: none; } }
+@keyframes sharpen { from { opacity: .2; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 @keyframes par { from { transform: translateY(-10%); } to { transform: translateY(14%); } }
-@keyframes rise-blur { from { opacity: .001; filter: blur(10px); transform: translateY(22px); } to { opacity: 1; filter: none; transform: none; } }
+@keyframes rise-blur { from { opacity: .001; filter: blur(6px); transform: translateY(22px); } to { opacity: 1; filter: blur(0); transform: none; } }
 @keyframes spin-angle { to { --angle: 360deg; } }
-@keyframes shine { 0%, 70% { transform: translateX(-120%) skewX(-20deg); } 100% { transform: translateX(220%) skewX(-20deg); } }
+@keyframes shine { 0% { transform: translateX(-120%) skewX(-20deg); } 100% { transform: translateX(220%) skewX(-20deg); } }
 @keyframes tick { to { transform: translateX(-50%); } }
+
+/* Price changes: short pulse instead of a counting animation (instant, readable value). */
+@media (prefers-reduced-motion: no-preference) {
+  .price-pop { animation: price-pop .3s var(--ease-out); }
+}
+@keyframes price-pop { from { transform: scale(1.06); color: var(--paint); } to { transform: none; } }

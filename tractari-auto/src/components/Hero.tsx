@@ -36,7 +36,7 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="relative mt-10 h-[clamp(10rem,24vw,17rem)] overflow-hidden" aria-hidden="true">
+      <div data-anim className="relative mt-10 h-[clamp(10rem,24vw,17rem)] overflow-hidden" aria-hidden="true">
         {/* distant city at night, drifting slowly (ambient) */}
         <div className="skyline-par absolute inset-0">
         <svg className="skyline absolute bottom-[38%] left-0 h-[45%] w-[200%] opacity-40" viewBox="0 0 1600 120" preserveAspectRatio="none">
@@ -59,11 +59,14 @@ export function Hero() {
         </div>
         <div className="truck-in absolute bottom-[4%] left-[max(1rem,calc(50%-38rem))] w-[min(84vw,36rem)]">
           {/* headlight beam */}
-          <svg className="beam pointer-events-none absolute -right-[38%] bottom-[22%] w-[45%]" viewBox="0 0 200 60" aria-hidden="true">
+          <svg className="pointer-events-none opacity-50 absolute -right-[38%] bottom-[22%] w-[45%]" viewBox="0 0 200 60" aria-hidden="true">
             <defs><linearGradient id="beam-g" x1="0" x2="1"><stop offset="0" stopColor="#fff3c4" stopOpacity=".8" /><stop offset="1" stopColor="#fff3c4" stopOpacity="0" /></linearGradient></defs>
             <path d="M0 26 L200 0 L200 60 L0 34 Z" fill="url(#beam-g)" />
           </svg>
           <TowTruck className="relative w-full drop-shadow-[0_18px_20px_rgba(0,0,0,.35)]" />
+          {/* beacons as HTML layers over the SVG: blinking them doesn't repaint the truck */}
+          <span className="beacon-dot" style={{ left: "73.9%", top: "23.2%" }} />
+          <span className="beacon-dot beacon-b" style={{ left: "79.6%", top: "23.2%" }} />
         </div>
       </div>
     </section>

@@ -263,8 +263,8 @@ export function TowTruck({ className }: { className?: string }) {
       <path d="M498 104 l10 -4 l2 8 Z" fill="url(#p-white)" stroke="#000" strokeOpacity=".4" />
       {/* beacon bar */}
       <rect x="410" y="60" width="62" height="9" rx="3" fill="#2a3038" />
-      <rect className="beacon" x="414" y="51" width="22" height="10" rx="4" fill="var(--beacon)" />
-      <rect className="beacon beacon-b" x="446" y="51" width="22" height="10" rx="4" fill="var(--beacon)" />
+      <rect x="414" y="51" width="22" height="10" rx="4" fill="#7a4f0e" />
+      <rect x="446" y="51" width="22" height="10" rx="4" fill="#7a4f0e" />
       <Wheel x={96} y={180} r={22} />
       <Wheel x={150} y={180} r={22} />
       <Wheel x={470} y={180} r={22} />

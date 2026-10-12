@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { autocomplete, type Suggestion } from "@/lib/maps";
+import { autocomplete, warmUp, type Suggestion } from "@/lib/maps";
 
 /** Accessible combobox (ARIA 1.2 pattern) over Places autocomplete. */
 export function PlaceField({ label, value, onPick, sessionToken, placeholder }: {
@@ -17,6 +17,7 @@ export function PlaceField({ label, value, onPick, sessionToken, placeholder }: 
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const timer = useRef<number | undefined>(undefined);
   const ctrl = useRef<AbortController | null>(null);
 
@@ -26,17 +27,19 @@ export function PlaceField({ label, value, onPick, sessionToken, placeholder }: 
     setText(v);
     onPick(null);
     window.clearTimeout(timer.current);
-    if (v.trim().length < 3) { setItems([]); setOpen(false); return; }
+    if (v.trim().length < 2) { setItems([]); setOpen(false); setLoading(false); return; }
+    setLoading(true);
     timer.current = window.setTimeout(async () => {
       ctrl.current?.abort();
       ctrl.current = new AbortController();
       try {
         const res = await autocomplete(v.trim(), sessionToken, ctrl.current.signal);
         setItems(res); setOpen(res.length > 0); setActive(-1); setError(res.length ? "" : "Nicio adresă găsită.");
+        setLoading(false);
       } catch (e) {
-        if ((e as Error).name !== "AbortError") setError("Căutarea adreselor nu răspunde. Poți introduce kilometrii manual.");
+        if ((e as Error).name !== "AbortError") { setError("Căutarea adreselor nu răspunde. Poți introduce kilometrii manual."); setLoading(false); }
       }
-    }, 250);
+    }, 120);
   }
 
   function pick(s: Suggestion) {
@@ -58,6 +61,7 @@ export function PlaceField({ label, value, onPick, sessionToken, placeholder }: 
         autoComplete="off"
         placeholder={placeholder}
         value={text}
+        onFocus={warmUp}
         onChange={(e) => onInput(e.target.value)}
         onBlur={() => window.setTimeout(() => setOpen(false), 120)}
         onKeyDown={(e) => {
@@ -84,6 +88,7 @@ export function PlaceField({ label, value, onPick, sessionToken, placeholder }: 
           ))}
         </ul>
       )}
+      {loading && !open && <p className="absolute right-3 top-[2.65rem] text-[length:var(--step--1)] text-ink-2" aria-live="polite">Se caută…</p>}
       {error && <p id={`${id}-err`} className="mt-1 text-[length:var(--step--1)] text-danger">{error}</p>}
     </div>
   );

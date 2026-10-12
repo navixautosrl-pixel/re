@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { MobileCallBar } from "@/components/MobileCallBar";
 import { VehicleDefs } from "@/components/Vehicles";
 import { Spotlight } from "@/components/Spotlight";
+import { PauseOffscreen } from "@/components/PauseOffscreen";
 import { site } from "@/config/site";
 import { JsonLd } from "@/components/JsonLd";
 import "./globals.css";
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <VehicleDefs />
         <div className="progress" aria-hidden="true" />
         <Spotlight />
+        <PauseOffscreen />
         <div id="top-sentinel" aria-hidden="true" className="absolute top-0 h-px w-px" />
         <a href="#main" className="btn btn-beacon fixed left-4 top-3 z-50 -translate-y-24 focus:translate-y-0">Sari la conținut</a>
         <Header />

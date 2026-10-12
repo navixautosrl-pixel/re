@@ -55,11 +55,13 @@ export function LandingPage({ l }: { l: Landing }) {
           </div>
         </div>
         {/* road strip: the tow truck drives in and keeps rolling (same motion language as the home hero) */}
-        <div className="relative mt-10 h-[clamp(6rem,13vw,9rem)] overflow-hidden" aria-hidden="true">
+        <div data-anim className="relative mt-10 h-[clamp(6rem,13vw,9rem)] overflow-hidden" aria-hidden="true">
           <div className="absolute inset-x-0 bottom-0 h-[42%] bg-asphalt-3" />
           <div className="lane absolute inset-x-0 bottom-[18%] h-1 opacity-70" />
           <div className="truck-in absolute bottom-[2%] right-[max(1rem,calc(50%-38rem))] w-[min(56vw,21rem)]">
             <TowTruck className="w-full drop-shadow-[0_12px_14px_rgba(0,0,0,.35)]" />
+            <span className="beacon-dot" style={{ left: "73.9%", top: "23.2%" }} />
+            <span className="beacon-dot beacon-b" style={{ left: "79.6%", top: "23.2%" }} />
           </div>
         </div>
       </section>

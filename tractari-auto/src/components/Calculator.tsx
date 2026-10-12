@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { DOCUMENTS, PRICING, VEHICLES, byId, type VehicleId } from "@/config/pricing";
 import { site } from "@/config/site";
@@ -15,32 +15,11 @@ import { CallButtons } from "@/components/CallButtons";
  * Price calculator. Motion (SECONDARY / ambient), no animation library:
  *  - vehicle change: the vehicle drives in from the right (CSS, 0.9 s, wheels rolling, suspension
  *    settle) and then idles on the moving road; selected card lifts, cards roll their wheels on hover
- *  - total: number tweens from the previous value (0.5 s, ease-out); instant under reduced motion
+ *  - total: shown instantly, with a 0.3 s pulse on change
  */
-const EASE = (t: number) => 1 - Math.pow(1 - t, 3);
-const prefersReduced = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-/** Counts from the previous total to the new one (0.5 s ease-out); instant under reduced motion. */
+/** New total appears instantly; a short CSS pulse (re-keyed per value) signals the change. */
 function AnimatedLei({ value }: { value: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const prev = useRef(value);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const from = prev.current;
-    prev.current = value;
-    if (prefersReduced() || from === value) { el.textContent = formatLei(value); return; }
-    const start = performance.now();
-    let raf = 0;
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / 500);
-      el.textContent = formatLei(from + (value - from) * EASE(t));
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [value]);
-  return <span ref={ref} className="tabular">{formatLei(value)}</span>;
+  return <span key={value} className="price-pop tabular inline-block">{formatLei(value)}</span>;
 }
 
 const uuid = () => (typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : String(Math.random()).slice(2));
@@ -203,7 +182,7 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
         {/* Result */}
         <section id={`${id}-res-panel`} aria-labelledby={`${id}-res`} className="on-dark scroll-mt-20 rounded-[var(--radius-l)] bg-asphalt p-5 text-paint sm:p-7 lg:sticky lg:top-24">
           {headingLevel === "h1" ? <h2 id={`${id}-res`} className="sr-only">Rezultatul calculului</h2> : <h3 id={`${id}-res`} className="sr-only">Rezultatul calculului</h3>}
-          <div className="stage relative grid h-40 place-items-center overflow-hidden rounded-[var(--radius-m)] bg-[linear-gradient(to_bottom,var(--asphalt-2)_0_72%,var(--asphalt-3)_72%)]" style={{ ["--veh-arch" as string]: "var(--asphalt-2)", ["--veh-shadow" as string]: "rgba(0,0,0,.4)" }}>
+          <div data-anim className="stage relative grid h-40 place-items-center overflow-hidden rounded-[var(--radius-m)] bg-[linear-gradient(to_bottom,var(--asphalt-2)_0_72%,var(--asphalt-3)_72%)]" style={{ ["--veh-arch" as string]: "var(--asphalt-2)", ["--veh-shadow" as string]: "rgba(0,0,0,.4)" }}>
             <span aria-hidden="true" className="lane absolute inset-x-0 bottom-[12%] h-1 opacity-50" />
             {/* re-keyed on change → the CSS entrance runs again (slide in from the right) */}
             <div key={vehicleId} className="drive-in mt-4 w-60">

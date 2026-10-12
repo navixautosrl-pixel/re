@@ -16,7 +16,7 @@ export function ZoneTicker() {
       </li>
     ));
   return (
-    <nav aria-label="Zone deservite" className="on-dark ticker-mask border-y border-white/10 bg-asphalt py-4">
+    <nav data-anim aria-label="Zone deservite" className="on-dark ticker-mask border-y border-white/10 bg-asphalt py-4">
       <div className="ticker">
         <ul className="flex gap-10">{row(false)}</ul>
         <ul className="flex gap-10" aria-hidden="true">{row(true)}</ul>

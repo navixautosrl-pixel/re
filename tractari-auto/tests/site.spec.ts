@@ -127,3 +127,14 @@ test("short trips show load/unload fees @mobile", async ({ page }) => {
   await expect(total).toContainText("2.453,50 lei");
   await expect(page.getByText("Taxă încărcare")).toBeHidden();
 });
+
+test("switching vehicle updates the total on the first click, immediately @mobile", async ({ page }) => {
+  await page.goto("/calculator/");
+  await page.getByLabel("Distanța traseului (km)").fill("100");
+  const total = page.locator("[aria-live=polite][aria-atomic=true]").last();
+  const expected: Record<string, string> = { SUV: "841,25 lei", Sedan: "590,00 lei", Motocicletă: "375,00 lei", Hatchback: "490,00 lei" };
+  for (const [name, value] of Object.entries(expected)) {
+    await page.locator("label", { hasText: name }).first().click();
+    await expect(total).toContainText(value, { timeout: 300 }); // no counting animation: correct at once
+  }
+});
