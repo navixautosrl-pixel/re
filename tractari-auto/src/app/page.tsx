@@ -10,6 +10,7 @@ import { FaqList } from "@/data/faq";
 import { pageMeta } from "@/lib/seo";
 import { PRIMARY_ZONES } from "@/data/landings";
 import { LandingCards } from "@/components/LandingCards";
+import { ZoneTicker } from "@/components/ZoneTicker";
 import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/config/site";
 
@@ -41,6 +42,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <ZoneTicker />
 
       <section id="calculator" aria-label="Calculator preț tractare" className="scroll-mt-16 bg-[linear-gradient(to_bottom,var(--asphalt)_0_7rem,var(--concrete)_7rem)] pb-20">
         <div className="wrap -mt-px pt-10">
@@ -54,7 +56,7 @@ export default function Home() {
 
       <section aria-labelledby="zone-title" className="wrap pt-20 md:pt-28">
         <Reveal>
-          <h2 id="zone-title" className="text-[length:var(--step-3)]">Zonele noastre principale</h2>
+          <h2 id="zone-title" className="sd-sharpen text-[length:var(--step-3)]">Zonele noastre principale</h2>
           <p className="mt-3 max-w-[62ch] text-[length:var(--step-1)] text-ink-2">
             Chiajna, Militari, Autostrada A1 București–Pitești și Centura București — non-stop. Venim și în zonele din jur.
           </p>
@@ -69,7 +71,7 @@ export default function Home() {
 
       <section aria-labelledby="serv-title" className="wrap pt-20">
         <Reveal>
-          <h2 id="serv-title" className="text-[length:var(--step-3)]">Ce transportăm</h2>
+          <h2 id="serv-title" className="sd-sharpen text-[length:var(--step-3)]">Ce transportăm</h2>
           <p className="mt-3 max-w-[62ch] text-[length:var(--step-1)] text-ink-2">De la motociclete la autoutilitare de 7,5 tone, inclusiv mașini avariate cu roți blocate, în oraș sau în toată țara pe platformă.</p>
         </Reveal>
         <div className="mt-8"><LandingCards group="serviciu" /></div>
@@ -77,7 +79,7 @@ export default function Home() {
 
       <section id="tarife" aria-labelledby="rates-title" className="wrap scroll-mt-20 py-20 md:py-28">
         <Reveal>
-          <h2 id="rates-title" className="text-[length:var(--step-3)]">Tarife pe kilometru</h2>
+          <h2 id="rates-title" className="sd-sharpen text-[length:var(--step-3)]">Tarife pe kilometru</h2>
           <p className="mt-3 max-w-[60ch] text-[length:var(--step-1)] text-ink-2">Aceleași tarife pe care le folosește calculatorul — nimic ascuns. Exemple calculate pe <Link href="/tarife-tractari/" className="link">pagina de tarife</Link>.</p>
         </Reveal>
         <Reveal className="mt-8" delay={80}><RatesTable /></Reveal>
@@ -85,7 +87,7 @@ export default function Home() {
 
       <section aria-labelledby="faq-title" className="wrap grid gap-8 pb-20 md:pb-28 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.8fr)]">
         <Reveal>
-          <h2 id="faq-title" className="text-[length:var(--step-3)]">Întrebări frecvente</h2>
+          <h2 id="faq-title" className="sd-sharpen text-[length:var(--step-3)]">Întrebări frecvente</h2>
           <p className="mt-3 text-ink-2">Altă întrebare? <Link href="/contact/" className="link">Scrie-ne sau sună</Link>.</p>
         </Reveal>
         <FaqList />

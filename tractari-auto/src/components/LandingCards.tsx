@@ -15,7 +15,7 @@ export function LandingCards({ group, slugs, exclude = [], headingLevel = "h3" }
           <li key={l.slug}>
             <Link
               href={`/${l.slug}/`}
-              className={`group flex h-full flex-col rounded-[var(--radius-l)] p-5 ring-1 transition hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(20,30,50,.5)] ${main ? "bg-sign text-white ring-sign" : "bg-card ring-rule hover:ring-sign"}`}
+              className={`spot group flex h-full flex-col rounded-[var(--radius-l)] p-5 ring-1 transition hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(20,30,50,.5)] ${main ? "glow-border bg-sign text-white ring-sign" : "bg-card ring-rule hover:ring-sign"}`}
             >
               <H className="text-[length:var(--step-1)] font-[800] tracking-normal">{l.nav}</H>
               <span className={`mt-2 text-[length:var(--step--1)] ${main ? "text-white/85" : "text-ink-2"}`}>{l.lead}</span>

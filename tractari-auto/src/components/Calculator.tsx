@@ -123,7 +123,7 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
               {VEHICLES.map((v) => (
                 <label
                   key={v.id}
-                  className="veh-card group relative flex cursor-pointer flex-col items-center rounded-[var(--radius-m)] border-2 border-rule bg-concrete px-2 pb-3 pt-2 text-center transition duration-200 hover:border-ink-2 has-checked:-translate-y-0.5 has-checked:border-sign has-checked:bg-card has-checked:shadow-[0_10px_24px_-14px_var(--sign)] has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-sign-2"
+                  className="veh-card spot group relative flex cursor-pointer flex-col items-center rounded-[var(--radius-m)] border-2 border-rule bg-concrete px-2 pb-3 pt-2 text-center transition duration-200 hover:border-ink-2 has-checked:-translate-y-0.5 has-checked:border-sign has-checked:bg-card has-checked:shadow-[0_10px_24px_-14px_var(--sign)] has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-sign-2"
                 >
                   <input type="radio" name={`${id}-veh`} value={v.id} checked={vehicleId === v.id} onChange={() => setVehicleId(v.id)} className="sr-only" />
                   <VehicleArt id={v.id} className="h-14 w-full max-w-[9.5rem]" />

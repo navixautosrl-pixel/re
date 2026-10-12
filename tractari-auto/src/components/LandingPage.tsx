@@ -68,7 +68,7 @@ export function LandingPage({ l }: { l: Landing }) {
         <article className="space-y-12">
           {l.sections.map((s, i) => (
             <Reveal as="section" key={s.h2} delay={i ? 40 : 0}>
-              <h2 className="text-[length:var(--step-2)]">{s.h2}</h2>
+              <h2 className="sd-sharpen text-[length:var(--step-2)]">{s.h2}</h2>
               <div className="prose-road mt-4">{s.body}</div>
             </Reveal>
           ))}

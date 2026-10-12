@@ -38,6 +38,7 @@ export function Hero() {
 
       <div className="relative mt-10 h-[clamp(10rem,24vw,17rem)] overflow-hidden" aria-hidden="true">
         {/* distant city at night, drifting slowly (ambient) */}
+        <div className="skyline-par absolute inset-0">
         <svg className="skyline absolute bottom-[38%] left-0 h-[45%] w-[200%] opacity-40" viewBox="0 0 1600 120" preserveAspectRatio="none">
           {Array.from({ length: 2 }).map((_, k) => (
             <g key={k} transform={`translate(${k * 800} 0)`} fill="#2f3a4b">
@@ -48,6 +49,7 @@ export function Hero() {
             </g>
           ))}
         </svg>
+        </div>
         <div className="absolute inset-x-0 bottom-0 h-[40%] bg-asphalt-3" />
         <div className="absolute inset-x-0 bottom-[38%] h-[3px] bg-paint/25" />
         <div className="lane absolute inset-x-0 bottom-[18%] h-1.5 opacity-80" />

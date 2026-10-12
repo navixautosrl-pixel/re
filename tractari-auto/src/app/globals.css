@@ -180,3 +180,46 @@ details[open] .chev { transform: rotate(180deg); }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
+
+/* ── 2026 motion layer ──────────────────────────────────────────────────────
+   Scroll-driven (CSS animation-timeline, no JS): reading-progress bar, section headings that
+   sharpen from blur as they enter, hero skyline parallax. Pointer spotlight on cards, rotating
+   conic border on the main-zone cards, light sweep on primary buttons, zones ticker.
+   All of it is decoration on top of content that is already visible; off under reduced motion. */
+@property --angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+
+.progress { position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 60; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, var(--beacon), var(--sign-2)); pointer-events: none; }
+
+.spot { position: relative; isolation: isolate; }
+.spot::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1; opacity: 0; transition: opacity .3s var(--ease-out);
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), color-mix(in oklch, var(--beacon) 22%, transparent), transparent 70%); }
+.spot:hover::before { opacity: 1; }
+
+.ticker { display: flex; width: max-content; gap: 2.5rem; }
+.ticker-mask { mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); overflow: hidden; }
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .progress { animation: grow linear both; animation-timeline: scroll(root); }
+    .sd-sharpen { animation: sharpen linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+    .skyline-par { animation: par linear both; animation-timeline: view(); }
+  }
+  .rise > * { animation: rise-blur .9s var(--ease-out) both !important; }
+  .glow-border { position: relative; }
+  .glow-border::after { content: ""; position: absolute; inset: -2px; border-radius: inherit; padding: 2px; pointer-events: none;
+    background: conic-gradient(from var(--angle), transparent 0 70%, var(--beacon) 80%, transparent 90%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: spin-angle 4s linear infinite; }
+  .btn-beacon:not(.fixed) { position: relative; overflow: hidden; }
+  .btn-beacon::after { content: ""; position: absolute; inset: 0; transform: translateX(-120%) skewX(-20deg); pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); animation: shine 4.5s var(--ease-out) 2s infinite; }
+  .ticker { animation: tick 38s linear infinite; }
+  .ticker-mask:hover .ticker { animation-play-state: paused; }
+}
+@keyframes grow { to { transform: scaleX(1); } }
+@keyframes sharpen { from { opacity: .2; filter: blur(8px); transform: translateY(24px); } to { opacity: 1; filter: none; transform: none; } }
+@keyframes par { from { transform: translateY(-10%); } to { transform: translateY(14%); } }
+@keyframes rise-blur { from { opacity: .001; filter: blur(10px); transform: translateY(22px); } to { opacity: 1; filter: none; transform: none; } }
+@keyframes spin-angle { to { --angle: 360deg; } }
+@keyframes shine { 0%, 70% { transform: translateX(-120%) skewX(-20deg); } 100% { transform: translateX(220%) skewX(-20deg); } }
+@keyframes tick { to { transform: translateX(-50%); } }
