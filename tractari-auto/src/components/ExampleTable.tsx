@@ -20,7 +20,7 @@ export function ExampleTable({ vehicle = "hatchback", kms }: { vehicle?: Vehicle
           {kms.map((km) => (
             <tr key={km}>
               <th scope="row" className="px-5 py-3 font-[650]">{km} km</th>
-              <td className="px-5 py-3 text-right font-[800]">{formatLei(quote(v, km).total)}{quote(v, km).minimumApplied && <span className="block text-[0.75rem] font-[600] text-ink-2">tarif minim</span>}</td>
+              <td className="px-5 py-3 text-right font-[800]">{formatLei(quote(v, km).total)}{quote(v, km).band === "short" && <span className="block text-[0.75rem] font-[600] text-ink-2">cu încărcare și descărcare</span>}</td>
               <td className="px-5 py-3 text-right"><Link className="link text-[length:var(--step--1)]" href={`/calculator/?vehicul=${v.id}&km=${km}`}>Vezi calculul<span className="sr-only"> pentru {km} km</span></Link></td>
             </tr>
           ))}

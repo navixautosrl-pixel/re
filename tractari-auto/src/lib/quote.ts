@@ -2,43 +2,58 @@ import { PRICING, type Vehicle } from "@/config/pricing";
 
 export type Quote = {
   km: number;
+  /** "short" = urban tariff with load/unload fees; "long" = distance tariff */
+  band: "short" | "long";
   intraKm: number;
   extraKm: number;
-  intraCost: number;
-  extraCost: number;
+  intraRate: number;
+  extraRate: number;
+  loadFee: number;
+  unloadFee: number;
   subtotal: number;
-  /** Distance price before the minimum is applied. */
-  computed: number;
-  /** true when the trip is short enough that the minimum charge applies */
-  minimumApplied: boolean;
+  /** true when the long-trip price was raised so a longer trip is never cheaper than a shorter one */
+  floorApplied: boolean;
   total: number;
   hours: number;
-  damagedPending: boolean;
+  lockedWheels: number;
+  wheelsPending: boolean;
 };
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
-/** Pure pricing function — the only place the formula lives (unit-tested). */
-export function quote(vehicle: Vehicle, kmRaw: number, opts: { damaged?: boolean; hours?: number } = {}): Quote {
-  const km = Math.max(0, Math.min(PRICING.maxKm, Math.round(kmRaw)));
+function raw(vehicle: Vehicle, km: number, lockedWheels: number) {
+  const wheels = lockedWheels * (PRICING.lockedWheelFee ?? 0);
+  if (km <= PRICING.shortMaxKm) {
+    const s = vehicle.short;
+    const subtotal = s.loadFee + s.unloadFee + km * s.intraRate + wheels;
+    return { band: "short" as const, intraKm: km, extraKm: 0, intraRate: s.intraRate, extraRate: s.extraRate, loadFee: s.loadFee, unloadFee: s.unloadFee, subtotal };
+  }
   const extraKm = Math.min(km, PRICING.extraKm);
   const intraKm = km - extraKm;
-  const intraCost = intraKm * vehicle.intraRate;
-  const extraCost = extraKm * vehicle.extraRate;
-  const subtotal = intraCost + extraCost;
-  const damagedFactor = opts.damaged && PRICING.damagedMultiplier ? PRICING.damagedMultiplier : 1;
+  const subtotal = intraKm * vehicle.intraRate + extraKm * vehicle.extraRate + wheels;
+  return { band: "long" as const, intraKm, extraKm, intraRate: vehicle.intraRate, extraRate: vehicle.extraRate, loadFee: 0, unloadFee: 0, subtotal };
+}
+
+/** Pure pricing function — the only place the formula lives (unit-tested). */
+export function quote(vehicle: Vehicle, kmRaw: number, opts: { lockedWheels?: number; hours?: number } = {}): Quote {
+  const km = Math.max(0, Math.min(PRICING.maxKm, Math.round(kmRaw)));
+  const lockedWheels = Math.max(0, Math.min(4, Math.round(opts.lockedWheels ?? 0)));
+  const r = raw(vehicle, km, lockedWheels);
+  let total = km > 0 ? r.subtotal * PRICING.multiplier : 0;
+  // Interim rule until the band boundary is confirmed: a longer trip never costs less than the
+  // longest short trip (otherwise the price would drop sharply just past SHORT_MAX_KM).
+  const floor = r.band === "long" ? raw(vehicle, PRICING.shortMaxKm, lockedWheels).subtotal * PRICING.multiplier : 0;
+  const floorApplied = total < floor;
+  if (floorApplied) total = floor;
   return {
     km,
-    intraKm,
-    extraKm,
-    intraCost: round2(intraCost),
-    extraCost: round2(extraCost),
-    subtotal: round2(subtotal),
-    computed: round2(subtotal * PRICING.multiplier * damagedFactor),
-    minimumApplied: km > 0 && subtotal * PRICING.multiplier * damagedFactor < PRICING.minTotal,
-    total: km > 0 ? round2(Math.max(PRICING.minTotal, subtotal * PRICING.multiplier * damagedFactor)) : 0,
+    ...r,
+    subtotal: round2(r.subtotal),
+    floorApplied,
+    total: round2(total),
     hours: opts.hours ?? km / PRICING.avgSpeedKmh,
-    damagedPending: !!opts.damaged && PRICING.damagedMultiplier == null,
+    lockedWheels,
+    wheelsPending: lockedWheels > 0 && PRICING.lockedWheelFee == null,
   };
 }
 

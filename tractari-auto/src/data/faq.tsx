@@ -15,8 +15,8 @@ export const FAQ: { q: string; a: ReactNode }[] = [
     ),
   },
   {
-    q: "Care este prețul minim al unei curse?",
-    a: `${PRICING.minTotal} lei. Pentru trasee scurte, unde calculul pe kilometri iese mai puțin, se plătește prețul minim.`,
+    q: "Cât costă o cursă scurtă, în oraș?",
+    a: `Pentru curse de până la ${PRICING.shortMaxKm} km se plătesc taxa de încărcare și taxa de descărcare (de la 90 la 200 lei fiecare, după vehicul) plus kilometrii cu tariful urban, totul cu coeficientul tarifar. Exemplu: un sedan pe 3 km costă aproximativ 274 lei.`,
   },
   {
     q: "Prețul din calculator este final?",

@@ -28,13 +28,39 @@ export default function Tarife() {
           <div className="mt-5"><RatesTable /></div>
         </section>
 
+        <section aria-labelledby="short-t" className="mt-14">
+          <h2 id="short-t" className="text-[length:var(--step-2)]">Curse scurte, în oraș</h2>
+          <div className="mt-5 overflow-x-auto rounded-[var(--radius-l)] bg-card ring-1 ring-rule" role="region" aria-labelledby="short-t" tabIndex={0}>
+            <table className="tabular w-full text-right">
+              <thead className="text-[length:var(--step--1)] text-ink-2">
+                <tr className="border-b border-rule">
+                  <th scope="col" className="px-4 py-3 text-left font-[700]">Vehicul</th>
+                  <th scope="col" className="px-4 py-3 font-[700]">Tarif urban<span className="block font-normal">lei/km</span></th>
+                  <th scope="col" className="px-4 py-3 font-[700]">Taxă încărcare</th>
+                  <th scope="col" className="px-4 py-3 font-[700]">Taxă descărcare</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-rule">
+                {VEHICLES.map((v) => (
+                  <tr key={v.id}>
+                    <th scope="row" className="px-4 py-3 text-left font-[750]">{v.name}</th>
+                    <td className="px-4 py-3">{v.short.intraRate.toLocaleString("ro-RO", { minimumFractionDigits: 1 })}</td>
+                    <td className="px-4 py-3">{v.short.loadFee} lei</td>
+                    <td className="px-4 py-3">{v.short.unloadFee} lei</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         <section aria-labelledby="formula" className="prose-road mt-14">
           <h2 id="formula" className="text-[length:var(--step-2)] text-ink">Cum se calculează prețul</h2>
           <ol>
             <li>Primii {PRICING.extraKm} km ai traseului × tariful Extra-City al vehiculului.</li>
             <li>Restul kilometrilor × tariful Intra-City.</li>
             <li>Suma se înmulțește cu coeficientul tarifar ×{PRICING.multiplier.toLocaleString("ro-RO")}.</li>
-            <li>Prețul minim al unei curse este {PRICING.minTotal} lei: pentru trasee scurte, plătești minimul.</li>
+            <li>Curse scurte (până la {PRICING.shortMaxKm} km): toți kilometrii cu tariful urban, plus taxa de încărcare și taxa de descărcare (tabelul de mai jos).</li>
             <li>Staționarea: primele {PRICING.freeWaitMinutes} de minute sunt gratuite, apoi {PRICING.waitPerHour} lei pe oră.</li>
             <li>Pentru mașini avariate cu roți blocate se adaugă un supliment, confirmat la telefon.</li>
           </ol>

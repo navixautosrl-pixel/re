@@ -20,15 +20,24 @@ for (const v of VEHICLES) {
   });
 }
 
-test("short trips use only the first-km rate; bounds are clamped", () => {
+// Short trips: Militari → Drumul Taberei (3 km), screenshots supplied by the client.
+test("short trip: urban rate + load/unload fees, motorcycle matches the reference 239,82 lei", () => {
+  const moto = VEHICLES.find((v) => v.id === "moto")!;
+  const q = quote(moto, 3);
+  expect(q).toMatchObject({ band: "short", intraKm: 3, extraKm: 0, intraRate: 3.9, loadFee: 90, unloadFee: 90 });
+  expect(Math.abs(q.total / 239.82 - 1)).toBeLessThan(0.002);
+  const sedan = VEHICLES.find((v) => v.id === "sedan")!;
+  expect(quote(sedan, 3).total).toBeCloseTo(1.25 * (200 + 3 * 6.3), 2);
+});
+
+test("a longer trip is never cheaper than the longest short trip; bounds are clamped", () => {
   const hb = VEHICLES.find((v) => v.id === "hatchback")!;
-  expect(quote(hb, 10)).toMatchObject({ intraKm: 0, extraKm: 10, computed: 35, total: 200, minimumApplied: true }); // 10 × 2.8 × 1.25 = 35 → minimum 200
-  expect(quote(hb, 60)).toMatchObject({ total: 270, minimumApplied: false }); // (30×2.8 + 30×4.4) × 1.25 = 270
+  for (let km = PRICING.shortMaxKm; km < 200; km++) expect(quote(hb, km + 1).total).toBeGreaterThanOrEqual(quote(hb, km).total);
   expect(quote(hb, 0).total).toBe(0);
   expect(quote(hb, 999999).km).toBe(PRICING.maxKm);
 });
 
-test("damaged vehicle: surcharge flagged as pending while unpriced", () => {
-  const q = quote(VEHICLES[0], 100, { damaged: true });
-  expect(q.damagedPending).toBe(PRICING.damagedMultiplier == null);
+test("locked wheels: surcharge flagged as pending while unpriced", () => {
+  const q = quote(VEHICLES[0], 100, { lockedWheels: 2 });
+  expect(q.wheelsPending).toBe(PRICING.lockedWheelFee == null);
 });

@@ -64,6 +64,7 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
   const id = useId();
   const [vehicleId, setVehicleId] = useState<VehicleId>(initialVehicle ?? "hatchback");
   const [damaged, setDamaged] = useState(false);
+  const [wheels, setWheels] = useState(1);
   const [useMaps] = useState(mapsEnabled());
   const [manual, setManual] = useState(!mapsEnabled() || Boolean(initialKm));
   const [kmText, setKmText] = useState(initialKm ?? "");
@@ -92,7 +93,7 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
   const kmManual = Number(kmText.replace(",", "."));
   const km = manual ? (Number.isFinite(kmManual) ? kmManual : 0) : routeKm?.km ?? 0;
   const kmInvalid = manual && kmText !== "" && (!Number.isFinite(kmManual) || kmManual <= 0 || kmManual > PRICING.maxKm);
-  const q = quote(vehicle, km, { damaged, hours: manual ? undefined : routeKm?.hours });
+  const q = quote(vehicle, km, { lockedWheels: damaged ? wheels : 0, hours: manual ? undefined : routeKm?.hours });
   const ready = q.km > 0 && !kmInvalid;
   const from = manual ? fromText.trim() : origin?.text ?? "";
   const to = manual ? toText.trim() : dest?.text ?? "";
@@ -100,11 +101,11 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
   const message = ready
     ? [
         "Bună ziua! Aș dori o tractare / transport pe platformă.",
-        `Vehicul: ${vehicle.name}${damaged ? " (avariat, roți blocate)" : ""}.`,
+        `Vehicul: ${vehicle.name}${damaged ? ` (avariat, ${wheels} ${wheels === 1 ? "roată blocată" : "roți blocate"})` : ""}.`,
         from && `De la: ${from}.`,
         to && `Până la: ${to}.`,
         `Distanță: ${q.km} km.`,
-        `Preț calculat pe site: ${formatLei(q.total)}${q.damagedPending ? " + supliment avariat de confirmat" : ""}.`,
+        `Preț calculat pe site: ${formatLei(q.total)}${q.wheelsPending ? " + supliment roți blocate de confirmat" : ""}.`,
       ].filter(Boolean).join("\n")
     : undefined;
 
@@ -135,6 +136,15 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
               <input type="checkbox" checked={damaged} onChange={(e) => setDamaged(e.target.checked)} className="size-6 shrink-0 accent-[var(--danger)]" />
               <span className="font-[650]">Mașină avariată (roți blocate)</span>
             </label>
+            {damaged && (
+              <div className="mt-3 rounded-[var(--radius-m)] bg-danger/5 p-4">
+                <label htmlFor={`${id}-wheels`} className="block font-[700]">Câte roți sunt blocate?</label>
+                <select id={`${id}-wheels`} className="field mt-2 sm:max-w-[10rem]" value={wheels} onChange={(e) => setWheels(Number(e.target.value))}>
+                  {[1, 2, 3, 4].map((n) => <option key={n} value={n}>{n}</option>)}
+                </select>
+                <p className="mt-2 text-[length:var(--step--1)] text-ink-2">Roțile care nu se mai învârt liber (frână blocată, suspensie ruptă, fără roată).</p>
+              </div>
+            )}
           </fieldset>
 
           <fieldset className="mt-7">
@@ -210,15 +220,15 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
                 <div><dt className="text-[0.8rem] uppercase text-paint/60">Destinație</dt><dd className="font-[700] text-beacon-2">{to || "—"}</dd></div>
               </div>
             )}
-            <div className="flex justify-between gap-4"><dt>Intra-City</dt><dd className="font-[700]">{q.intraKm} km × {formatRate(vehicle.intraRate)} lei</dd></div>
-            <div className="flex justify-between gap-4"><dt>Extra-City</dt><dd className="font-[700]">{q.extraKm} km × {formatRate(vehicle.extraRate)} lei</dd></div>
-            <div className="flex justify-between gap-4"><dt>Coeficient tarifar</dt><dd className="font-[700]">× {PRICING.multiplier.toLocaleString("ro-RO")}</dd></div>
-            {q.minimumApplied && (
-              <div className="flex justify-between gap-4 text-beacon-2">
-                <dt>Tarif minim pe cursă</dt>
-                <dd className="font-[700]">{formatLei(PRICING.minTotal)}<span className="sr-only"> (calculat pe km: {formatLei(q.computed)})</span></dd>
-              </div>
+            <div className="flex justify-between gap-4"><dt>Intra-City</dt><dd className="font-[700]">{q.intraKm} km × {formatRate(q.intraRate)} lei</dd></div>
+            <div className="flex justify-between gap-4"><dt>Extra-City</dt><dd className="font-[700]">{q.extraKm} km × {formatRate(q.extraRate)} lei</dd></div>
+            {q.band === "short" && (
+              <>
+                <div className="flex justify-between gap-4"><dt>Taxă încărcare</dt><dd className="font-[700]">{q.loadFee} lei</dd></div>
+                <div className="flex justify-between gap-4"><dt>Taxă descărcare</dt><dd className="font-[700]">{q.unloadFee} lei</dd></div>
+              </>
             )}
+            <div className="flex justify-between gap-4"><dt>Coeficient tarifar</dt><dd className="font-[700]">× {PRICING.multiplier.toLocaleString("ro-RO")}</dd></div>
             <div className="flex justify-between gap-4 text-beacon-2"><dt className="font-[750]">Distanță</dt><dd className="font-[800]">{q.km} km</dd></div>
             <div className="flex justify-between gap-4"><dt>Durată</dt><dd>{ready ? `aprox. ${formatHours(q.hours)}` : "—"}</dd></div>
             <div className="flex justify-between gap-4"><dt>Staționare</dt><dd className="font-[750] text-[oklch(78%_0.15_150)]">{PRICING.freeWaitMinutes} min gratuit</dd></div>
@@ -240,7 +250,7 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
               <button type="button" className="link" onClick={() => setManual(true)}>Introdu kilometrii manual</button>.
             </p>
           )}
-          {q.damagedPending && <p className="mt-2 text-beacon-2">Pentru mașini avariate cu roți blocate se adaugă un supliment, confirmat telefonic.</p>}
+          {q.wheelsPending && <p className="mt-2 text-beacon-2">Pentru roțile blocate se adaugă un supliment, confirmat telefonic.</p>}
           {!ready && routeState === "idle" && <p className="mt-2 text-paint/75">{manual ? "Introdu distanța ca să vezi prețul." : "Alege încărcarea și destinația ca să vezi prețul."}</p>}
           <p className="mt-2 text-[length:var(--step--1)] text-paint/70">Tarif pentru o autospecială de tip platformă auto. Preț estimativ, confirmat la telefon.</p>
 

@@ -31,6 +31,7 @@ test("calculator: validation, damaged note, duration, shareable URL", async ({ p
   await expect(total(page)).toContainText("1.182,50 lei");
   await expect(page.getByText(/aprox\. 1 h 17 min/)).toBeVisible();
   await page.getByLabel("Mașină avariată (roți blocate)").check();
+  await page.getByLabel("Câte roți sunt blocate?").selectOption("2");
   await expect(page.getByText(/se adaugă un supliment, confirmat telefonic/)).toBeVisible();
   await page.getByLabel("Distanța traseului (km)").fill("99999");
   await expect(page.getByText("Introdu o distanță între 1 și 3000 km.")).toBeVisible();
@@ -115,13 +116,14 @@ for (const path of ["/", "/calculator/", "/servicii/", "/contact/", "/termeni/",
   });
 }
 
-test("short trips are charged the 200 lei minimum @mobile", async ({ page }) => {
+test("short trips show load/unload fees @mobile", async ({ page }) => {
   await page.goto("/calculator/");
-  await page.getByLabel("Distanța traseului (km)").fill("5"); // 5 × 2,8 × 1,25 = 17,50 → minimum
+  await page.getByLabel("Distanța traseului (km)").fill("3"); // hatchback: 1,25 × (100 + 100 + 3 × 5,3) = 269,88
   const total = page.locator("[aria-live=polite][aria-atomic=true]").last();
-  await expect(total).toContainText("200,00 lei");
-  await expect(page.getByText("Tarif minim pe cursă")).toBeVisible();
-  await page.getByLabel("Distanța traseului (km)").fill("60"); // (30×2,8 + 30×4,4) × 1,25 = 270
-  await expect(total).toContainText("270,00 lei");
-  await expect(page.getByText("Tarif minim pe cursă")).toBeHidden();
+  await expect(total).toContainText("269,88 lei");
+  await expect(page.getByText("Taxă încărcare")).toBeVisible();
+  await expect(page.getByText("3 km × 5,3 lei")).toBeVisible();
+  await page.getByLabel("Distanța traseului (km)").fill("457");
+  await expect(total).toContainText("2.453,50 lei");
+  await expect(page.getByText("Taxă încărcare")).toBeHidden();
 });
