@@ -58,11 +58,12 @@ one decimal. With the displayed rates our totals are within −0,6 % … +1,3 % 
 ## Distance: manual km or Google Maps
 
 Without a key the visitor types the kilometres. With `NEXT_PUBLIC_GOOGLE_MAPS_KEY` set at build
-time, the fields become address search (Places API (New) autocomplete) and the distance and
+time (put it in `.env.local`, which git ignores — never commit it), the fields become address search (Places API (New) autocomplete) and the distance and
 duration come from the Routes API. In Google Cloud: enable **Places API (New)** and **Routes API**,
 restrict the key to **HTTP referrers** = your domain and to those two APIs, set a budget alert.
-Google is contacted only after the visitor types an address (tested). The live Google calls were
-only tested against mocked responses — verify with the real key before launch.
+Google is contacted only after the visitor types an address (tested). Verified with the client's
+real key on 2026-10-12: Places autocomplete and Routes both answer 200; București → Cluj-Napoca =
+457,9 km / 5,84 h, the same figures as the reference calculator.
 
 ## What the business must supply (`src/config/site.ts`; dashed ✎ placeholders on the pages)
 

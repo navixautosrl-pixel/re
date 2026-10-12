@@ -4,4 +4,5 @@ set -e
 cd "$(dirname "$0")/.."
 NEXT_PUBLIC_GOOGLE_MAPS_KEY=test-key npx next build
 rm -rf out-maps && mv out out-maps
-npx next build
+# manual-km export: force no key even if .env.local holds the real one
+NEXT_PUBLIC_GOOGLE_MAPS_KEY= npx next build
