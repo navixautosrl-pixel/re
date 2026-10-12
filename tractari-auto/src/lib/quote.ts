@@ -7,7 +7,10 @@ export type Quote = {
   intraCost: number;
   extraCost: number;
   subtotal: number;
-  /** null when a surcharge applies that isn't priced yet (damaged vehicle) */
+  /** Distance price before the minimum is applied. */
+  computed: number;
+  /** true when the trip is short enough that the minimum charge applies */
+  minimumApplied: boolean;
   total: number;
   hours: number;
   damagedPending: boolean;
@@ -31,7 +34,9 @@ export function quote(vehicle: Vehicle, kmRaw: number, opts: { damaged?: boolean
     intraCost: round2(intraCost),
     extraCost: round2(extraCost),
     subtotal: round2(subtotal),
-    total: round2(subtotal * PRICING.multiplier * damagedFactor),
+    computed: round2(subtotal * PRICING.multiplier * damagedFactor),
+    minimumApplied: km > 0 && subtotal * PRICING.multiplier * damagedFactor < PRICING.minTotal,
+    total: km > 0 ? round2(Math.max(PRICING.minTotal, subtotal * PRICING.multiplier * damagedFactor)) : 0,
     hours: opts.hours ?? km / PRICING.avgSpeedKmh,
     damagedPending: !!opts.damaged && PRICING.damagedMultiplier == null,
   };

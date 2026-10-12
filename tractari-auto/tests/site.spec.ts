@@ -114,3 +114,14 @@ for (const path of ["/", "/calculator/", "/servicii/", "/contact/", "/termeni/",
     expect(bad.map((v) => `${v.id}: ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });
 }
+
+test("short trips are charged the 200 lei minimum @mobile", async ({ page }) => {
+  await page.goto("/calculator/");
+  await page.getByLabel("Distanța traseului (km)").fill("5"); // 5 × 2,8 × 1,25 = 17,50 → minimum
+  const total = page.locator("[aria-live=polite][aria-atomic=true]").last();
+  await expect(total).toContainText("200,00 lei");
+  await expect(page.getByText("Tarif minim pe cursă")).toBeVisible();
+  await page.getByLabel("Distanța traseului (km)").fill("60"); // (30×2,8 + 30×4,4) × 1,25 = 270
+  await expect(total).toContainText("270,00 lei");
+  await expect(page.getByText("Tarif minim pe cursă")).toBeHidden();
+});

@@ -34,6 +34,7 @@ export default function Tarife() {
             <li>Primii {PRICING.extraKm} km ai traseului × tariful Extra-City al vehiculului.</li>
             <li>Restul kilometrilor × tariful Intra-City.</li>
             <li>Suma se înmulțește cu coeficientul tarifar ×{PRICING.multiplier.toLocaleString("ro-RO")}.</li>
+            <li>Prețul minim al unei curse este {PRICING.minTotal} lei: pentru trasee scurte, plătești minimul.</li>
             <li>Staționarea: primele {PRICING.freeWaitMinutes} de minute sunt gratuite, apoi {PRICING.waitPerHour} lei pe oră.</li>
             <li>Pentru mașini avariate cu roți blocate se adaugă un supliment, confirmat la telefon.</li>
           </ol>

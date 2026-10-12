@@ -15,6 +15,10 @@ export const FAQ: { q: string; a: ReactNode }[] = [
     ),
   },
   {
+    q: "Care este prețul minim al unei curse?",
+    a: `${PRICING.minTotal} lei. Pentru trasee scurte, unde calculul pe kilometri iese mai puțin, se plătește prețul minim.`,
+  },
+  {
     q: "Prețul din calculator este final?",
     a: "Este un preț estimativ, calculat după distanța pe drum. Îl confirmăm la telefon, în funcție de starea mașinii și de condițiile de încărcare.",
   },

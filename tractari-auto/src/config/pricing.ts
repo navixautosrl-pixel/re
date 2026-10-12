@@ -40,6 +40,8 @@ export const PRICING = {
   extraKm: 30,
   /** Average speed implied by the reference: 457 km ≈ 5.84 h. Used when no route service is set. */
   avgSpeedKmh: 457 / 5.84,
+  /** Minimum charge for any trip, in lei (client, 2026-10-12: "cursa minimă ~200 lei"). */
+  minTotal: 200,
   freeWaitMinutes: 30,
   waitPerHour: 100,
   /** Surcharge for a damaged vehicle with locked wheels — not visible in the screenshots. */

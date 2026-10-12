@@ -22,7 +22,8 @@ for (const v of VEHICLES) {
 
 test("short trips use only the first-km rate; bounds are clamped", () => {
   const hb = VEHICLES.find((v) => v.id === "hatchback")!;
-  expect(quote(hb, 10)).toMatchObject({ intraKm: 0, extraKm: 10, total: 35 }); // 10 × 2.8 × 1.25
+  expect(quote(hb, 10)).toMatchObject({ intraKm: 0, extraKm: 10, computed: 35, total: 200, minimumApplied: true }); // 10 × 2.8 × 1.25 = 35 → minimum 200
+  expect(quote(hb, 60)).toMatchObject({ total: 270, minimumApplied: false }); // (30×2.8 + 30×4.4) × 1.25 = 270
   expect(quote(hb, 0).total).toBe(0);
   expect(quote(hb, 999999).km).toBe(PRICING.maxKm);
 });

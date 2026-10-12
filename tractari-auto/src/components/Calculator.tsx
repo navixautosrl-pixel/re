@@ -213,6 +213,12 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
             <div className="flex justify-between gap-4"><dt>Intra-City</dt><dd className="font-[700]">{q.intraKm} km × {formatRate(vehicle.intraRate)} lei</dd></div>
             <div className="flex justify-between gap-4"><dt>Extra-City</dt><dd className="font-[700]">{q.extraKm} km × {formatRate(vehicle.extraRate)} lei</dd></div>
             <div className="flex justify-between gap-4"><dt>Coeficient tarifar</dt><dd className="font-[700]">× {PRICING.multiplier.toLocaleString("ro-RO")}</dd></div>
+            {q.minimumApplied && (
+              <div className="flex justify-between gap-4 text-beacon-2">
+                <dt>Tarif minim pe cursă</dt>
+                <dd className="font-[700]">{formatLei(PRICING.minTotal)}<span className="sr-only"> (calculat pe km: {formatLei(q.computed)})</span></dd>
+              </div>
+            )}
             <div className="flex justify-between gap-4 text-beacon-2"><dt className="font-[750]">Distanță</dt><dd className="font-[800]">{q.km} km</dd></div>
             <div className="flex justify-between gap-4"><dt>Durată</dt><dd>{ready ? `aprox. ${formatHours(q.hours)}` : "—"}</dd></div>
             <div className="flex justify-between gap-4"><dt>Staționare</dt><dd className="font-[750] text-[oklch(78%_0.15_150)]">{PRICING.freeWaitMinutes} min gratuit</dd></div>
