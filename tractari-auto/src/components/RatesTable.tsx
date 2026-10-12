@@ -1,6 +1,5 @@
 import { PRICING, VEHICLES } from "@/config/pricing";
 import { formatRate } from "@/lib/quote";
-import { VehicleArt } from "@/components/Vehicles";
 
 export function RatesTable() {
   return (
@@ -20,7 +19,6 @@ export function RatesTable() {
             <tr key={v.id}>
               <th scope="row" className="px-4 py-3 sm:px-5">
                 <span className="flex items-center gap-3 font-[750]">
-                  <VehicleArt id={v.id} className="hidden h-8 w-20 shrink-0 sm:block" />
                   <span>{v.name}<span className="block text-[0.78rem] font-normal text-ink-2 sm:hidden">{v.weight.replace("Între ", "").replace(" și ", "–")}</span></span>
                 </span>
               </th>

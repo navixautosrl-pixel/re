@@ -13,7 +13,8 @@ import { CallButtons } from "@/components/CallButtons";
 
 /**
  * Price calculator. Motion (SECONDARY / ambient), no animation library:
- *  - vehicle change: silhouette slides in from the right (CSS, 0.35 s), selected card lifts
+ *  - vehicle change: the vehicle drives in from the right (CSS, 0.9 s, wheels rolling, suspension
+ *    settle) and then idles on the moving road; selected card lifts, cards roll their wheels on hover
  *  - total: number tweens from the previous value (0.5 s, ease-out); instant under reduced motion
  */
 const EASE = (t: number) => 1 - Math.pow(1 - t, 3);
@@ -121,10 +122,10 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
               {VEHICLES.map((v) => (
                 <label
                   key={v.id}
-                  className="group relative flex cursor-pointer flex-col items-center rounded-[var(--radius-m)] border-2 border-rule bg-concrete px-2 pb-3 pt-2 text-center transition duration-200 hover:border-ink-2 has-checked:-translate-y-0.5 has-checked:border-sign has-checked:bg-card has-checked:shadow-[0_10px_24px_-14px_var(--sign)] has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-sign-2"
+                  className="veh-card group relative flex cursor-pointer flex-col items-center rounded-[var(--radius-m)] border-2 border-rule bg-concrete px-2 pb-3 pt-2 text-center transition duration-200 hover:border-ink-2 has-checked:-translate-y-0.5 has-checked:border-sign has-checked:bg-card has-checked:shadow-[0_10px_24px_-14px_var(--sign)] has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-sign-2"
                 >
                   <input type="radio" name={`${id}-veh`} value={v.id} checked={vehicleId === v.id} onChange={() => setVehicleId(v.id)} className="sr-only" />
-                  <VehicleArt id={v.id} className="h-12 w-full max-w-[8.5rem]" />
+                  <VehicleArt id={v.id} className="h-14 w-full max-w-[9.5rem]" />
                   <span className="mt-1 font-[780] leading-tight">{v.name}</span>
                   <span className="text-[0.78rem] leading-snug text-ink-2">{v.weight.replace("Între ", "").replace(" și ", "–")}</span>
                 </label>
@@ -192,10 +193,10 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
         {/* Result */}
         <section id={`${id}-res-panel`} aria-labelledby={`${id}-res`} className="on-dark scroll-mt-20 rounded-[var(--radius-l)] bg-asphalt p-5 text-paint sm:p-7 lg:sticky lg:top-24">
           {headingLevel === "h1" ? <h2 id={`${id}-res`} className="sr-only">Rezultatul calculului</h2> : <h3 id={`${id}-res`} className="sr-only">Rezultatul calculului</h3>}
-          <div className="relative grid h-36 place-items-center overflow-hidden rounded-[var(--radius-m)] bg-asphalt-2" style={{ ["--veh-arch" as string]: "var(--asphalt-2)", ["--veh-shadow" as string]: "rgba(0,0,0,.4)" }}>
-            <span aria-hidden="true" className="lane absolute inset-x-0 bottom-5 h-1 opacity-40" />
+          <div className="stage relative grid h-40 place-items-center overflow-hidden rounded-[var(--radius-m)] bg-[linear-gradient(to_bottom,var(--asphalt-2)_0_72%,var(--asphalt-3)_72%)]" style={{ ["--veh-arch" as string]: "var(--asphalt-2)", ["--veh-shadow" as string]: "rgba(0,0,0,.4)" }}>
+            <span aria-hidden="true" className="lane absolute inset-x-0 bottom-[12%] h-1 opacity-50" />
             {/* re-keyed on change → the CSS entrance runs again (slide in from the right) */}
-            <div key={vehicleId} className="veh-in w-56">
+            <div key={vehicleId} className="drive-in mt-4 w-60">
               <VehicleArt id={vehicleId} className="w-full" />
             </div>
             <p className="absolute left-4 top-3 font-[800] text-beacon">{vehicle.name}</p>

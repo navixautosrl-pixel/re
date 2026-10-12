@@ -42,8 +42,8 @@ export default function Services() {
         <ul className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
           {VEHICLES.map((v, i) => (
             <Reveal as="li" key={v.id} delay={i * 60}>
-              <Link href={`/calculator/?vehicul=${v.id}`} className="group block rounded-[var(--radius-l)] bg-card p-5 ring-1 ring-rule transition hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(20,30,50,.5)]">
-                <VehicleArt id={v.id} className="h-16 w-full transition-transform duration-300 group-hover:-translate-x-1.5" />
+              <Link href={`/calculator/?vehicul=${v.id}`} className="veh-card group block rounded-[var(--radius-l)] bg-card p-5 ring-1 ring-rule transition hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(20,30,50,.5)]">
+                <VehicleArt id={v.id} className="h-20 w-full" />
                 <span className="mt-3 block text-[length:var(--step-1)] font-[800]">{v.name}</span>
                 <span className="block text-[length:var(--step--1)] text-ink-2">{v.weight}</span>
                 <span className="mt-2 block font-[700] text-sign">Calculează prețul</span>

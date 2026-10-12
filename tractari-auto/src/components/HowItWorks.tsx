@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 /**
  * PRIMARY moment #2 — the only scroll set piece. ≥ 900px with motion allowed: the section pins,
- * a route line draws from A to B as you scroll and a beacon dot travels along it while the
+ * a route line draws from A to B as you scroll and a mini tow truck drives along it while the
  * three steps light up in turn. GSAP is imported only then. Otherwise: a static list.
  */
 const STEPS = [
@@ -35,8 +35,11 @@ export function HowItWorks() {
         const steps = gsap.utils.toArray<HTMLElement>("[data-step]", el);
         const state = { p: 0 };
         const place = () => {
-          const pt = path.getPointAtLength(state.p * len);
-          dot.setAttribute("transform", `translate(${pt.x} ${pt.y})`);
+          const at = Math.min(len - 1, state.p * len);
+          const pt = path.getPointAtLength(at);
+          const ahead = path.getPointAtLength(Math.min(len, at + 1));
+          const angle = (Math.atan2(ahead.y - pt.y, ahead.x - pt.x) * 180) / Math.PI;
+          dot.setAttribute("transform", `translate(${pt.x} ${pt.y}) rotate(${angle})`);
           path.style.strokeDashoffset = String(len * (1 - state.p));
           steps.forEach((s, i) => s.toggleAttribute("data-on", state.p >= i / steps.length - 0.02));
         };
@@ -63,7 +66,16 @@ export function HowItWorks() {
             <path data-route d={PATH} fill="none" stroke="var(--beacon)" strokeWidth="5" strokeLinecap="round" />
             <circle cx="40" cy="220" r="12" fill="var(--sign)" /><text x="40" y="225" textAnchor="middle" fontSize="14" fontWeight="800" fill="white">A</text>
             <circle cx="900" cy="70" r="12" fill="var(--sign)" /><text x="900" y="75" textAnchor="middle" fontSize="14" fontWeight="800" fill="white">B</text>
-            <g data-dot transform="translate(40 220)"><circle r="16" fill="var(--beacon)" opacity=".25" /><circle r="8" fill="var(--beacon)" /></g>
+            <g data-dot transform="translate(40 220)">
+              {/* mini tow truck that rides the route, nose along the tangent */}
+              <g transform="scale(1.9) translate(-26 -16)">
+                <rect x="0" y="12" width="34" height="5" rx="1.5" fill="#9aa4b1" />
+                <path d="M34 20 L34 6 Q34 3 37 3 L44 3 Q47 3 49 6 L53 12 L53 20 Z" fill="#f2f4f7" />
+                <path d="M37 6 L44 6 L48 11 L37 11 Z" fill="#3b4656" />
+                <rect className="beacon" x="38" y="0" width="6" height="3" rx="1" fill="var(--beacon)" />
+                <circle cx="8" cy="21" r="4" fill="#1b2027" /><circle cx="45" cy="21" r="4" fill="#1b2027" />
+              </g>
+            </g>
           </svg>
           <ol className="mt-10 grid gap-8 min-[900px]:mt-6 min-[900px]:grid-cols-3">
             {STEPS.map((s, i) => (

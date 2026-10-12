@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { site } from "@/config/site";
-import { TowTruck } from "@/components/Vehicles";
+import { TowTruck, VehicleArt } from "@/components/Vehicles";
 import { CallButtons } from "@/components/CallButtons";
 import { Placeholder } from "@/components/Placeholder";
 
 /**
- * PRIMARY moment #1 (CSS only, runs before hydration): headline lines rise in sequence,
- * the tow truck drives in from the left with spinning wheels and parks; then ambient:
- * the centre line keeps scrolling and the beacon blinks. CTAs are visible from frame one.
+ * PRIMARY moment #1 (CSS only, runs before hydration): headline lines rise in sequence, the tow
+ * truck drives in from the left, wheels rolling, and keeps "driving" with the road; ambient: lane
+ * paint scrolls, the two beacons alternate, the headlight beam breathes, the city drifts, a car
+ * passes in the far lane. CTAs are visible from frame one; all static under reduced motion.
  */
 export function Hero() {
   return (
@@ -32,11 +33,32 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="relative mt-10 h-[clamp(9rem,22vw,15rem)]" aria-hidden="true">
-        <div className="absolute inset-x-0 bottom-0 h-[38%] bg-asphalt-3" />
-        <div className="lane absolute inset-x-0 bottom-[17%] h-1.5 opacity-80" />
-        <div className="truck-in absolute bottom-[8%] left-[max(1rem,calc(50%-38rem))] w-[min(80vw,34rem)]">
-          <TowTruck className="w-full drop-shadow-[0_18px_20px_rgba(0,0,0,.35)]" />
+      <div className="relative mt-10 h-[clamp(10rem,24vw,17rem)] overflow-hidden" aria-hidden="true">
+        {/* distant city at night, drifting slowly (ambient) */}
+        <svg className="skyline absolute bottom-[38%] left-0 h-[45%] w-[200%] opacity-40" viewBox="0 0 1600 120" preserveAspectRatio="none">
+          {Array.from({ length: 2 }).map((_, k) => (
+            <g key={k} transform={`translate(${k * 800} 0)`} fill="#2f3a4b">
+              {[[0,70,60],[60,40,40],[100,85,55],[155,55,30],[185,95,70],[255,30,45],[300,75,50],[350,50,35],[385,100,60],[445,65,40],[485,35,55],[540,80,45],[585,55,60],[645,90,40],[685,45,50],[735,70,65]].map(([x, h, w]) => (
+                <rect key={x} x={x} y={120 - h} width={w} height={h} />
+              ))}
+              {[[120,50],[200,40],[395,30],[560,55],[660,35]].map(([x, y]) => <rect key={x} x={x} y={120 - y} width="3" height="3" fill="#f2b33d" opacity=".7" />)}
+            </g>
+          ))}
+        </svg>
+        <div className="absolute inset-x-0 bottom-0 h-[40%] bg-asphalt-3" />
+        <div className="absolute inset-x-0 bottom-[38%] h-[3px] bg-paint/25" />
+        <div className="lane absolute inset-x-0 bottom-[18%] h-1.5 opacity-80" />
+        {/* far-lane traffic: a car passes now and then */}
+        <div className="traffic absolute bottom-[26%] left-0 w-[clamp(4.5rem,9vw,7rem)] opacity-60" style={{ transform: "translateX(-30vw)" }}>
+          <div className="-scale-x-100"><VehicleArt id="sedan" paint="graphite" className="w-full" /></div>
+        </div>
+        <div className="truck-in absolute bottom-[4%] left-[max(1rem,calc(50%-38rem))] w-[min(84vw,36rem)]">
+          {/* headlight beam */}
+          <svg className="beam pointer-events-none absolute -right-[38%] bottom-[22%] w-[45%]" viewBox="0 0 200 60" aria-hidden="true">
+            <defs><linearGradient id="beam-g" x1="0" x2="1"><stop offset="0" stopColor="#fff3c4" stopOpacity=".8" /><stop offset="1" stopColor="#fff3c4" stopOpacity="0" /></linearGradient></defs>
+            <path d="M0 26 L200 0 L200 60 L0 34 Z" fill="url(#beam-g)" />
+          </svg>
+          <TowTruck className="relative w-full drop-shadow-[0_18px_20px_rgba(0,0,0,.35)]" />
         </div>
       </div>
     </section>

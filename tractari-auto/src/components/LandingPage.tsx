@@ -8,6 +8,7 @@ import { ExampleTable } from "@/components/ExampleTable";
 import { JsonLd } from "@/components/JsonLd";
 import { Reveal } from "@/components/Reveal";
 import { breadcrumbLd } from "@/lib/seo";
+import { TowTruck } from "@/components/Vehicles";
 
 const pathOf = (slug: string) => `/${slug}/`;
 const crumbsFor = (l: Landing) => [
@@ -32,7 +33,7 @@ export function LandingPage({ l }: { l: Landing }) {
 
   return (
     <>
-      <section className="on-dark bg-asphalt pb-14 pt-24 text-paint md:pt-28">
+      <section className="on-dark relative overflow-hidden bg-asphalt pt-24 text-paint md:pt-28">
         <div className="wrap rise">
           <nav aria-label="Firimituri" className="text-[length:var(--step--1)] text-paint/75">
             <ol className="flex flex-wrap gap-x-2">
@@ -49,6 +50,14 @@ export function LandingPage({ l }: { l: Landing }) {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="#calculator" className="btn btn-beacon min-h-14 px-6 text-[length:var(--step-1)]">Calculează prețul</Link>
             <CallButtons size="lg" quiet />
+          </div>
+        </div>
+        {/* road strip: the tow truck drives in and keeps rolling (same motion language as the home hero) */}
+        <div className="relative mt-10 h-[clamp(6rem,13vw,9rem)] overflow-hidden" aria-hidden="true">
+          <div className="absolute inset-x-0 bottom-0 h-[42%] bg-asphalt-3" />
+          <div className="lane absolute inset-x-0 bottom-[18%] h-1 opacity-70" />
+          <div className="truck-in absolute bottom-[2%] right-[max(1rem,calc(50%-38rem))] w-[min(56vw,21rem)]">
+            <TowTruck className="w-full drop-shadow-[0_12px_14px_rgba(0,0,0,.35)]" />
           </div>
         </div>
       </section>

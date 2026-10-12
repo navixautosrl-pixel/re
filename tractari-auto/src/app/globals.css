@@ -108,23 +108,52 @@ p { text-wrap: pretty; }
 }
 
 /* Road paint: dashed centre line, moving under the truck (ambient) */
-.lane { background-image: linear-gradient(90deg, var(--paint) 0 55%, transparent 55% 100%); background-size: 90px 100%; }
+/* Lane paint: one element 90px wider than its road, moved with transform (compositor-only, no repaint). */
+.lane { background-image: linear-gradient(90deg, var(--paint) 0 55%, transparent 55% 100%); background-size: 90px 100%; right: -90px !important; will-change: transform; }
+/* ── Motion: vehicles ─────────────────────────────────────────────────────────
+   PRIMARY  hero: truck drives in (1.3 s), wheels roll in, then keep rolling with the road.
+   AMBIENT  lane paint scrolls, beacons alternate, a car passes in the far lane every 11 s.
+   SECONDARY calculator: the chosen vehicle drives in from the right with a small suspension
+            settle, then idles "on the road" (wheels roll, body hums 0.4 px).
+   HOVER    vehicle cards: wheels turn, the vehicle edges forward.
+   Everything here is off under prefers-reduced-motion. */
+.wheel { transform-box: view-box; }
+.veh-body { transform-box: fill-box; transform-origin: 50% 100%; }
 @media (prefers-reduced-motion: no-preference) {
   .lane { animation: lane 0.9s linear infinite; }
-  .beacon { animation: beacon 1.1s steps(2, jump-none) infinite; }
+  .beacon { animation: beacon 0.9s steps(2, jump-none) infinite; }
+  .beacon-b { animation-delay: -0.45s; }
   .truck-in { animation: truck-in 1.3s var(--ease-out) 0.15s both; }
-  .truck-in .wheel { animation: spin 1.3s var(--ease-out) 0.15s both; }
+  .truck-in .wheel { animation: roll-in 1.3s var(--ease-out) 0.15s both, roll-r 0.7s linear 1.45s infinite; }
+  .truck-in .veh-hum, .truck-in > svg { animation: hum .28s ease-in-out 1.45s infinite alternate; }
+  .traffic { animation: traffic 11s linear 2.5s infinite both; }
+  .traffic .wheel { animation: roll-l .45s linear infinite; } /* the car is mirrored */
   .rise > * { animation: rise .8s var(--ease-out) both; }
-  .veh-in { animation: veh-in .35s var(--ease-out) both; }
   .rise > :nth-child(2) { animation-delay: 90ms; }
   .rise > :nth-child(3) { animation-delay: 180ms; }
   .rise > :nth-child(4) { animation-delay: 270ms; }
+  .stage .drive-in { animation: drive-in .9s cubic-bezier(.2,.9,.25,1.05) both; }
+  .stage .drive-in .wheel { animation: roll-l .55s linear infinite; }
+  .stage .drive-in .veh-body { animation: settle .9s var(--ease-out) both, hum .3s ease-in-out .9s infinite alternate; }
+  .veh-card .wheel { transition: transform .6s var(--ease-out); }
+  .veh-card:hover .wheel { transform: rotate(-200deg); }
+  .veh-card svg { transition: transform .45s var(--ease-out); }
+  .veh-card:hover svg { transform: translateX(-6px); }
+  .beam { animation: beam 2.4s ease-in-out infinite alternate; }
+  .skyline { animation: drift 60s linear infinite; }
 }
-@keyframes lane { to { background-position: -90px 0; } }
-@keyframes beacon { 0% { fill: var(--beacon); filter: drop-shadow(0 0 6px var(--beacon)); } 100% { fill: #8a5a10; filter: none; } }
-@keyframes truck-in { from { transform: translateX(-60%); } to { transform: none; } }
-@keyframes spin { from { transform: rotate(-720deg); } to { transform: none; } }
-@keyframes veh-in { from { opacity: 0; transform: translateX(80px); } }
+@keyframes lane { to { transform: translateX(-90px); } }
+@keyframes beacon { 0% { opacity: 1; } 100% { opacity: .25; } }
+@keyframes truck-in { from { transform: translateX(-70%); } to { transform: none; } }
+@keyframes roll-in { from { transform: rotate(-900deg); } to { transform: none; } }
+@keyframes roll-r { to { transform: rotate(360deg); } }
+@keyframes roll-l { to { transform: rotate(-360deg); } }
+@keyframes hum { to { transform: translateY(.4px); } }
+@keyframes traffic { 0% { transform: translateX(-30vw); } 100% { transform: translateX(130vw); } }
+@keyframes drive-in { 0% { transform: translateX(150px); opacity: 0; } 15% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+@keyframes settle { 0%, 70% { transform: none; } 80% { transform: translateY(1.6px) rotate(-.6deg); } 90% { transform: translateY(-.6px) rotate(.2deg); } 100% { transform: none; } }
+@keyframes beam { from { opacity: .35; } to { opacity: .6; } }
+@keyframes drift { to { transform: translateX(-50%); } }
 @keyframes rise { from { opacity: .001; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 
 /* Section reveals: hidden only once JS is present and motion is allowed */

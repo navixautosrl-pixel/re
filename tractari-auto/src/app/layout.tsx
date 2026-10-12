@@ -4,6 +4,7 @@ import { ViewTransition } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MobileCallBar } from "@/components/MobileCallBar";
+import { VehicleDefs } from "@/components/Vehicles";
 import { site } from "@/config/site";
 import { JsonLd } from "@/components/JsonLd";
 import "./globals.css";
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
       <body className="flex min-h-dvh flex-col antialiased">
+        <VehicleDefs />
         <div id="top-sentinel" aria-hidden="true" className="absolute top-0 h-px w-px" />
         <a href="#main" className="btn btn-beacon fixed left-4 top-3 z-50 -translate-y-24 focus:translate-y-0">Sari la conținut</a>
         <Header />
