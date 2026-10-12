@@ -25,7 +25,10 @@ function Logo() {
         <circle cx="23" cy="24" r="2.6" fill="var(--beacon)" />
         <rect x="14" y="10" width="6" height="3" rx="1.5" fill="var(--beacon)" />
       </svg>
-      <span className="text-[1.2rem] leading-none">{site.name}</span>
+      <span className="leading-none">
+        <span className="block text-[1.15rem]">Tractări Auto</span>
+        <span className="block text-[0.8rem] font-[700] tracking-wide opacity-80">București <span className="logo-24">24</span></span>
+      </span>
     </Link>
   );
 }

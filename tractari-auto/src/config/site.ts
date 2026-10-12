@@ -3,9 +3,9 @@
  * instead of an invented value (grep "data-placeholder" in the export to list them).
  */
 export const site = {
-  /** Working name until the real company name is supplied. */
-  name: "Tractări Auto",
-  nameConfirmed: false,
+  /** Brand = the domain (client, 2026-10-12). */
+  name: "Tractări Auto București 24",
+  nameConfirmed: true,
   legalName: null as string | null,
   url: (process.env.NEXT_PUBLIC_SITE_URL || "https://tractariautobucuresti24.ro").replace(/\/$/, ""),
   indexable: process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true",
