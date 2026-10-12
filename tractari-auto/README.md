@@ -1,7 +1,10 @@
 # Tractări auto — site cu calculator de preț
 
-Static site (Next.js 16 export): home with an animated hero, the price calculator, how-it-works
-(GSAP scroll piece on desktop), tariffs table, FAQ, services, contact, legal drafts.
+Static site (Next.js 16 export), 15 indexable pages: home (tractări auto București), calculator,
+tarife, servicii and zone hubs, 8 landing pages (Centura București, A1 București–Pitești, Ilfov,
+sectoarele 1–6, transport pe platformă, moto, mașini avariate, microbuze/autoutilitare), one guide,
+contact, legal drafts. Page copy for landings: `src/data/landings.tsx`; keyword → URL map:
+`docs/keyword-map.md`.
 No backend, no cookies, no third-party scripts. Not published.
 
 ## Run
@@ -67,3 +70,16 @@ Company name (working name now: "Tractări Auto"), phone (enables Call), WhatsAp
 the pre-filled message), e-mail, hours (e.g. non-stop — only if true), service area, legal name,
 CUI, Reg. Com., address; payment methods; typical arrival time; real photos of the trucks;
 legal review of the two legal drafts.
+
+## SEO launch checklist (nothing here is done yet — needs the owner's accounts)
+
+1. Real company name, phone, address in `src/config/site.ts` (enables the AutomotiveBusiness
+   JSON-LD and the call buttons), then build with `NEXT_PUBLIC_SITE_INDEXABLE=true` and the real
+   `NEXT_PUBLIC_SITE_URL`.
+2. **Google Business Profile**, category "Serviciu de tractare", same name/phone/address as the site,
+   service area București + Ilfov. This drives the map results for "tractări București".
+3. Google Search Console: verify the domain, submit `sitemap.xml`, request indexing for the home
+   page and the landing pages.
+4. Same name/phone/address on Romanian directories (e.g. listafirme, paginiaurii, cylex) and
+   social profiles → add their URLs as `sameAs`.
+5. Ask real customers for Google reviews (never write or buy them).

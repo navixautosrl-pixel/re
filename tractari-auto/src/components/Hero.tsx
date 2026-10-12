@@ -20,11 +20,11 @@ export function Hero() {
           {" · "}
           {site.serviceArea ?? <Placeholder field="serviceArea">zona acoperită</Placeholder>}
         </p>
-        <h1 id="hero-title" className="mt-5 max-w-[16ch] text-[length:var(--step-4)]">
-          Tractări auto, cu prețul <span className="text-beacon">știut dinainte</span>
+        <h1 id="hero-title" className="mt-5 max-w-[17ch] text-[length:var(--step-4)]">
+          Tractări auto București, cu prețul <span className="text-beacon">știut dinainte</span>
         </h1>
         <p className="mt-5 max-w-[46ch] text-[length:var(--step-1)] text-paint/85">
-          Alegi vehiculul și traseul, vezi totalul în câteva secunde, apoi suni sau scrii pe WhatsApp cu prețul deja calculat.
+          În București, Ilfov, pe Centură și pe A1 București–Pitești. Alegi vehiculul și traseul, vezi totalul în câteva secunde, apoi suni sau scrii pe WhatsApp cu prețul deja calculat.
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <Link href="#calculator" className="btn btn-beacon min-h-14 px-6 text-[length:var(--step-1)]">Calculează prețul</Link>

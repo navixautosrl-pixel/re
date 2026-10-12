@@ -4,7 +4,7 @@ import { Placeholder } from "@/components/Placeholder";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
 
-export const metadata = pageMeta({ title: "Contact", description: `Telefon, WhatsApp și e-mail ${site.name}.`, path: "/contact/" });
+export const metadata = pageMeta({ title: "Contact", description: `Contact ${site.name}: telefon, WhatsApp și e-mail pentru tractări în București, Ilfov, pe Centura București și pe A1 București–Pitești.`, path: "/contact/" });
 
 export default function Contact() {
   const rows: [string, React.ReactNode][] = [

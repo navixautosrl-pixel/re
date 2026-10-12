@@ -6,8 +6,10 @@ import { useEffect, useRef, useState } from "react";
 import { site } from "@/config/site";
 
 export const NAV = [
-  { href: "/calculator/", label: "Calculator preț" },
+  { href: "/calculator/", label: "Calculator" },
+  { href: "/tarife-tractari/", label: "Tarife" },
   { href: "/servicii/", label: "Servicii" },
+  { href: "/zone-deservite/", label: "Zone" },
   { href: "/contact/", label: "Contact" },
 ];
 
@@ -58,7 +60,7 @@ export function Header() {
                 <Link
                   href={n.href}
                   aria-current={active(n.href) ? "page" : undefined}
-                  className="inline-flex min-h-11 items-center rounded-full px-4 font-semibold opacity-85 transition hover:opacity-100 aria-[current=page]:bg-sign aria-[current=page]:text-white aria-[current=page]:opacity-100"
+                  className="inline-flex min-h-11 items-center rounded-full px-3.5 font-semibold opacity-85 transition hover:opacity-100 aria-[current=page]:bg-sign aria-[current=page]:text-white aria-[current=page]:opacity-100"
                 >
                   {n.label}
                 </Link>

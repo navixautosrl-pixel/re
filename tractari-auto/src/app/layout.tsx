@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MobileCallBar } from "@/components/MobileCallBar";
 import { site } from "@/config/site";
+import { JsonLd } from "@/components/JsonLd";
 import "./globals.css";
 
 // Overpass (OFL), subset: Latin + a 3 KB file with ă ș ț Ă Ș Ț. "optional" = no reflow on slow
@@ -21,6 +22,18 @@ export const metadata: Metadata = {
 };
 export const viewport: Viewport = { themeColor: "#232a35" };
 
+// Organization + WebSite always; AutomotiveBusiness (local SEO) only once a real phone and address exist.
+const orgLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": `${site.url}/#org`, name: site.name, url: site.url, logo: `${site.url}/apple-icon.png`, ...(site.phone ? { telephone: site.phone, contactPoint: { "@type": "ContactPoint", telephone: site.phone, contactType: "customer service", areaServed: "RO", availableLanguage: "ro" } } : {}) },
+    { "@type": "WebSite", "@id": `${site.url}/#website`, name: site.name, url: site.url, inLanguage: "ro-RO", publisher: { "@id": `${site.url}/#org` } },
+    ...(site.phone && site.company.address
+      ? [{ "@type": "AutomotiveBusiness", "@id": `${site.url}/#business`, name: site.legalName ?? site.name, url: site.url, telephone: site.phone, address: site.company.address, areaServed: site.serviceArea, ...(site.hours ? { openingHours: site.hours } : {}) }]
+      : []),
+  ],
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ro" className={`${latin.variable} ${ro.variable}`} suppressHydrationWarning>
@@ -36,6 +49,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </ViewTransition>
         <Footer />
         <MobileCallBar />
+        <JsonLd data={orgLd} />
       </body>
     </html>
   );

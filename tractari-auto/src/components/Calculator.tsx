@@ -45,14 +45,14 @@ function AnimatedLei({ value }: { value: number }) {
 const uuid = () => (typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : String(Math.random()).slice(2));
 
 /** Reads ?vehicul=suv&km=120 (shareable links); render inside <Suspense fallback={<Calculator />}>. */
-export function CalculatorFromUrl(props: { headingLevel?: "h1" | "h2" }) {
+export function CalculatorFromUrl({ defaultVehicle, ...props }: { headingLevel?: "h1" | "h2"; defaultVehicle?: VehicleId }) {
   const p = useSearchParams();
   const v = p.get("vehicul");
   const k = Number(p.get("km"));
   return (
     <Calculator
       {...props}
-      initialVehicle={v && byId(v) ? (v as VehicleId) : undefined}
+      initialVehicle={v && byId(v) ? (v as VehicleId) : defaultVehicle}
       initialKm={k > 0 ? String(Math.round(k)) : undefined}
     />
   );

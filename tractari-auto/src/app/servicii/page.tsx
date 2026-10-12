@@ -5,10 +5,11 @@ import { CallButtons } from "@/components/CallButtons";
 import { Placeholder } from "@/components/Placeholder";
 import { Reveal } from "@/components/Reveal";
 import { JsonLd } from "@/components/JsonLd";
+import { LandingCards } from "@/components/LandingCards";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Servicii: tractări auto și transport pe platformă",
+  title: "Servicii tractări auto și transport pe platformă",
   description: "Tractări și transport pe platformă pentru motociclete, autoturisme, SUV-uri, microbuze și autoutilitare până la 7,5 tone, inclusiv mașini avariate.",
   path: "/servicii/",
 });
@@ -26,10 +27,12 @@ export default function Services() {
         <h1 className="max-w-[18ch] text-[length:var(--step-4)]">Ce transportăm</h1>
         <p className="mt-4 max-w-[55ch] text-[length:var(--step-1)] text-ink-2">Pe platformă, de la motociclete la autoutilitare de 7,5 tone. Prețul îl afli din <Link href="/calculator/" className="link">calculator</Link>.</p>
 
+        <div className="mt-12"><LandingCards group="serviciu" headingLevel="h2" /></div>
+
         <ul className="mt-12 grid gap-4 md:grid-cols-3">
           {SERVICES.map((s, i) => (
             <Reveal as="li" key={s.t} delay={i * 80} className="rounded-[var(--radius-l)] bg-card p-6 ring-1 ring-rule">
-              <h2 className="text-[length:var(--step-2)]">{s.t}</h2>
+              <h2 className="text-[length:var(--step-1)]">{s.t}</h2>
               <p className="mt-3 text-ink-2">{s.d}</p>
             </Reveal>
           ))}

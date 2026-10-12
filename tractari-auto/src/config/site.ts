@@ -15,8 +15,8 @@ export const site = {
   phoneDisplay: null as string | null,
   whatsapp: null as string | null, // international digits, e.g. "40722123456"
   email: null as string | null,
-  /** e.g. "București, Ilfov și toată țara" — only what the business actually covers. */
-  serviceArea: null as string | null,
+  /** From the client's brief (2026-10-12): București, Centura, A1 București–Pitești. Edit if it changes. */
+  serviceArea: "București, Ilfov, Centura București și A1 București–Pitești" as string | null,
   /** e.g. "Non-stop" — only if true. */
   hours: null as string | null,
   company: { cui: null as string | null, regCom: null as string | null, address: null as string | null },

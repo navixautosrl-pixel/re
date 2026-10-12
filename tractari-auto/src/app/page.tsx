@@ -8,6 +8,8 @@ import { Reveal } from "@/components/Reveal";
 import { CallButtons } from "@/components/CallButtons";
 import { FaqList } from "@/data/faq";
 import { pageMeta } from "@/lib/seo";
+import { LandingCards } from "@/components/LandingCards";
+import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/config/site";
 
 /*
@@ -28,10 +30,9 @@ import { site } from "@/config/site";
  */
 
 export const metadata = pageMeta({
-  title: `Tractări auto cu preț calculat online | ${site.name}`,
-  description: "Calculează online prețul unei tractări: motocicletă, autoturism, SUV, microbuz sau autoutilitară. Vezi totalul pe loc și suni cu prețul deja știut.",
+  title: "Tractări auto București — preț calculat online",
+  description: "Tractări auto în București, Ilfov, pe Centură și pe A1 București–Pitești. Calculezi online prețul pe km pentru moto, autoturism, SUV sau autoutilitară.",
   path: "/",
-  absolute: true,
 });
 
 export default function Home() {
@@ -49,10 +50,28 @@ export default function Home() {
 
       <HowItWorks />
 
+      <section aria-labelledby="zone-title" className="wrap pt-20 md:pt-28">
+        <Reveal>
+          <h2 id="zone-title" className="text-[length:var(--step-3)]">Unde venim</h2>
+          <p className="mt-3 max-w-[62ch] text-[length:var(--step-1)] text-ink-2">
+            Tractări auto în toate sectoarele Bucureștiului și în Ilfov, de pe Centura București și de pe Autostrada A1 București–Pitești, pe ambele sensuri.
+          </p>
+        </Reveal>
+        <div className="mt-8"><LandingCards group="zona" /></div>
+      </section>
+
+      <section aria-labelledby="serv-title" className="wrap pt-20">
+        <Reveal>
+          <h2 id="serv-title" className="text-[length:var(--step-3)]">Ce transportăm</h2>
+          <p className="mt-3 max-w-[62ch] text-[length:var(--step-1)] text-ink-2">De la motociclete la autoutilitare de 7,5 tone, inclusiv mașini avariate cu roți blocate, în oraș sau în toată țara pe platformă.</p>
+        </Reveal>
+        <div className="mt-8"><LandingCards group="serviciu" /></div>
+      </section>
+
       <section id="tarife" aria-labelledby="rates-title" className="wrap scroll-mt-20 py-20 md:py-28">
         <Reveal>
           <h2 id="rates-title" className="text-[length:var(--step-3)]">Tarife pe kilometru</h2>
-          <p className="mt-3 max-w-[60ch] text-[length:var(--step-1)] text-ink-2">Aceleași tarife pe care le folosește calculatorul — nimic ascuns.</p>
+          <p className="mt-3 max-w-[60ch] text-[length:var(--step-1)] text-ink-2">Aceleași tarife pe care le folosește calculatorul — nimic ascuns. Exemple calculate pe <Link href="/tarife-tractari/" className="link">pagina de tarife</Link>.</p>
         </Reveal>
         <Reveal className="mt-8" delay={80}><RatesTable /></Reveal>
       </section>
@@ -64,6 +83,8 @@ export default function Home() {
         </Reveal>
         <FaqList />
       </section>
+
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "Service", name: "Tractări auto București", description: "Tractări auto și transport pe platformă în București, Ilfov, pe Centura București și pe A1 București–Pitești, cu preț calculat online.", serviceType: "Tractări auto", url: `${site.url}/`, provider: { "@id": `${site.url}/#org` }, areaServed: ["București", "Ilfov", "Centura București", "Autostrada A1 București–Pitești"].map((name) => ({ "@type": "Place", name })) }} />
 
       <section aria-labelledby="cta-title" className="on-dark bg-sign text-white">
         <div className="wrap flex flex-col items-start gap-6 py-16 md:flex-row md:items-center md:justify-between">
