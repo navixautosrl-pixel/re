@@ -30,8 +30,9 @@ import { site } from "@/config/site";
  */
 
 export const metadata = pageMeta({
-  title: "Tractări auto București — preț calculat online",
-  description: "Tractări auto în București, Ilfov, pe Centură și pe A1 București–Pitești. Calculezi online prețul pe km pentru moto, autoturism, SUV sau autoutilitară.",
+  title: "Tractări auto București non-stop | Preț calculat online",
+  absolute: true,
+  description: "Tractări auto non-stop în București, Ilfov, pe Centură și pe A1 București–Pitești. Calculezi online prețul pe km pentru moto, autoturism, SUV sau dubă.",
   path: "/",
 });
 

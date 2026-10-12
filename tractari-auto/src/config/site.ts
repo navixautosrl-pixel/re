@@ -17,8 +17,10 @@ export const site = {
   email: null as string | null,
   /** From the client's brief (2026-10-12): București, Centura, A1 București–Pitești. Edit if it changes. */
   serviceArea: "București, Ilfov, Centura București și A1 București–Pitești" as string | null,
-  /** e.g. "Non-stop" — only if true. */
-  hours: null as string | null,
+  /** Confirmed by the client (2026-10-12): non-stop, 7 days a week. */
+  hours: "Non-stop, 24/7" as string | null,
+  /** schema.org openingHours for the hours above. */
+  openingHoursSchema: "Mo-Su 00:00-23:59" as string | null,
   company: { cui: null as string | null, regCom: null as string | null, address: null as string | null },
   /** Google Maps key (Places API New + Routes API), restricted to the site's domain. Optional. */
   mapsKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY || "",

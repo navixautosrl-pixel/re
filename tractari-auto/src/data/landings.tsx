@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { VehicleId } from "@/config/pricing";
+import { LOCAL_LANDINGS } from "@/data/landings-local";
 
 /**
  * Landing pages, one per search-intent cluster (see docs/keyword-map.md). Each page has its own
@@ -10,7 +11,9 @@ import type { VehicleId } from "@/config/pricing";
  */
 export type Landing = {
   slug: string;
-  group: "zona" | "serviciu" | "ghid";
+  group: "zona" | "localitate" | "sector" | "serviciu" | "ghid";
+  /** Hub pages list the pages of this group at the end. */
+  children?: "localitate" | "sector";
   nav: string;
   title: string;
   description: string;
@@ -28,7 +31,7 @@ export type Landing = {
 
 const L = ({ href, children }: { href: string; children: ReactNode }) => <Link className="link" href={href}>{children}</Link>;
 
-export const LANDINGS: Landing[] = [
+const BASE_LANDINGS: Landing[] = [
   {
     slug: "tractari-centura-bucuresti",
     group: "zona",
@@ -77,7 +80,7 @@ export const LANDINGS: Landing[] = [
       },
     ],
     faq: [
-      { q: "Tractați și noaptea de pe Centură?", a: "Programul de lucru este afișat sus pe pagină. Dacă ai nevoie de tractare în afara lui, sună și îți spunem pe loc dacă putem veni." },
+      { q: "Tractați și noaptea de pe Centură?", a: "Da, lucrăm non-stop, 24 de ore din 24, inclusiv în weekend și de sărbători." },
       { q: "Pot duce mașina direct la un service din București?", a: "Da. Introdu în calculator distanța până la service; prețul se calculează pe kilometrii reali ai traseului." },
       { q: "Ce se întâmplă dacă trebuie să așteptați la încărcare?", a: "Primele 30 de minute de staționare sunt gratuite, apoi tariful este de 100 lei pe oră." },
     ],
@@ -134,6 +137,7 @@ export const LANDINGS: Landing[] = [
   {
     slug: "tractari-ilfov",
     group: "zona",
+    children: "localitate",
     nav: "Ilfov",
     title: "Tractări auto Ilfov: Otopeni, Voluntari, Chiajna",
     description: "Tractare auto în Ilfov: Otopeni, Voluntari, Pantelimon, Popești-Leordeni, Bragadiru, Chiajna, Chitila, Buftea, Măgurele. Preț calculat online.",
@@ -172,6 +176,7 @@ export const LANDINGS: Landing[] = [
   {
     slug: "tractari-sectoare-bucuresti",
     group: "zona",
+    children: "sector",
     nav: "Sectoarele 1–6",
     title: "Tractări auto pe sectoare, București 1–6",
     description: "Tractare auto în Sectorul 1, 2, 3, 4, 5 și 6: Băneasa, Colentina, Titan, Berceni, Rahova, Drumul Taberei, Militari. Preț pe km calculat online.",
@@ -395,5 +400,7 @@ export const LANDINGS: Landing[] = [
     related: ["tractari-autostrada-bucuresti-pitesti", "tractari-centura-bucuresti", "tractari-masini-avariate"],
   },
 ];
+
+export const LANDINGS: Landing[] = [...BASE_LANDINGS, ...LOCAL_LANDINGS];
 
 export const landingBySlug = (slug: string) => LANDINGS.find((l) => l.slug === slug);

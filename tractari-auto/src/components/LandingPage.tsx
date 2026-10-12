@@ -9,11 +9,13 @@ import { JsonLd } from "@/components/JsonLd";
 import { Reveal } from "@/components/Reveal";
 import { breadcrumbLd } from "@/lib/seo";
 import { TowTruck } from "@/components/Vehicles";
+import { LandingCards } from "@/components/LandingCards";
 
 const pathOf = (slug: string) => `/${slug}/`;
 const crumbsFor = (l: Landing) => [
   { name: "Acasă", path: "/" },
-  ...(l.group === "zona" ? [{ name: "Zone", path: "/zone-deservite/" }] : l.group === "serviciu" ? [{ name: "Servicii", path: "/servicii/" }] : []),
+  ...(l.group === "serviciu" ? [{ name: "Servicii", path: "/servicii/" }] : l.group === "ghid" ? [] : [{ name: "Zone", path: "/zone-deservite/" }]),
+  ...(l.group === "localitate" ? [{ name: "Ilfov", path: "/tractari-ilfov/" }] : l.group === "sector" ? [{ name: "Sectoare", path: "/tractari-sectoare-bucuresti/" }] : []),
   { name: l.nav, path: pathOf(l.slug) },
 ];
 
@@ -80,6 +82,13 @@ export function LandingPage({ l }: { l: Landing }) {
           </div>
         </aside>
       </div>
+
+      {l.children && (
+        <section aria-labelledby="children-l" className="wrap pb-16">
+          <h2 id="children-l" className="text-[length:var(--step-3)]">{l.children === "localitate" ? "Pagini pe localități" : "Pagini pe sectoare"}</h2>
+          <div className="mt-6"><LandingCards group={l.children} /></div>
+        </section>
+      )}
 
       <section id="calculator" aria-label="Calculator preț" className="scroll-mt-16 bg-concrete-2 py-16">
         <div className="wrap">

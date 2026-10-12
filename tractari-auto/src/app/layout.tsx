@@ -16,7 +16,7 @@ const ro = localFont({ src: "../fonts/overpass-ro.woff2", weight: "100 900", var
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: `Tractări auto cu preț calculat online | ${site.name}`, template: `%s | ${site.name}` },
+  title: { default: `Tractări auto non-stop, preț calculat online | ${site.name}`, template: `%s | ${site.name}` },
   description: "Tractări și transport auto pe platformă. Calculează prețul online: alegi vehiculul, de unde și până unde, și vezi totalul înainte să suni.",
   robots: site.indexable ? { index: true, follow: true } : { index: false, follow: false },
   formatDetection: { telephone: false },
@@ -30,7 +30,7 @@ const orgLd = {
     { "@type": "Organization", "@id": `${site.url}/#org`, name: site.name, url: site.url, logo: `${site.url}/apple-icon.png`, ...(site.phone ? { telephone: site.phone, contactPoint: { "@type": "ContactPoint", telephone: site.phone, contactType: "customer service", areaServed: "RO", availableLanguage: "ro" } } : {}) },
     { "@type": "WebSite", "@id": `${site.url}/#website`, name: site.name, url: site.url, inLanguage: "ro-RO", publisher: { "@id": `${site.url}/#org` } },
     ...(site.phone && site.company.address
-      ? [{ "@type": "AutomotiveBusiness", "@id": `${site.url}/#business`, name: site.legalName ?? site.name, url: site.url, telephone: site.phone, address: site.company.address, areaServed: site.serviceArea, ...(site.hours ? { openingHours: site.hours } : {}) }]
+      ? [{ "@type": "AutomotiveBusiness", "@id": `${site.url}/#business`, name: site.legalName ?? site.name, url: site.url, telephone: site.phone, address: site.company.address, areaServed: site.serviceArea, ...(site.openingHoursSchema ? { openingHours: site.openingHoursSchema } : {}) }]
       : []),
   ],
 };

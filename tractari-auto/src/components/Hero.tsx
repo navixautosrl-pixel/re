@@ -21,8 +21,8 @@ export function Hero() {
           {" · "}
           {site.serviceArea ?? <Placeholder field="serviceArea">zona acoperită</Placeholder>}
         </p>
-        <h1 id="hero-title" className="mt-5 max-w-[17ch] text-[length:var(--step-4)]">
-          Tractări auto București, cu prețul <span className="text-beacon">știut dinainte</span>
+        <h1 id="hero-title" className="mt-5 max-w-[19ch] text-[length:var(--step-4)]">
+          Tractări auto București non-stop, cu prețul <span className="text-beacon">știut dinainte</span>
         </h1>
         <p className="mt-5 max-w-[46ch] text-[length:var(--step-1)] text-paint/85">
           În București, Ilfov, pe Centură și pe A1 București–Pitești. Alegi vehiculul și traseul, vezi totalul în câteva secunde, apoi suni sau scrii pe WhatsApp cu prețul deja calculat.

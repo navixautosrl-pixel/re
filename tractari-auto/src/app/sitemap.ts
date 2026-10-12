@@ -7,6 +7,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const core = ["/", "/calculator/", "/tarife-tractari/", "/servicii/", "/zone-deservite/", "/contact/"];
   return [
     ...core.map((p) => ({ url: `${site.url}${p}`, priority: p === "/" ? 1 : 0.8 })),
-    ...LANDINGS.map((l) => ({ url: `${site.url}/${l.slug}/`, priority: l.group === "ghid" ? 0.5 : 0.9 })),
+    ...LANDINGS.map((l) => ({ url: `${site.url}/${l.slug}/`, priority: l.group === "ghid" ? 0.5 : l.group === "zona" || l.group === "serviciu" ? 0.9 : 0.7 })),
   ];
 }
