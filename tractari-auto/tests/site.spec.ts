@@ -27,8 +27,8 @@ test("calculator: validation, damaged note, duration, shareable URL", async ({ p
   await page.goto("/calculator/?vehicul=microbuz&km=100");
   await expect(page.getByRole("radio", { name: /Microbuz/ })).toBeChecked();
   await expect(page.getByLabel("Distanța traseului (km)")).toHaveValue("100");
-  // 30 × 7.5 + 70 × 10.3 = 946 → × 1.25 = 1182.50
-  await expect(total(page)).toContainText("1.182,50 lei");
+  // mid tariff: 200 + 130 + 99 × 8.9 + 1 × 7.5 = 1218.6 → × 1.25 = 1523.25
+  await expect(total(page)).toContainText("1.523,25 lei");
   await expect(page.getByText(/aprox\. 1 h 17 min/)).toBeVisible();
   await page.getByLabel("Mașină avariată (roți blocate)").check();
   await page.getByLabel("Câte roți sunt blocate?").selectOption("2");
@@ -132,7 +132,7 @@ test("switching vehicle updates the total on the first click, immediately @mobil
   await page.goto("/calculator/");
   await page.getByLabel("Distanța traseului (km)").fill("100");
   const total = page.locator("[aria-live=polite][aria-atomic=true]").last();
-  const expected: Record<string, string> = { SUV: "841,25 lei", Sedan: "590,00 lei", Motocicletă: "375,00 lei", Hatchback: "490,00 lei" };
+  const expected: Record<string, string> = { SUV: "1.036,38 lei", Sedan: "773,88 lei", Motocicletă: "536,88 lei", Hatchback: "686,25 lei" };
   for (const [name, value] of Object.entries(expected)) {
     await page.locator("label", { hasText: name }).first().click();
     await expect(total).toContainText(value, { timeout: 300 }); // no counting animation: correct at once

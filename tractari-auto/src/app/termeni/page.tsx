@@ -48,8 +48,9 @@ export default function Terms() {
       <h2>5. Prețul</h2>
       <ul>
         <li>Calculatorul de pe site oferă un preț estimativ, calculat după tipul vehiculului și distanța pe drum, conform <Link className="link" href="/tarife-tractari/">tarifelor publicate</Link>. Prețul final este cel confirmat la telefon înainte de plecarea platformei.</li>
-        <li>Pentru curse lungi se aplică tariful pe kilometru (primii {PRICING.extraKm} km cu tariful Extra-City, restul cu tariful Intra-City), cu coeficientul tarifar ×{PRICING.multiplier.toLocaleString("ro-RO")}.</li>
-        <li>Pentru curse scurte (până la {PRICING.shortMaxKm} km) se adaugă taxa de încărcare și taxa de descărcare, după tipul vehiculului.</li>
+        <li>Pentru curse în oraș (până la {PRICING.shortMaxKm} km) și pentru curse regionale se plătesc kilometrii plus taxa de încărcare și taxa de descărcare, după tipul vehiculului.</li>
+        <li>Pentru curse lungi se aplică tariful pe kilometru (primii {PRICING.extraKm} km cu tariful Extra-City, restul cu tariful Intra-City), dacă iese mai mare decât tariful regional.</li>
+        <li>Totalul se înmulțește cu coeficientul tarifar ×{PRICING.multiplier.toLocaleString("ro-RO")}.</li>
         <li>Staționarea: primele {PRICING.freeWaitMinutes} de minute la încărcare și la descărcare sunt gratuite; după aceea se plătesc {PRICING.waitPerHour} lei pe oră.</li>
         <li>Vehiculele cu roți blocate sau avariate necesită echipament suplimentar; suplimentul se comunică la telefon, înainte de confirmare.</li>
       </ul>

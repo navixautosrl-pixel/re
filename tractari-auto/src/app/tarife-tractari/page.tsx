@@ -54,13 +54,42 @@ export default function Tarife() {
           </div>
         </section>
 
+        <section aria-labelledby="mid-t" className="mt-14">
+          <h2 id="mid-t" className="text-[length:var(--step-2)]">Curse în afara orașului, cu taxe de încărcare</h2>
+          <p className="mt-2 max-w-[65ch] text-ink-2">Peste {PRICING.shortMaxKm} km se aplică tariful regional de mai jos sau tariful pe kilometru, oricare iese mai mare. Pe distanțe medii (de exemplu Chiajna → Giurgiu sau Ploiești) iese tariful regional.</p>
+          <div className="mt-5 overflow-x-auto rounded-[var(--radius-l)] bg-card ring-1 ring-rule" role="region" aria-labelledby="mid-t" tabIndex={0}>
+            <table className="tabular w-full text-right">
+              <thead className="text-[length:var(--step--1)] text-ink-2">
+                <tr className="border-b border-rule">
+                  <th scope="col" className="px-4 py-3 text-left font-[700]">Vehicul</th>
+                  <th scope="col" className="px-4 py-3 font-[700]">Intra-City<span className="block font-normal">lei/km</span></th>
+                  <th scope="col" className="px-4 py-3 font-[700]">Extra-City<span className="block font-normal">lei/km</span></th>
+                  <th scope="col" className="px-4 py-3 font-[700]">Taxă încărcare</th>
+                  <th scope="col" className="px-4 py-3 font-[700]">Taxă descărcare</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-rule">
+                {VEHICLES.map((v) => (
+                  <tr key={v.id}>
+                    <th scope="row" className="px-4 py-3 text-left font-[750]">{v.name}</th>
+                    <td className="px-4 py-3">{v.mid.intraRate.toLocaleString("ro-RO", { minimumFractionDigits: 1 })}</td>
+                    <td className="px-4 py-3">{v.extraRate.toLocaleString("ro-RO", { minimumFractionDigits: 1 })}</td>
+                    <td className="px-4 py-3">{v.short.loadFee} lei</td>
+                    <td className="px-4 py-3">{v.mid.unloadFee} lei</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         <section aria-labelledby="formula" className="prose-road mt-14">
           <h2 id="formula" className="text-[length:var(--step-2)] text-ink">Cum se calculează prețul</h2>
           <ol>
-            <li>Primii {PRICING.extraKm} km ai traseului × tariful Extra-City al vehiculului.</li>
-            <li>Restul kilometrilor × tariful Intra-City.</li>
+            <li>Curse scurte, în oraș (până la {PRICING.shortMaxKm} km): toți kilometrii cu tariful urban, plus taxa de încărcare și taxa de descărcare.</li>
+            <li>Curse în afara orașului: kilometrii cu tariful regional (Intra-City), {PRICING.midExtraKm} km Extra-City, plus taxa de încărcare și taxa de descărcare.</li>
+            <li>Curse lungi: primii {PRICING.extraKm} km × tariful Extra-City, restul × tariful Intra-City din tabelul de tarife pe kilometru. Peste {PRICING.shortMaxKm} km se aplică varianta care iese mai mare dintre aceasta și cea regională.</li>
             <li>Suma se înmulțește cu coeficientul tarifar ×{PRICING.multiplier.toLocaleString("ro-RO")}.</li>
-            <li>Curse scurte (până la {PRICING.shortMaxKm} km): toți kilometrii cu tariful urban, plus taxa de încărcare și taxa de descărcare (tabelul de mai jos).</li>
             <li>Staționarea: primele {PRICING.freeWaitMinutes} de minute sunt gratuite, apoi {PRICING.waitPerHour} lei pe oră.</li>
             <li>Pentru mașini avariate cu roți blocate se adaugă un supliment, confirmat la telefon.</li>
           </ol>

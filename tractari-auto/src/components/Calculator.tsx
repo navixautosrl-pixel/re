@@ -5,7 +5,7 @@ import { useEffect, useId, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { DOCUMENTS, PRICING, VEHICLES, byId, type VehicleId } from "@/config/pricing";
 import { site } from "@/config/site";
-import { formatHours, formatLei, formatRate, quote } from "@/lib/quote";
+import { formatHours, formatKm, formatLei, formatRate, quote } from "@/lib/quote";
 import { mapsEnabled, route, type Suggestion } from "@/lib/maps";
 import { PlaceField } from "@/components/PlaceField";
 import { VehicleArt } from "@/components/Vehicles";
@@ -199,16 +199,16 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
                 <div><dt className="text-[0.8rem] uppercase text-paint/60">Destinație</dt><dd className="font-[700] text-beacon-2">{to || "—"}</dd></div>
               </div>
             )}
-            <div className="flex justify-between gap-4"><dt>Intra-City</dt><dd className="font-[700]">{q.intraKm} km × {formatRate(q.intraRate)} lei</dd></div>
-            <div className="flex justify-between gap-4"><dt>Extra-City</dt><dd className="font-[700]">{q.extraKm} km × {formatRate(q.extraRate)} lei</dd></div>
-            {q.band === "short" && (
+            <div className="flex justify-between gap-4"><dt>Intra-City</dt><dd className="font-[700]">{Math.round(q.intraKm)} km × {formatRate(q.intraRate)} lei</dd></div>
+            <div className="flex justify-between gap-4"><dt>Extra-City</dt><dd className="font-[700]">{Math.round(q.extraKm)} km × {formatRate(q.extraRate)} lei</dd></div>
+            {q.loadFee > 0 && (
               <>
                 <div className="flex justify-between gap-4"><dt>Taxă încărcare</dt><dd className="font-[700]">{q.loadFee} lei</dd></div>
                 <div className="flex justify-between gap-4"><dt>Taxă descărcare</dt><dd className="font-[700]">{q.unloadFee} lei</dd></div>
               </>
             )}
             <div className="flex justify-between gap-4"><dt>Coeficient tarifar</dt><dd className="font-[700]">× {PRICING.multiplier.toLocaleString("ro-RO")}</dd></div>
-            <div className="flex justify-between gap-4 text-beacon-2"><dt className="font-[750]">Distanță</dt><dd className="font-[800]">{q.km} km</dd></div>
+            <div className="flex justify-between gap-4 text-beacon-2"><dt className="font-[750]">Distanță</dt><dd className="font-[800]">{formatKm(q.km)}</dd></div>
             <div className="flex justify-between gap-4"><dt>Durată</dt><dd>{ready ? `aprox. ${formatHours(q.hours)}` : "—"}</dd></div>
             <div className="flex justify-between gap-4"><dt>Staționare</dt><dd className="font-[750] text-[oklch(78%_0.15_150)]">{PRICING.freeWaitMinutes} min gratuit</dd></div>
           </dl>

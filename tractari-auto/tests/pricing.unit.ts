@@ -30,6 +30,14 @@ test("short trip: urban rate + load/unload fees, motorcycle matches the referenc
   expect(quote(sedan, 3).total).toBeCloseTo(1.25 * (200 + 3 * 6.3), 2);
 });
 
+// Mid trip: SUV, Roșu → Bucșani, 70,1 km — reference total 800,65 lei (client screenshot).
+test("mid trip: SUV 70 km matches the reference (69 × 6,3 + 1 × 5,4 + 120 + 80)", () => {
+  const suv = VEHICLES.find((v) => v.id === "suv")!;
+  const q = quote(suv, 70.07);
+  expect(q).toMatchObject({ band: "mid", extraKm: 1, intraRate: 6.3, extraRate: 5.4, loadFee: 120, unloadFee: 80 });
+  expect(Math.abs(q.total - 800.65)).toBeLessThan(0.05);
+});
+
 test("a longer trip is never cheaper than the longest short trip; bounds are clamped", () => {
   const hb = VEHICLES.find((v) => v.id === "hatchback")!;
   for (let km = PRICING.shortMaxKm; km < 200; km++) expect(quote(hb, km + 1).total).toBeGreaterThanOrEqual(quote(hb, km).total);

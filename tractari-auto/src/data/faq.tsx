@@ -8,7 +8,7 @@ export const FAQ: { q: string; a: ReactNode }[] = [
     q: "Cum se calculează prețul?",
     a: (
       <>
-        Din tipul vehiculului și distanța traseului: primii {PRICING.extraKm} km cu tariful Extra-City, restul cu tariful Intra-City, totul înmulțit cu
+        Din tipul vehiculului și distanța traseului. În oraș și pe distanțe medii se plătesc kilometrii plus taxa de încărcare și de descărcare; pe curse lungi, primii {PRICING.extraKm} km cu tariful Extra-City și restul cu Intra-City. Totul se înmulțește cu
         coeficientul tarifar ×{PRICING.multiplier.toLocaleString("ro-RO")}. Toate tarifele sunt în <Link className="link" href="/#tarife">tabelul de tarife</Link>.
       </>
     ),
