@@ -9,8 +9,8 @@ import { useEffect, useRef } from "react";
  */
 const STEPS = [
   { t: "Calculezi prețul", d: "Alegi tipul vehiculului și traseul. Totalul apare imediat, cu tot calculul la vedere." },
-  { t: "Suni sau scrii pe WhatsApp", d: "Mesajul pleacă deja completat cu vehiculul, traseul și prețul calculat." },
-  { t: "Platforma vine după mașină", d: "Încărcăm, transportăm și descărcăm la destinație. Primele 30 de minute de staționare sunt gratuite." },
+  { t: "Suni sau scrii pe WhatsApp", d: "Dispeceratul confirmă prețul și îți spune în cât timp ajunge cea mai apropiată platformă parteneră disponibilă." },
+  { t: "Platforma vine după mașină", d: "Încarcă, transportă și descarcă la destinație. Plătești cash sau prin transfer bancar; primele 30 de minute de staționare sunt gratuite." },
 ];
 const PATH = "M40 220 C 180 220, 200 60, 340 60 S 520 200, 640 140 S 820 40, 900 70";
 

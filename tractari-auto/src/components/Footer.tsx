@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { site } from "@/config/site";
-import { Placeholder } from "@/components/Placeholder";
 import { LANDINGS } from "@/data/landings";
 
 export function Footer() {
@@ -10,7 +9,7 @@ export function Footer() {
       <div className="wrap grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div>
           <p className="text-[1.4rem] font-[820]">{site.name}</p>
-          <p className="mt-2 max-w-[28ch] text-paint/75">Tractări și transport auto pe platformă, cu prețul calculat înainte de plecare.</p>
+          <p className="mt-2 max-w-[28ch] text-paint/75">Dispecerat non-stop de tractări auto: trimitem cea mai apropiată platformă parteneră disponibilă, cu prețul calculat înainte de plecare.</p>
         </div>
         <nav aria-label="Zone">
           <p className="font-[750] text-paint/70">Zone</p>
@@ -38,10 +37,13 @@ export function Footer() {
         </nav>
         <div className="space-y-2 text-[length:var(--step--1)]">
           <p className="font-[750] text-paint/70">Firmă</p>
-          <p>{site.legalName ?? <Placeholder field="legalName">denumirea firmei</Placeholder>}</p>
-          <p>{c.cui && c.regCom ? `CUI ${c.cui}, ${c.regCom}` : <Placeholder field="company.cui">CUI și Reg. Com.</Placeholder>}</p>
-          <p>{site.phoneDisplay ?? <Placeholder field="phone">telefon</Placeholder>}</p>
-          <p>{site.email ?? <Placeholder field="email">e-mail</Placeholder>}</p>
+          <p>{site.legalName}</p>
+          <p>CUI {c.cui}, Reg. Com. {c.regCom}</p>
+          <p>EUID {c.euid}</p>
+          <p>{c.address}</p>
+          <p><a className="link" href={`tel:${site.phone}`}>{site.phoneDisplay}</a></p>
+          {site.email && <p><a className="link" href={`mailto:${site.email}`}>{site.email}</a></p>}
+          <p className="text-paint/75">Plata: numerar sau transfer bancar</p>
         </div>
       </div>
       <p className="wrap border-t border-white/10 py-5 text-[length:var(--step--1)] text-paint/70">© {new Date().getFullYear()} {site.name}</p>

@@ -1,19 +1,25 @@
 import { site } from "@/config/site";
 import { CallButtons } from "@/components/CallButtons";
-import { Placeholder } from "@/components/Placeholder";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
 
-export const metadata = pageMeta({ title: "Contact", description: `Contact ${site.name}: telefon, WhatsApp și e-mail pentru tractări în București, Ilfov, pe Centura București și pe A1 București–Pitești.`, path: "/contact/" });
+export const metadata = pageMeta({ title: "Contact", description: `Contact ${site.name}: dispecerat non-stop, telefon și WhatsApp pentru tractări în Chiajna, Militari, București, pe Centura și pe A1.`, path: "/contact/" });
 
 export default function Contact() {
+  const c = site.company;
   const rows: [string, React.ReactNode][] = [
-    ["Telefon", site.phoneDisplay ?? <Placeholder field="phone">telefon</Placeholder>],
-    ["WhatsApp", site.whatsapp ? `+${site.whatsapp}` : <Placeholder field="whatsapp">număr WhatsApp</Placeholder>],
-    ["E-mail", site.email ? <a className="link" href={`mailto:${site.email}`}>{site.email}</a> : <Placeholder field="email">e-mail</Placeholder>],
-    ["Program", site.hours ?? <Placeholder field="hours">program</Placeholder>],
-    ["Zona acoperită", site.serviceArea ?? <Placeholder field="serviceArea">zona acoperită</Placeholder>],
-    ["Adresă", site.company.address ?? <Placeholder field="company.address">adresa firmei</Placeholder>],
+    ["Telefon", <a key="t" className="link" href={`tel:${site.phone}`}>{site.phoneDisplay}</a>],
+    ["WhatsApp", <a key="w" className="link" href={`https://wa.me/${site.whatsapp}`} rel="noopener">+{site.whatsapp}</a>],
+    ...(site.email ? [["E-mail", <a key="e" className="link" href={`mailto:${site.email}`}>{site.email}</a>] as [string, React.ReactNode]] : []),
+    ["Program", "Dispecerat non-stop, 24 de ore din 24, 7 zile din 7"],
+    ["Cum lucrăm", "Suntem dispecerat și colaborăm cu mai multe platforme partenere. Trimitem cea mai apropiată platformă disponibilă; timpul de sosire depinde de zonă și de locul de unde pleacă platforma și ți-l spunem la telefon."],
+    ["Zona acoperită", site.serviceArea],
+    ["Plata", "Numerar (cash) sau transfer bancar, cu factură"],
+    ["Firma", site.legalName],
+    ["Sediul social", c.address],
+    ["CUI", c.cui],
+    ["Nr. Reg. Com.", c.regCom],
+    ["EUID", c.euid],
   ];
   return (
     <div className="wrap pb-20 pt-24 md:pt-28">

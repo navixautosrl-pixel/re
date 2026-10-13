@@ -1,0 +1,207 @@
+{
+  "base": "http://127.0.0.1:40769",
+  "startedAt": "2026-10-13T09:44:06.458Z",
+  "pages": {
+    "/": {
+      "url": "http://127.0.0.1:40769/",
+      "viewports": {
+        "320": {
+          "status": 200,
+          "overflowX": 0,
+          "smallTargets": [],
+          "console": [],
+          "pageErrors": [],
+          "failed": []
+        },
+        "375": {
+          "status": 200,
+          "overflowX": 0,
+          "smallTargets": [],
+          "console": [],
+          "pageErrors": [],
+          "failed": []
+        },
+        "768": {
+          "status": 200,
+          "overflowX": 0,
+          "smallTargets": [],
+          "console": [],
+          "pageErrors": [],
+          "failed": []
+        },
+        "1024": {
+          "status": 200,
+          "overflowX": 0,
+          "smallTargets": [],
+          "console": [],
+          "pageErrors": [],
+          "failed": []
+        },
+        "1440": {
+          "status": 200,
+          "overflowX": 0,
+          "smallTargets": [],
+          "console": [],
+          "pageErrors": [],
+          "failed": []
+        },
+        "1920": {
+          "status": 200,
+          "overflowX": 0,
+          "smallTargets": [],
+          "console": [],
+          "pageErrors": [],
+          "failed": []
+        }
+      },
+      "seo": {
+        "title": "Tractări auto Chiajna, Militari, A1 și Centura București",
+        "titleLen": 56,
+        "description": "Tractări auto non-stop în Chiajna, Militari, pe A1 București–Pitești și pe Centura București. Calculezi online prețul pe km, înainte să suni.",
+        "canonical": "https://tractariautobucuresti24.ro/",
+        "robots": "index, follow",
+        "ogTitle": "Tractări auto Chiajna, Militari, A1 și Centura București",
+        "ogImage": "https://tractariautobucuresti24.ro/og.png",
+        "lang": "ro",
+        "viewport": "width=device-width, initial-scale=1",
+        "h1": 1,
+        "headingSkips": 0,
+        "imgsNoAlt": 0,
+        "imgsNoDims": 0,
+        "emptyLinks": 0,
+        "unnamedControls": 0,
+        "unlabeledInputs": 0,
+        "brokenAnchors": [],
+        "internalLinks": [
+          "http://127.0.0.1:40769/",
+          "http://127.0.0.1:40769/calculator/",
+          "http://127.0.0.1:40769/tarife-tractari/",
+          "http://127.0.0.1:40769/tractari-chiajna/",
+          "http://127.0.0.1:40769/tractari-militari/",
+          "http://127.0.0.1:40769/zone-deservite/",
+          "http://127.0.0.1:40769/servicii/",
+          "http://127.0.0.1:40769/contact/",
+          "http://127.0.0.1:40769/tractari-autostrada-bucuresti-pitesti/",
+          "http://127.0.0.1:40769/tractari-centura-bucuresti/",
+          "http://127.0.0.1:40769/tractari-dragomiresti-vale/",
+          "http://127.0.0.1:40769/tractari-ciorogarla/",
+          "http://127.0.0.1:40769/tractari-domnesti/",
+          "http://127.0.0.1:40769/tractari-sector-6/",
+          "http://127.0.0.1:40769/tractari-bragadiru/",
+          "http://127.0.0.1:40769/tractari-non-stop-bucuresti/",
+          "http://127.0.0.1:40769/tractari-ilfov/",
+          "http://127.0.0.1:40769/tractari-sectoare-bucuresti/",
+          "http://127.0.0.1:40769/tractari-otopeni/",
+          "http://127.0.0.1:40769/transport-auto-pe-platforma/",
+          "http://127.0.0.1:40769/tractari-moto-bucuresti/",
+          "http://127.0.0.1:40769/tractari-masini-avariate/",
+          "http://127.0.0.1:40769/tractari-microbuze-autoutilitare/",
+          "http://127.0.0.1:40769/ghid/masina-defecta-pe-autostrada/",
+          "http://127.0.0.1:40769/tractari-voluntari/",
+          "http://127.0.0.1:40769/tractari-popesti-leordeni/",
+          "http://127.0.0.1:40769/tractari-pantelimon/",
+          "http://127.0.0.1:40769/tractari-jilava/",
+          "http://127.0.0.1:40769/tractari-buftea/",
+          "http://127.0.0.1:40769/tractari-sector-1/",
+          "http://127.0.0.1:40769/tractari-sector-2/",
+          "http://127.0.0.1:40769/tractari-sector-3/",
+          "http://127.0.0.1:40769/tractari-sector-4/",
+          "http://127.0.0.1:40769/tractari-sector-5/",
+          "http://127.0.0.1:40769/ghid/accident-ce-faci/",
+          "http://127.0.0.1:40769/ghid/masina-nu-porneste/",
+          "http://127.0.0.1:40769/ghid/tractare-cutie-automata/",
+          "http://127.0.0.1:40769/termeni/",
+          "http://127.0.0.1:40769/politica-de-confidentialitate/"
+        ],
+        "jsonLd": [
+          {
+            "ok": true,
+            "types": [
+              "Service"
+            ]
+          },
+          {
+            "ok": true,
+            "types": [
+              "Organization",
+              "WebSite",
+              "AutomotiveBusiness"
+            ]
+          }
+        ]
+      },
+      "keyboard": [
+        {
+          "el": "a",
+          "text": "Sari la conținut",
+          "visible": true
+        },
+        {
+          "el": "a",
+          "text": "Tractări Auto\nBucurești 24",
+          "visible": true
+        },
+        {
+          "el": "a",
+          "text": "Calculator",
+          "visible": true
+        },
+        {
+          "el": "a",
+          "text": "Tarife",
+          "visible": true
+        },
+        {
+          "el": "a",
+          "text": "Chiajna",
+          "visible": true
+        },
+        {
+          "el": "a",
+          "text": "Militari",
+          "visible": true
+        },
+        {
+          "el": "a",
+          "text": "Zone",
+          "visible": true
+        },
+        {
+          "el": "a",
+          "text": "Servicii",
+          "visible": true
+        },
+        {
+          "el": "a",
+          "text": "Contact",
+          "visible": true
+        },
+        {
+          "el": "a",
+          "text": "Află prețul",
+          "visible": true
+        },
+        {
+          "el": "a",
+          "text": "Calculează prețul",
+          "visible": true
+        },
+        {
+          "el": "a",
+          "text": "Sună: 0773 938 355",
+          "visible": true
+        }
+      ],
+      "axe": [],
+      "reduced-motion": {
+        "hidden": []
+      },
+      "no-js": {
+        "hidden": []
+      }
+    }
+  },
+  "critical": [],
+  "warnings": [],
+  "finishedAt": "2026-10-13T09:44:37.237Z"
+}

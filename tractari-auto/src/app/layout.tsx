@@ -29,10 +29,10 @@ export const viewport: Viewport = { themeColor: "#232a35" };
 const orgLd = {
   "@context": "https://schema.org",
   "@graph": [
-    { "@type": "Organization", "@id": `${site.url}/#org`, name: site.name, url: site.url, logo: `${site.url}/apple-icon.png`, ...(site.phone ? { telephone: site.phone, contactPoint: { "@type": "ContactPoint", telephone: site.phone, contactType: "customer service", areaServed: "RO", availableLanguage: "ro" } } : {}) },
+    { "@type": "Organization", "@id": `${site.url}/#org`, name: site.name, legalName: site.legalName, taxID: site.company.cui, foundingDate: site.company.founded, url: site.url, logo: `${site.url}/apple-icon.png`, ...(site.phone ? { telephone: site.phone, contactPoint: { "@type": "ContactPoint", telephone: site.phone, contactType: "customer service", areaServed: "RO", availableLanguage: "ro" } } : {}) },
     { "@type": "WebSite", "@id": `${site.url}/#website`, name: site.name, url: site.url, inLanguage: "ro-RO", publisher: { "@id": `${site.url}/#org` } },
     ...(site.phone && site.company.address
-      ? [{ "@type": "AutomotiveBusiness", "@id": `${site.url}/#business`, name: site.legalName ?? site.name, url: site.url, telephone: site.phone, address: site.company.address, areaServed: site.serviceArea, ...(site.openingHoursSchema ? { openingHours: site.openingHoursSchema } : {}) }]
+      ? [{ "@type": "AutomotiveBusiness", "@id": `${site.url}/#business`, name: site.name, legalName: site.legalName, url: site.url, telephone: site.phone, address: { "@type": "PostalAddress", streetAddress: site.company.street, addressLocality: site.company.locality, addressRegion: site.company.region, postalCode: site.company.postalCode, addressCountry: "RO" }, areaServed: site.serviceArea, paymentAccepted: "Cash, Bank transfer", currenciesAccepted: "RON", image: `${site.url}/og.png`, openingHoursSpecification: { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], opens: "00:00", closes: "23:59" }, ...(site.openingHoursSchema ? { openingHours: site.openingHoursSchema } : {}) }]
       : []),
   ],
 };

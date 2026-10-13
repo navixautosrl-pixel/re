@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { PRICING } from "@/config/pricing";
 import { site } from "@/config/site";
-import { Placeholder } from "@/components/Placeholder";
 
 export const FAQ: { q: string; a: ReactNode }[] = [
   {
@@ -36,15 +35,19 @@ export const FAQ: { q: string; a: ReactNode }[] = [
   },
   {
     q: "În cât timp ajunge platforma?",
-    a: <Placeholder field="faq.eta">timpul obișnuit de sosire, doar dacă îl puteți garanta</Placeholder>,
+    a: "Depinde de zonă, de trafic și de locul de unde pleacă cea mai apropiată platformă disponibilă. Suntem dispecerat și lucrăm cu mai multe platforme partenere, așa că trimitem mereu pe cea mai apropiată liberă; timpul estimat ți-l spunem la telefon, înainte de confirmare.",
+  },
+  {
+    q: "Sunteți firmă de tractări sau dispecerat?",
+    a: "Suntem dispecerat non-stop: preluăm comanda, îți dăm prețul și trimitem cea mai apropiată platformă parteneră disponibilă. Transportul îl face firma parteneră, la tarifele afișate pe site.",
   },
   {
     q: "Cum se plătește?",
-    a: <Placeholder field="faq.payment">metodele de plată acceptate (numerar, card, transfer, factură)</Placeholder>,
+    a: "Numerar (cash), la finalul transportului, sau transfer bancar. La cerere, emitem factură pe persoană fizică sau juridică.",
   },
   {
     q: "În ce zone lucrați?",
-    a: site.serviceArea ?? <Placeholder field="serviceArea">zona acoperită</Placeholder>,
+    a: `${site.serviceArea}. Pentru curse lungi mergem oriunde în țară, la cerere.`,
   },
 ];
 

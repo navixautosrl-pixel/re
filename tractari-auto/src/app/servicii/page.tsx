@@ -2,7 +2,6 @@ import Link from "next/link";
 import { VEHICLES } from "@/config/pricing";
 import { VehicleArt } from "@/components/Vehicles";
 import { CallButtons } from "@/components/CallButtons";
-import { Placeholder } from "@/components/Placeholder";
 import { Reveal } from "@/components/Reveal";
 import { JsonLd } from "@/components/JsonLd";
 import { LandingCards } from "@/components/LandingCards";
@@ -52,13 +51,20 @@ export default function Services() {
           ))}
         </ul>
 
-        <div className="mt-16 rounded-[var(--radius-l)] border-2 border-dashed border-[#b7791f] p-6">
-          <p className="font-[750]">De completat de firmă</p>
-          <ul className="mt-3 space-y-2">
-            <li><Placeholder field="services.fleet">platformele din flotă (capacitate, lungime)</Placeholder></li>
-            <li><Placeholder field="services.photos">fotografii reale cu platformele și tractări făcute</Placeholder></li>
-            <li><Placeholder field="services.extra">alte servicii reale (ex. transport utilaje, internațional)</Placeholder></li>
-          </ul>
+        <h2 className="mt-20 text-[length:var(--step-3)]">Cum lucrăm: dispecerat non-stop</h2>
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <div className="rounded-[var(--radius-l)] bg-card p-6 ring-1 ring-rule">
+            <h3 className="text-[length:var(--step-1)] font-[800] tracking-normal">Platforme partenere</h3>
+            <p className="mt-2 text-ink-2">Suntem dispecerat și colaborăm cu mai multe firme de transport pe platformă. Când suni, trimitem cea mai apropiată platformă disponibilă în acel moment.</p>
+          </div>
+          <div className="rounded-[var(--radius-l)] bg-card p-6 ring-1 ring-rule">
+            <h3 className="text-[length:var(--step-1)] font-[800] tracking-normal">Timpul de sosire</h3>
+            <p className="mt-2 text-ink-2">Depinde de zonă, de trafic și de locul de unde pleacă platforma. Ți-l spunem la telefon, înainte să confirmi comanda.</p>
+          </div>
+          <div className="rounded-[var(--radius-l)] bg-card p-6 ring-1 ring-rule">
+            <h3 className="text-[length:var(--step-1)] font-[800] tracking-normal">Plata</h3>
+            <p className="mt-2 text-ink-2">Numerar (cash) la finalul transportului sau transfer bancar. Factura se emite la cerere, pe persoană fizică sau firmă.</p>
+          </div>
         </div>
         <CallButtons className="mt-12" size="lg" />
       </div>

@@ -172,7 +172,7 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
               </a>
             )}
             {useMaps && (
-              <button type="button" className="link mt-3 text-[length:var(--step--1)]" onClick={() => setManual((v) => !v)}>
+              <button type="button" className="link mt-2 min-h-11 text-[length:var(--step--1)]" onClick={() => setManual((v) => !v)}>
                 {manual ? "Caută adresele pe hartă" : "Introdu kilometrii manual"}
               </button>
             )}
