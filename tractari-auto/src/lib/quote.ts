@@ -31,7 +31,7 @@ function raw(vehicle: Vehicle, km: number, lockedWheels: number) {
     return { band: "short" as const, intraKm: km, extraKm: 0, intraRate: s.intraRate, extraRate: s.extraRate, loadFee: s.loadFee, unloadFee: s.unloadFee, subtotal };
   }
   const mExtra = Math.min(km, PRICING.midExtraKm);
-  const mid = { band: "mid" as const, intraKm: km - mExtra, extraKm: mExtra, intraRate: vehicle.mid.intraRate, extraRate: vehicle.extraRate, loadFee: vehicle.short.loadFee, unloadFee: vehicle.mid.unloadFee, subtotal: 0 };
+  const mid = { band: "mid" as const, intraKm: km - mExtra, extraKm: mExtra, intraRate: vehicle.mid.intraRate, extraRate: vehicle.extraRate, loadFee: vehicle.short.loadFee, unloadFee: vehicle.short.unloadFee, subtotal: 0 };
   mid.subtotal = mid.loadFee + mid.unloadFee + mid.intraKm * mid.intraRate + mid.extraKm * mid.extraRate + wheels;
   const extraKm = Math.min(km, PRICING.extraKm);
   const intraKm = km - extraKm;

@@ -75,7 +75,7 @@ export default function Tarife() {
                     <td className="px-4 py-3">{v.mid.intraRate.toLocaleString("ro-RO", { minimumFractionDigits: 1 })}</td>
                     <td className="px-4 py-3">{v.extraRate.toLocaleString("ro-RO", { minimumFractionDigits: 1 })}</td>
                     <td className="px-4 py-3">{v.short.loadFee} lei</td>
-                    <td className="px-4 py-3">{v.mid.unloadFee} lei</td>
+                    <td className="px-4 py-3">{v.short.unloadFee} lei</td>
                   </tr>
                 ))}
               </tbody>
