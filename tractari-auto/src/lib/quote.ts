@@ -70,7 +70,7 @@ export function quote(vehicle: Vehicle, kmRaw: number, opts: { lockedWheels?: nu
 
 const lei = new Intl.NumberFormat("ro-RO", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 export const formatLei = (n: number) => `${lei.format(n)} lei`;
-export const formatRate = (n: number) => n.toLocaleString("ro-RO", { minimumFractionDigits: 1 });
+export const formatRate = (n: number) => n.toLocaleString("ro-RO", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 export const formatKm = (km: number) => `${km.toLocaleString("ro-RO", { maximumFractionDigits: 1 })} km`;
 export function formatHours(h: number) {
   if (h <= 0) return "—";

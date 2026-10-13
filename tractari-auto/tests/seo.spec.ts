@@ -38,12 +38,12 @@ test("all sitemap pages pass on-page SEO checks", async ({ page, request }) => {
 });
 
 const REF = [
-  ["Motocicletă", "1.847,63 lei", 1823.34],
-  ["Hatchback", "2.453,50 lei", 2462.45],
-  ["Sedan", "2.910,50 lei", 2926.75],
-  ["SUV", "4.098,88 lei", 4110.99],
-  ["Microbuz", "5.778,88 lei", 5802.75],
-  ["Autoutilitară", "6.054,38 lei", 6034.05],
+  ["Motocicletă", "1.823,34 lei", 1823.34],
+  ["Hatchback", "2.462,45 lei", 2462.45],
+  ["Sedan", "2.926,75 lei", 2926.75],
+  ["SUV", "4.110,99 lei", 4110.99],
+  ["Microbuz", "5.802,75 lei", 5802.75],
+  ["Autoutilitară", "6.034,05 lei", 6034.05],
 ] as const;
 
 test("calculator in the browser, București → Cluj (457 km), all six vehicles", async ({ page }) => {

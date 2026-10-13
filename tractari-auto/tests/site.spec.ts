@@ -13,13 +13,13 @@ test("calculator: same inputs as the reference give the expected totals @mobile"
   const errors = errorsOf(page);
   await page.goto("/calculator/");
   await page.getByLabel("Distanța traseului (km)").fill("457");
-  await expect(total(page)).toContainText("2.453,50 lei"); // hatchback (reference 2.462,45)
+  await expect(total(page)).toContainText("2.462,45 lei"); // hatchback = reference
   await expect(page.getByText("427 km × 4,4 lei")).toBeVisible();
   await expect(page.getByText("30 km × 2,8 lei")).toBeVisible();
   await page.getByText("SUV", { exact: true }).first().click();
-  await expect(total(page)).toContainText("4.098,88 lei"); // reference 4.110,99
+  await expect(total(page)).toContainText("4.110,99 lei"); // = reference
   await page.getByText("Autoutilitară", { exact: true }).first().click();
-  await expect(total(page)).toContainText("6.054,38 lei"); // reference 6.034,05
+  await expect(total(page)).toContainText("6.034,05 lei"); // = reference
   expect(errors).toEqual([]);
 });
 
@@ -61,7 +61,7 @@ test("calculator with address search (Google mocked): pick both places → route
   await expect(page.getByRole("option", { name: "Cluj-Napoca, România" })).toBeVisible();
   await to.press("ArrowDown");
   await to.press("Enter");
-  await expect(total(page)).toContainText("2.453,50 lei");
+  await expect(total(page)).toContainText("2.462,45 lei");
   await expect(page.getByText("aprox. 5 h 50 min")).toBeVisible();
   expect(routeBody).toContain("id-București, România");
 });
@@ -127,7 +127,7 @@ test("short trips show load/unload fees @mobile", async ({ page }) => {
   await expect(page.getByText("Taxă încărcare")).toBeVisible();
   await expect(page.getByText("3 km × 5,3 lei")).toBeVisible();
   await page.getByLabel("Distanța traseului (km)").fill("457");
-  await expect(total).toContainText("2.453,50 lei");
+  await expect(total).toContainText("2.462,45 lei");
   await expect(page.getByText("Taxă încărcare")).toBeHidden();
 });
 

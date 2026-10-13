@@ -34,17 +34,18 @@ total = 1,25 × (km_Intra-City × tarif_Intra + km_Extra-City × tarif_Extra)
 Reconstructed from six simulations of bursatractari.ro/calculator (București → Cluj-Napoca,
 457 km = 427 Intra-City + 30 Extra-City) supplied by the client. The coefficient 1,25 is the only
 value consistent with all six totals given that the reference displays its rates rounded to
-one decimal. With the displayed rates our totals are within −0,6 % … +1,3 % of theirs
-(`tests/pricing.unit.ts`):
+one decimal. The long-trip Intra rates are stored unrounded (solved from the six totals; each
+rounds to the displayed value), so the totals match theirs to the ban (`tests/pricing.unit.ts`).
+Short (urban) and regional trips with load/unload fees are described in `src/config/pricing.ts`.
 
 | Vehicul | Intra | Extra | Referință | Calculator |
 |---|---|---|---|---|
-| Motocicletă | 3,3 | 2,3 | 1.823,34 | 1.847,63 |
-| Hatchback | 4,4 | 2,8 | 2.462,45 | 2.453,50 |
-| Sedan | 5,2 | 3,6 | 2.926,75 | 2.910,50 |
-| SUV | 7,3 | 5,4 | 4.110,99 | 4.098,88 |
-| Microbuz | 10,3 | 7,5 | 5.802,75 | 5.778,88 |
-| Autoutilitară | 10,5 | 12,0 | 6.034,05 | 6.054,38 |
+| Motocicletă | 3,3 | 2,3 | 1.823,34 | 1.823,34 |
+| Hatchback | 4,4 | 2,8 | 2.462,45 | 2.462,45 |
+| Sedan | 5,2 | 3,6 | 2.926,75 | 2.926,75 |
+| SUV | 7,3 | 5,4 | 4.110,99 | 4.110,99 |
+| Microbuz | 10,3 | 7,5 | 5.802,75 | 5.802,75 |
+| Autoutilitară | 10,5 | 12,0 | 6.034,05 | 6.034,05 |
 
 **To confirm** (one route can't show these):
 1. Exact rates: one more simulation per vehicle on a different route (e.g. București → Ploiești)

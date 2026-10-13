@@ -12,11 +12,10 @@ test("same split as the reference: 457 km → 427 + 30", () => {
 });
 
 for (const v of VEHICLES) {
-  test(`${v.name}: within 1.5 % of the reference total`, () => {
+  test(`${v.name}: reproduces the reference total to the ban`, () => {
     const q = quote(v, 457);
     expect(q.total).toBeCloseTo(PRICING.multiplier * (427 * v.intraRate + 30 * v.extraRate), 1);
-    const diff = Math.abs(q.total / REFERENCE[v.id] - 1);
-    expect(diff).toBeLessThan(0.015);
+    expect(Math.abs(q.total - REFERENCE[v.id])).toBeLessThanOrEqual(0.01);
   });
 }
 
