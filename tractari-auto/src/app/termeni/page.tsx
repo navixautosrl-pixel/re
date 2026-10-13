@@ -6,7 +6,6 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = {
   ...pageMeta({ title: "Termeni și condiții", description: `Termenii serviciului de dispecerat pentru tractări auto ${site.name}: comandă, preț, plată, anulare, răspundere și reclamații.`, path: "/termeni/" }),
-  robots: { index: false },
 };
 
 export default function Terms() {

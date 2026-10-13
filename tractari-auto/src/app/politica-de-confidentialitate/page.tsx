@@ -5,7 +5,6 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = {
   ...pageMeta({ title: "Politica de confidențialitate", description: `Ce date personale folosește ${site.name}, de ce, cât timp și ce drepturi ai.`, path: "/politica-de-confidentialitate/" }),
-  robots: { index: false },
 };
 
 export default function Privacy() {
