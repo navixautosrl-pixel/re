@@ -310,7 +310,7 @@ const BASE_LANDINGS: Landing[] = [
     sections: [
       {
         h2: "De ce costă diferit o mașină cu roți blocate",
-        body: <p>O mașină care se rulează urcă pe platformă trasă de troliu. Una cu roți blocate, direcția ruptă sau fără roți cere timp și echipament în plus la încărcare. De aceea, în calculator bifezi „Mașină avariată (roți blocate)”, iar suplimentul îl confirmăm la telefon, după ce ne spui ce s-a întâmplat.</p>,
+        body: <p>O mașină care se rulează urcă pe platformă trasă de troliu. Una cu roți blocate, direcția ruptă sau fără roți cere timp și echipament în plus la încărcare. De aceea, în calculator bifezi „Mașină avariată (roți blocate)”, apoi alegi câte roți sunt blocate: taxa de manipulare cu căruciorul este de 60 de lei pentru fiecare roată.</p>,
       },
       {
         h2: "După un accident",
@@ -323,7 +323,7 @@ const BASE_LANDINGS: Landing[] = [
           </ol>
         ),
       },
-      { h2: "Exemple de preț (fără supliment)", body: <p>Tabelul arată prețul de bază pentru un hatchback; suplimentul pentru roți blocate se adaugă după confirmare.</p> },
+      { h2: "Exemple de preț (fără roți blocate)", body: <p>Tabelul arată prețul de bază pentru un hatchback; pentru fiecare roată blocată se adaugă taxa de manipulare cu căruciorul.</p> },
     ],
     faq: [
       { q: "Duceți mașina direct la service-ul asigurătorului?", a: "Da, destinația o alegi tu. Spune-ne adresa service-ului și calculăm traseul." },

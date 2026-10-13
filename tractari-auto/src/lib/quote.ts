@@ -16,6 +16,8 @@ export type Quote = {
   total: number;
   hours: number;
   lockedWheels: number;
+  /** trolley handling fee for locked wheels, before the coefficient */
+  wheelsFee: number;
   wheelsPending: boolean;
 };
 
@@ -59,6 +61,7 @@ export function quote(vehicle: Vehicle, kmRaw: number, opts: { lockedWheels?: nu
     total: round2(total),
     hours: opts.hours ?? km / PRICING.avgSpeedKmh,
     lockedWheels,
+    wheelsFee: lockedWheels * (PRICING.lockedWheelFee ?? 0),
     wheelsPending: lockedWheels > 0 && PRICING.lockedWheelFee == null,
   };
 }

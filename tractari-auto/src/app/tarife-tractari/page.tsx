@@ -91,7 +91,7 @@ export default function Tarife() {
             <li>Curse lungi: primii {PRICING.extraKm} km × tariful Extra-City, restul × tariful Intra-City din tabelul de tarife pe kilometru. Peste {PRICING.shortMaxKm} km se aplică varianta care iese mai mare dintre aceasta și cea regională.</li>
             <li>Suma se înmulțește cu coeficientul tarifar ×{PRICING.multiplier.toLocaleString("ro-RO")}.</li>
             <li>Staționarea: primele {PRICING.freeWaitMinutes} de minute sunt gratuite, apoi {PRICING.waitPerHour} lei pe oră.</li>
-            <li>Pentru mașini avariate cu roți blocate se adaugă un supliment, confirmat la telefon.</li>
+            <li>Mașini avariate cu roți blocate: taxa de manipulare cu căruciorul, {PRICING.lockedWheelFee} lei pentru fiecare roată blocată.</li>
           </ol>
         </section>
 

@@ -311,7 +311,7 @@ const extraPages: Landing[] = [
       { h2: "Unde venim", body: <p>În toate <L href="/tractari-sectoare-bucuresti/">sectoarele Bucureștiului</L>, în <L href="/tractari-ilfov/">Ilfov</L>, pe <L href="/tractari-centura-bucuresti/">Centură</L> și pe <L href="/tractari-autostrada-bucuresti-pitesti/">A1 București–Pitești</L>.</p> },
     ],
     faq: [
-      { q: "Costă mai mult noaptea?", a: "Nu: calculatorul aplică aceleași tarife pe km oricând. Singurele adaosuri posibile sunt staționarea peste 30 de minute și suplimentul pentru roți blocate." },
+      { q: "Costă mai mult noaptea?", a: "Nu: calculatorul aplică aceleași tarife pe km oricând. Singurele adaosuri posibile sunt staționarea peste 30 de minute și taxa de cărucior pentru roți blocate." },
       { q: "Lucrați și de Crăciun sau de Paște?", a: "Da, lucrăm non-stop, inclusiv de sărbători." },
     ],
     related: ["tractari-centura-bucuresti", "tractari-autostrada-bucuresti-pitesti", "tractari-sectoare-bucuresti", "tarife-tractari"],

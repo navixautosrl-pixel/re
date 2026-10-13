@@ -52,7 +52,7 @@ export default function Terms() {
         <li>Pentru curse lungi se aplică tariful pe kilometru (primii {PRICING.extraKm} km cu tariful Extra-City, restul cu tariful Intra-City), dacă iese mai mare decât tariful regional.</li>
         <li>Totalul se înmulțește cu coeficientul tarifar ×{PRICING.multiplier.toLocaleString("ro-RO")}.</li>
         <li>Staționarea: primele {PRICING.freeWaitMinutes} de minute la încărcare și la descărcare sunt gratuite; după aceea se plătesc {PRICING.waitPerHour} lei pe oră.</li>
-        <li>Vehiculele cu roți blocate sau avariate necesită echipament suplimentar; suplimentul se comunică la telefon, înainte de confirmare.</li>
+        <li>Vehiculele cu roți blocate se încarcă folosind cărucioare; taxa de manipulare este de {PRICING.lockedWheelFee} lei pentru fiecare roată blocată.</li>
       </ul>
 
       <h2>6. Plata</h2>

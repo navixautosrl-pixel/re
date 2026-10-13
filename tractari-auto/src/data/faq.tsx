@@ -27,7 +27,7 @@ export const FAQ: { q: string; a: ReactNode }[] = [
   },
   {
     q: "Transportați și mașini avariate?",
-    a: "Da. Bifează „Mașină avariată (roți blocate)” în calculator: încărcarea cere echipament suplimentar, iar suplimentul se confirmă la telefon.",
+    a: `Da. Bifează „Mașină avariată (roți blocate)” în calculator: alegi câte roți sunt blocate, iar taxa de manipulare cu căruciorul este de ${PRICING.lockedWheelFee} lei pentru fiecare roată.`,
   },
   {
     q: "Ce documente trebuie să am?",

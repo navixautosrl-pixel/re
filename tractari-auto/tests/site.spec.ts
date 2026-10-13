@@ -32,7 +32,9 @@ test("calculator: validation, damaged note, duration, shareable URL", async ({ p
   await expect(page.getByText(/aprox\. 1 h 17 min/)).toBeVisible();
   await page.getByLabel("Mașină avariată (roți blocate)").check();
   await page.getByLabel("Câte roți sunt blocate?").selectOption("2");
-  await expect(page.getByText(/se adaugă un supliment, confirmat telefonic/)).toBeVisible();
+  // 2 locked wheels: (1218.6 + 2 × 60) × 1.25 = 1673.25
+  await expect(page.getByText("2 × 60 lei")).toBeVisible();
+  await expect(total(page)).toContainText("1.673,25 lei");
   await page.getByLabel("Distanța traseului (km)").fill("99999");
   await expect(page.getByText("Introdu o distanță între 1 și 3000 km.")).toBeVisible();
   await expect(page.getByLabel("Distanța traseului (km)")).toHaveAttribute("aria-invalid", "true");

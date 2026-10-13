@@ -67,8 +67,9 @@ export const PRICING = {
   midExtraKm: 1,
   freeWaitMinutes: 30,
   waitPerHour: 100,
-  /** Surcharge per locked wheel (reference asks 1–4) — not visible in the screenshots yet. */
-  lockedWheelFee: null as number | null,
+  /** "Taxă manipulare cărucior (roți blocate)": 60 lei per wheel (client, from the reference, 2026-10-13).
+   *  Added like the load/unload fees, i.e. before the coefficient — to confirm with a screenshot. */
+  lockedWheelFee: 60 as number | null,
   maxKm: 3000,
 };
 

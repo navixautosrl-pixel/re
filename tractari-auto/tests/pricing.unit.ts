@@ -45,7 +45,9 @@ test("a longer trip is never cheaper than the longest short trip; bounds are cla
   expect(quote(hb, 999999).km).toBe(PRICING.maxKm);
 });
 
-test("locked wheels: surcharge flagged as pending while unpriced", () => {
+test("locked wheels: 60 lei per wheel, before the coefficient", () => {
   const q = quote(VEHICLES[0], 100, { lockedWheels: 2 });
   expect(q.wheelsPending).toBe(PRICING.lockedWheelFee == null);
+  expect(q.wheelsFee).toBe(120);
+  expect(q.total).toBeCloseTo(quote(VEHICLES[0], 100).total + 2 * 60 * PRICING.multiplier, 2);
 });

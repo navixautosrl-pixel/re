@@ -16,7 +16,7 @@ export const metadata = pageMeta({
 const SERVICES = [
   { t: "Tractare după avarie sau pană", d: "Mașina nu mai pornește sau a fost implicată într-un accident: o încărcăm pe platformă și o ducem la service sau acasă." },
   { t: "Transport auto pe platformă", d: "Mașini cumpărate din alt oraș, mutări, drumuri la dealer sau la ITP — fără kilometri în plus pe bordul mașinii." },
-  { t: "Mașini avariate, cu roți blocate", d: "Încărcare cu echipament suplimentar. Bifează opțiunea în calculator; suplimentul se confirmă la telefon." },
+  { t: "Mașini avariate, cu roți blocate", d: "Încărcare cu echipament suplimentar. Bifează opțiunea în calculator: taxa de manipulare cu căruciorul este de 60 de lei pentru fiecare roată blocată." },
 ];
 
 export default function Services() {
