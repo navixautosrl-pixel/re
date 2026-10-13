@@ -164,7 +164,7 @@ const BASE_LANDINGS: Landing[] = [
       },
       {
         h2: "Cât costă o tractare în Ilfov",
-        body: <p>Prețul e același oriunde: kilometri × tariful vehiculului, apoi coeficientul tarifar. Exemplele de mai jos sunt pentru distanțe tipice din Ilfov până în București.</p>,
+        body: <p>Prețul e același oriunde: kilometri × tariful vehiculului, plus taxele, după caz. Exemplele de mai jos sunt pentru distanțe tipice din Ilfov până în București.</p>,
       },
     ],
     faq: [
@@ -247,7 +247,7 @@ const BASE_LANDINGS: Landing[] = [
       },
       {
         h2: "Exemplu real: București → Cluj-Napoca",
-        body: <p>Pentru un traseu de 457 km, un sedan costă cu tarifele noastre cât arată ultima coloană din tabelul de mai jos. Calculul complet — kilometri, tarif, coeficient — îl vezi în <L href="/calculator/?vehicul=sedan&km=457">calculator</L>.</p>,
+        body: <p>Pentru un traseu de 457 km, un sedan costă cu tarifele noastre cât arată ultima coloană din tabelul de mai jos. Calculul complet, pe kilometri și tarife, îl vezi în <L href="/calculator/?vehicul=sedan&km=457">calculator</L>.</p>,
       },
       {
         h2: "Documentele pentru transport",
@@ -287,7 +287,7 @@ const BASE_LANDINGS: Landing[] = [
           </ul>
         ),
       },
-      { h2: "Exemple de preț pentru motociclete", body: <p>Calculate cu tariful moto: 3,3 lei/km Intra-City și 2,3 lei/km Extra-City, apoi coeficientul tarifar.</p> },
+      { h2: "Exemple de preț pentru motociclete", body: <p>Calculate cu tariful moto: 3,3 lei/km Intra-City și 2,3 lei/km Extra-City.</p> },
     ],
     faq: [
       { q: "Transportați și scutere?", a: "Da, intră în categoria moto din calculator." },

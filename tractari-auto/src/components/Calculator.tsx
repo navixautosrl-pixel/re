@@ -210,7 +210,6 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
             {q.wheelsFee > 0 && (
               <div className="flex justify-between gap-4"><dt>Taxă manipulare cărucior <span className="text-paint/70">(roți blocate)</span></dt><dd className="shrink-0 font-[700]">{q.lockedWheels} × {PRICING.lockedWheelFee} lei</dd></div>
             )}
-            <div className="flex justify-between gap-4"><dt>Coeficient tarifar</dt><dd className="font-[700]">× {PRICING.multiplier.toLocaleString("ro-RO")}</dd></div>
             <div className="flex justify-between gap-4 text-beacon-2"><dt className="font-[750]">Distanță</dt><dd className="font-[800]">{formatKm(q.km)}</dd></div>
             <div className="flex justify-between gap-4"><dt>Durată</dt><dd>{ready ? `aprox. ${formatHours(q.hours)}` : "—"}</dd></div>
             <div className="flex justify-between gap-4"><dt>Staționare</dt><dd className="font-[750] text-[oklch(78%_0.15_150)]">{PRICING.freeWaitMinutes} min gratuit</dd></div>

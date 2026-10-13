@@ -8,14 +8,14 @@ export const FAQ: { q: string; a: ReactNode }[] = [
     q: "Cum se calculează prețul?",
     a: (
       <>
-        Din tipul vehiculului și distanța traseului. În oraș și pe distanțe medii se plătesc kilometrii plus taxa de încărcare și de descărcare; pe curse lungi, primii {PRICING.extraKm} km cu tariful Extra-City și restul cu Intra-City. Totul se înmulțește cu
-        coeficientul tarifar ×{PRICING.multiplier.toLocaleString("ro-RO")}. Toate tarifele sunt în <Link className="link" href="/#tarife">tabelul de tarife</Link>.
+        Din tipul vehiculului și distanța traseului. În oraș și pe distanțe medii se plătesc kilometrii plus taxa de încărcare și de descărcare; pe curse lungi, primii {PRICING.extraKm} km cu tariful Extra-City și restul cu Intra-City. Totalul îl vezi
+        imediat în calculator. Toate tarifele sunt în <Link className="link" href="/#tarife">tabelul de tarife</Link>.
       </>
     ),
   },
   {
     q: "Cât costă o cursă scurtă, în oraș?",
-    a: `Pentru curse de până la ${PRICING.shortMaxKm} km se plătesc taxa de încărcare și taxa de descărcare (de la 90 la 200 lei fiecare, după vehicul) plus kilometrii cu tariful urban, totul cu coeficientul tarifar. Exemplu: un sedan pe 3 km costă aproximativ 274 lei.`,
+    a: `Pentru curse de până la ${PRICING.shortMaxKm} km se plătesc taxa de încărcare și taxa de descărcare (de la 90 la 200 lei fiecare, după vehicul) plus kilometrii cu tariful urban, Totalul îl vezi direct în calculator. Exemplu: un sedan pe 3 km costă aproximativ 274 lei.`,
   },
   {
     q: "Prețul din calculator este final?",

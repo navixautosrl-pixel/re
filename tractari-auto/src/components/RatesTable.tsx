@@ -30,7 +30,7 @@ export function RatesTable() {
         </tbody>
       </table>
       <p className="border-t border-rule px-5 py-3 text-[length:var(--step--1)] text-ink-2">
-        Tarife pentru curse lungi: primii {PRICING.extraKm} km cu tariful Extra-City, restul cu Intra-City. Curse scurte în oraș și curse regionale: tarif pe km plus taxele de încărcare și descărcare (detalii pe pagina de tarife). Totalul se înmulțește cu coeficientul tarifar ×{PRICING.multiplier.toLocaleString("ro-RO")}. Staționarea: {PRICING.freeWaitMinutes} min gratuit, apoi {PRICING.waitPerHour} lei/oră.
+        Tarife pentru curse lungi: primii {PRICING.extraKm} km cu tariful Extra-City, restul cu Intra-City. Curse scurte în oraș și curse regionale: tarif pe km plus taxele de încărcare și descărcare (detalii pe pagina de tarife). Staționarea: {PRICING.freeWaitMinutes} min gratuit, apoi {PRICING.waitPerHour} lei/oră.
       </p>
     </div>
   );
