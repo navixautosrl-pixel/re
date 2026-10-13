@@ -11,7 +11,9 @@
  * 69 km × 6,3 + 1 km × 5,4, load 120 + unload 80 lei. Across all
  * vehicles the urban rates are the mid rates × 1,4 and the mid Extra rate equals the long one,
  * so the mid Intra rates of the other vehicles are urban ÷ 1,4. Load and unload fees are the same
- * on every band, per vehicle (client, 2026-10-13) — the screenshot's 80 lei unload is not used.
+ * on every band (client, 2026-10-13); on mid trips a "long-trip discount" comes off the unload fee
+ * (client: keep the reference's 80 lei for the SUV, i.e. −40). Other vehicles: ⅓ of the unload fee,
+ * rounded to 10 lei — to confirm.
  *
  * Short-trip data: Militari → Drumul Taberei (3,1 km) for all six vehicles; the motorcycle total
  * (239,82 lei) is reproduced within 0,1 %. Urban rates are ≈ ×1,2 (Intra) and ×1,4 (Extra) the
@@ -31,7 +33,7 @@ export type Vehicle = {
   /** Short (urban) trips, from the client's Militari → Drumul Taberei simulations (3,1 km). */
   short: { intraRate: number; extraRate: number; loadFee: number; unloadFee: number };
   /** Mid (regional) trips with load/unload fees — SUV observed, others derived (see above). */
-  mid: { intraRate: number };
+  mid: { intraRate: number; unloadDiscount: number };
   /** lei/km, "Intra-City" column of the reference */
   intraRate: number;
   /** lei/km, "Extra-City" column of the reference */
@@ -39,12 +41,12 @@ export type Vehicle = {
 };
 
 export const VEHICLES: Vehicle[] = [
-  { id: "moto", name: "Motocicletă", weight: "Între 100 și 300 kg", intraRate: 3.3, extraRate: 2.3, mid: { intraRate: 2.8 }, short: { intraRate: 3.9, extraRate: 3.2, loadFee: 90, unloadFee: 90 } },
-  { id: "hatchback", name: "Hatchback", weight: "Între 700 și 1.500 kg", intraRate: 4.4, extraRate: 2.8, mid: { intraRate: 3.8 }, short: { intraRate: 5.3, extraRate: 3.9, loadFee: 100, unloadFee: 100 } },
-  { id: "sedan", name: "Sedan", weight: "Între 1.200 și 2.200 kg", intraRate: 5.2, extraRate: 3.6, mid: { intraRate: 4.5 }, short: { intraRate: 6.3, extraRate: 5.0, loadFee: 100, unloadFee: 100 } },
-  { id: "suv", name: "SUV", weight: "Între 1.500 și 2.500 kg", intraRate: 7.3, extraRate: 5.4, mid: { intraRate: 6.3 }, short: { intraRate: 8.8, extraRate: 7.6, loadFee: 120, unloadFee: 120 } },
-  { id: "microbuz", name: "Microbuz", weight: "Între 2.000 și 3.500 kg, 16–24 locuri", intraRate: 10.3, extraRate: 7.5, mid: { intraRate: 8.9 }, short: { intraRate: 12.5, extraRate: 10.5, loadFee: 200, unloadFee: 200 } },
-  { id: "duba", name: "Autoutilitară", weight: "Între 3.000 și 7.500 kg", intraRate: 10.5, extraRate: 12.0, mid: { intraRate: 9.0 }, short: { intraRate: 12.6, extraRate: 16.8, loadFee: 200, unloadFee: 200 } },
+  { id: "moto", name: "Motocicletă", weight: "Între 100 și 300 kg", intraRate: 3.3, extraRate: 2.3, mid: { intraRate: 2.8, unloadDiscount: 30 }, short: { intraRate: 3.9, extraRate: 3.2, loadFee: 90, unloadFee: 90 } },
+  { id: "hatchback", name: "Hatchback", weight: "Între 700 și 1.500 kg", intraRate: 4.4, extraRate: 2.8, mid: { intraRate: 3.8, unloadDiscount: 30 }, short: { intraRate: 5.3, extraRate: 3.9, loadFee: 100, unloadFee: 100 } },
+  { id: "sedan", name: "Sedan", weight: "Între 1.200 și 2.200 kg", intraRate: 5.2, extraRate: 3.6, mid: { intraRate: 4.5, unloadDiscount: 30 }, short: { intraRate: 6.3, extraRate: 5.0, loadFee: 100, unloadFee: 100 } },
+  { id: "suv", name: "SUV", weight: "Între 1.500 și 2.500 kg", intraRate: 7.3, extraRate: 5.4, mid: { intraRate: 6.3, unloadDiscount: 40 }, short: { intraRate: 8.8, extraRate: 7.6, loadFee: 120, unloadFee: 120 } },
+  { id: "microbuz", name: "Microbuz", weight: "Între 2.000 și 3.500 kg, 16–24 locuri", intraRate: 10.3, extraRate: 7.5, mid: { intraRate: 8.9, unloadDiscount: 70 }, short: { intraRate: 12.5, extraRate: 10.5, loadFee: 200, unloadFee: 200 } },
+  { id: "duba", name: "Autoutilitară", weight: "Între 3.000 și 7.500 kg", intraRate: 10.5, extraRate: 12.0, mid: { intraRate: 9.0, unloadDiscount: 70 }, short: { intraRate: 12.6, extraRate: 16.8, loadFee: 200, unloadFee: 200 } },
 ];
 
 export const PRICING = {

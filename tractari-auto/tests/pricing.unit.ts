@@ -30,13 +30,13 @@ test("short trip: urban rate + load/unload fees, motorcycle matches the referenc
   expect(quote(sedan, 3).total).toBeCloseTo(1.25 * (200 + 3 * 6.3), 2);
 });
 
-// Mid trip: SUV, Roșu → Bucșani, 70,1 km (client screenshot: 69 × 6,3 + 1 × 5,4, load 120). The
-// client set the unload fee equal to the load fee on every band, so 120 + 120 instead of 120 + 80.
-test("mid trip: SUV 70 km = 69 × 6,3 + 1 × 5,4 + 120 + 120", () => {
+// Mid trip: SUV, Roșu → Bucșani, 70,1 km — reference 800,65 lei (69 × 6,3 + 1 × 5,4 + 120 + 80).
+// Shown as unload 120 with a 40 lei long-trip discount, same total.
+test("mid trip: SUV 70 km matches the reference via the long-trip discount", () => {
   const suv = VEHICLES.find((v) => v.id === "suv")!;
   const q = quote(suv, 70.07);
-  expect(q).toMatchObject({ band: "mid", extraKm: 1, intraRate: 6.3, extraRate: 5.4, loadFee: 120, unloadFee: 120 });
-  expect(Math.abs(q.total - 850.65)).toBeLessThan(0.05);
+  expect(q).toMatchObject({ band: "mid", extraKm: 1, intraRate: 6.3, extraRate: 5.4, loadFee: 120, unloadFee: 120, discount: 40 });
+  expect(Math.abs(q.total - 800.65)).toBeLessThan(0.05);
 });
 
 test("a longer trip is never cheaper than the longest short trip; bounds are clamped", () => {

@@ -10,6 +10,8 @@ export type Quote = {
   extraRate: number;
   loadFee: number;
   unloadFee: number;
+  /** "Reducere cursă lungă", taken off the unload fee on mid trips (before the coefficient) */
+  discount: number;
   subtotal: number;
   /** true when the long-trip price was raised so a longer trip is never cheaper than a shorter one */
   floorApplied: boolean;
@@ -28,15 +30,15 @@ function raw(vehicle: Vehicle, km: number, lockedWheels: number) {
   if (km <= PRICING.shortMaxKm) {
     const s = vehicle.short;
     const subtotal = s.loadFee + s.unloadFee + km * s.intraRate + wheels;
-    return { band: "short" as const, intraKm: km, extraKm: 0, intraRate: s.intraRate, extraRate: s.extraRate, loadFee: s.loadFee, unloadFee: s.unloadFee, subtotal };
+    return { band: "short" as const, intraKm: km, extraKm: 0, intraRate: s.intraRate, extraRate: s.extraRate, loadFee: s.loadFee, unloadFee: s.unloadFee, discount: 0, subtotal };
   }
   const mExtra = Math.min(km, PRICING.midExtraKm);
-  const mid = { band: "mid" as const, intraKm: km - mExtra, extraKm: mExtra, intraRate: vehicle.mid.intraRate, extraRate: vehicle.extraRate, loadFee: vehicle.short.loadFee, unloadFee: vehicle.short.unloadFee, subtotal: 0 };
-  mid.subtotal = mid.loadFee + mid.unloadFee + mid.intraKm * mid.intraRate + mid.extraKm * mid.extraRate + wheels;
+  const mid = { band: "mid" as const, intraKm: km - mExtra, extraKm: mExtra, intraRate: vehicle.mid.intraRate, extraRate: vehicle.extraRate, loadFee: vehicle.short.loadFee, unloadFee: vehicle.short.unloadFee, discount: vehicle.mid.unloadDiscount, subtotal: 0 };
+  mid.subtotal = mid.loadFee + mid.unloadFee - mid.discount + mid.intraKm * mid.intraRate + mid.extraKm * mid.extraRate + wheels;
   const extraKm = Math.min(km, PRICING.extraKm);
   const intraKm = km - extraKm;
   const subtotal = intraKm * vehicle.intraRate + extraKm * vehicle.extraRate + wheels;
-  const long = { band: "long" as const, intraKm, extraKm, intraRate: vehicle.intraRate, extraRate: vehicle.extraRate, loadFee: 0, unloadFee: 0, subtotal };
+  const long = { band: "long" as const, intraKm, extraKm, intraRate: vehicle.intraRate, extraRate: vehicle.extraRate, loadFee: 0, unloadFee: 0, discount: 0, subtotal };
   // Modelled as the higher of the two (fits all three reference routes): fees dominate on regional trips, the long tariff past ~200–360 km.
   return mid.subtotal >= long.subtotal ? mid : long;
 }

@@ -205,6 +205,9 @@ export function Calculator({ headingLevel = "h2", initialVehicle, initialKm }: {
               <>
                 <div className="flex justify-between gap-4"><dt>Taxă încărcare</dt><dd className="font-[700]">{q.loadFee} lei</dd></div>
                 <div className="flex justify-between gap-4"><dt>Taxă descărcare</dt><dd className="font-[700]">{q.unloadFee} lei</dd></div>
+                {q.discount > 0 && (
+                  <div className="flex justify-between gap-4 text-[oklch(78%_0.15_150)]"><dt className="font-[750]">Reducere cursă lungă</dt><dd className="font-[800]">−{q.discount} lei</dd></div>
+                )}
               </>
             )}
             {q.wheelsFee > 0 && (

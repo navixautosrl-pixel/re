@@ -18,6 +18,10 @@ export const FAQ: { q: string; a: ReactNode }[] = [
     a: `Pentru curse de până la ${PRICING.shortMaxKm} km se plătesc taxa de încărcare și taxa de descărcare (de la 90 la 200 lei fiecare, după vehicul) plus kilometrii cu tariful urban, Totalul îl vezi direct în calculator. Exemplu: un sedan pe 3 km costă aproximativ 274 lei.`,
   },
   {
+    q: "Aveți reducere la cursele lungi?",
+    a: `Da. La cursele în afara orașului, de peste ${PRICING.shortMaxKm} km, scădem automat din taxa de descărcare între 30 și 70 de lei, după vehicul (la SUV, 40 de lei). Reducerea apare în calculator, pe rândul „Reducere cursă lungă”.`,
+  },
+  {
     q: "Prețul din calculator este final?",
     a: "Este un preț estimativ, calculat după distanța pe drum. Îl confirmăm la telefon, în funcție de starea mașinii și de condițiile de încărcare.",
   },

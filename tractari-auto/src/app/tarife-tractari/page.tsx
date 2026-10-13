@@ -66,6 +66,7 @@ export default function Tarife() {
                   <th scope="col" className="px-4 py-3 font-[700]">Extra-City<span className="block font-normal">lei/km</span></th>
                   <th scope="col" className="px-4 py-3 font-[700]">Taxă încărcare</th>
                   <th scope="col" className="px-4 py-3 font-[700]">Taxă descărcare</th>
+                  <th scope="col" className="px-4 py-3 font-[700]">Reducere cursă lungă</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-rule">
@@ -76,6 +77,7 @@ export default function Tarife() {
                     <td className="px-4 py-3">{v.extraRate.toLocaleString("ro-RO", { minimumFractionDigits: 1 })}</td>
                     <td className="px-4 py-3">{v.short.loadFee} lei</td>
                     <td className="px-4 py-3">{v.short.unloadFee} lei</td>
+                    <td className="px-4 py-3 font-[750] text-[oklch(45%_0.13_150)]">−{v.mid.unloadDiscount} lei</td>
                   </tr>
                 ))}
               </tbody>
@@ -87,7 +89,7 @@ export default function Tarife() {
           <h2 id="formula" className="text-[length:var(--step-2)] text-ink">Cum se calculează prețul</h2>
           <ol>
             <li>Curse scurte, în oraș (până la {PRICING.shortMaxKm} km): toți kilometrii cu tariful urban, plus taxa de încărcare și taxa de descărcare.</li>
-            <li>Curse în afara orașului: kilometrii cu tariful regional (Intra-City), {PRICING.midExtraKm} km Extra-City, plus taxa de încărcare și taxa de descărcare.</li>
+            <li>Curse în afara orașului: kilometrii cu tariful regional (Intra-City), {PRICING.midExtraKm} km Extra-City, plus taxa de încărcare și taxa de descărcare, din care se scade reducerea pentru cursă lungă.</li>
             <li>Curse lungi: primii {PRICING.extraKm} km × tariful Extra-City, restul × tariful Intra-City din tabelul de tarife pe kilometru. Peste {PRICING.shortMaxKm} km se aplică varianta care iese mai mare dintre aceasta și cea regională.</li>
             <li>Staționarea: primele {PRICING.freeWaitMinutes} de minute sunt gratuite, apoi {PRICING.waitPerHour} lei pe oră.</li>
             <li>Mașini avariate cu roți blocate: taxa de manipulare cu căruciorul, {PRICING.lockedWheelFee} lei pentru fiecare roată blocată.</li>
