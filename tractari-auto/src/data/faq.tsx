@@ -19,7 +19,7 @@ export const FAQ: { q: string; a: ReactNode }[] = [
   },
   {
     q: "Aveți reducere la cursele lungi?",
-    a: `Da. La cursele în afara orașului, de peste ${PRICING.shortMaxKm} km, scădem automat din taxa de descărcare între 30 și 70 de lei, după vehicul (la SUV, 40 de lei). Reducerea apare în calculator, pe rândul „Reducere cursă lungă”.`,
+    a: `Da. La cursele în afara orașului, de la aproximativ 50 km până la 200–350 km (după vehicul), scădem automat din taxa de descărcare între 30 și 70 de lei, după vehicul (la SUV, 40 de lei). Reducerea apare în calculator, pe rândul „Reducere cursă lungă”.`,
   },
   {
     q: "Prețul din calculator este final?",
