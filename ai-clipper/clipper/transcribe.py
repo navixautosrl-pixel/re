@@ -14,7 +14,7 @@ import subprocess
 from pathlib import Path
 from typing import Callable
 
-from .config import MODELS_DIR
+from .config import BUNDLE_DIR, MODELS_DIR
 from .tools import CREATE_NO_WINDOW, ToolError, ffmpeg_path, probe
 
 Progress = Callable[[float, str], None]
@@ -83,9 +83,10 @@ def extract_audio(video: Path, out_wav: Path, progress: Progress | None = None,
 
 def _local_model_dir(model_name: str) -> Path | None:
     """Permite folosirea offline: models/faster-whisper-base/ cu model.bin, config.json etc."""
-    for cand in (MODELS_DIR / f"faster-whisper-{model_name}", MODELS_DIR / model_name):
-        if (cand / "model.bin").is_file():
-            return cand
+    for root in (MODELS_DIR, BUNDLE_DIR / "models"):  # descărcat de utilizator sau livrat în installer
+        for cand in (root / f"faster-whisper-{model_name}", root / model_name):
+            if (cand / "model.bin").is_file():
+                return cand
     return None
 
 

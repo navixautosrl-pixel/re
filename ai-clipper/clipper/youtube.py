@@ -7,13 +7,12 @@ dacă yt-dlp raportează astfel de restricții, importul se oprește cu un mesaj
 from __future__ import annotations
 
 import re
-import shutil
 from pathlib import Path
 from typing import Callable
 from urllib.parse import parse_qs, urlparse
 
 from .config import DOWNLOAD_MAX_HEIGHT, MAX_SOURCE_MINUTES
-from .tools import ToolError, find_executable
+from .tools import ToolError, find_executable, js_runtimes
 
 YOUTUBE_HOSTS = {
     "youtube.com", "www.youtube.com", "m.youtube.com", "music.youtube.com",
@@ -70,11 +69,7 @@ def _ydl_base_opts() -> dict:
         "retries": 3,
     }
     # yt-dlp folosește un runtime JavaScript pentru unele videoclipuri YouTube.
-    runtimes = {}
-    if shutil.which("deno"):
-        runtimes["deno"] = {}
-    if shutil.which("node"):
-        runtimes["node"] = {}
+    runtimes = js_runtimes()
     if runtimes:
         opts["js_runtimes"] = runtimes
     ff = find_executable("ffmpeg")

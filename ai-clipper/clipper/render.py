@@ -8,7 +8,7 @@ import shutil
 from pathlib import Path
 from typing import Callable
 
-from .config import APP_DIR, OUT_FPS, OUT_HEIGHT, OUT_WIDTH
+from .config import DATA_DIR, OUT_FPS, OUT_HEIGHT, OUT_WIDTH
 from .framing import Framing, center_framing, detect_face_framing
 from .moments import fmt_ts
 from .subtitles import group_cues, words_in_range, write_ass, write_srt
@@ -18,7 +18,7 @@ from .transcribe import run_ffmpeg_with_progress
 Progress = Callable[[float, str], None]
 
 W, H = OUT_WIDTH, OUT_HEIGHT
-FONTS_DIR = APP_DIR / "fonts"
+FONTS_DIR = DATA_DIR / "fonts"
 
 
 def ensure_fonts() -> Path | None:

@@ -12,7 +12,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from .config import APP_DIR
+from .config import BUNDLE_DIR
 
 # Pe Windows ascundem fereastra de consolă a proceselor copil.
 CREATE_NO_WINDOW = 0x08000000 if os.name == "nt" else 0
@@ -24,7 +24,7 @@ class ToolError(RuntimeError):
 
 def _local_candidates(name: str) -> list[Path]:
     exe = f"{name}.exe" if os.name == "nt" else name
-    cands = [APP_DIR / "ffmpeg" / "bin" / exe, APP_DIR / "ffmpeg" / exe]
+    cands = [BUNDLE_DIR / "ffmpeg" / "bin" / exe, BUNDLE_DIR / "ffmpeg" / exe]
     if os.name == "nt" and os.environ.get("LOCALAPPDATA"):
         # winget pune aici legăturile pentru FFmpeg; PATH-ul se actualizează abia într-o consolă nouă
         cands.append(Path(os.environ["LOCALAPPDATA"]) / "Microsoft" / "WinGet" / "Links" / exe)
@@ -37,6 +37,19 @@ def find_executable(name: str) -> str | None:
         if cand.is_file():
             return str(cand)
     return shutil.which(name)
+
+
+def js_runtimes() -> dict:
+    """Runtime-urile JavaScript pentru yt-dlp: Deno livrat cu aplicația, apoi Deno/Node din PATH."""
+    runtimes: dict = {}
+    bundled = BUNDLE_DIR / "deno" / ("deno.exe" if os.name == "nt" else "deno")
+    if bundled.is_file():
+        runtimes["deno"] = {"path": str(bundled)}
+    elif shutil.which("deno"):
+        runtimes["deno"] = {}
+    if shutil.which("node"):
+        runtimes["node"] = {}
+    return runtimes
 
 
 def ffmpeg_path() -> str:
@@ -145,7 +158,8 @@ def system_checks() -> list[Check]:
         found = importlib.util.find_spec(mod) is not None
         checks.append(Check(label, found, "instalat" if found else "lipsește — rulează install.bat", required))
 
-    js = shutil.which("deno") or shutil.which("node")
+    rt = js_runtimes()
+    js = next((cfg.get("path") or shutil.which(name) for name, cfg in rt.items()), None)
     checks.append(
         Check(
             "Runtime JavaScript (Deno/Node) pentru yt-dlp",

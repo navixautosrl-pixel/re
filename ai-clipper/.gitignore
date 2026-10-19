@@ -7,3 +7,6 @@ models/
 ffmpeg/
 fonts/
 .pytest_cache/
+dist/
+build/
+packaging/Romanian.isl

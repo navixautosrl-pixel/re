@@ -1,0 +1,139 @@
+name: AI Clipper - build și test Windows
+
+# Construiește AI-Clipper-Setup.exe pe Windows și îl testează: teste unitare, verificarea
+# programului, flux complet cu transcriere faster-whisper reală, pornirea interfeței.
+on:
+  push:
+    paths:
+      - "ai-clipper/**"
+      - ".github/workflows/ai-clipper-windows.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: ai-clipper
+    env:
+      PYTHONUTF8: "1"
+      HF_HUB_DISABLE_SYMLINKS_WARNING: "1"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: ai-clipper/requirements.txt
+
+      - name: Pachete Python
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller pytest
+
+      - name: FFmpeg (BtbN, build GPL shared)
+        run: |
+          $base = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest"
+          $name = "ffmpeg-master-latest-win64-gpl-shared.zip"
+          $zip = Join-Path $env:RUNNER_TEMP $name
+          Invoke-WebRequest "$base/$name" -OutFile $zip
+          $sums = Join-Path $env:RUNNER_TEMP "checksums.sha256"
+          Invoke-WebRequest "$base/checksums.sha256" -OutFile $sums
+          $expected = (Select-String -Path $sums -Pattern ([regex]::Escape($name))).Line.Split(" ")[0]
+          $actual = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
+          if (-not $expected -or $expected.ToLower() -ne $actual) { throw "Checksum FFmpeg invalid: $expected vs $actual" }
+          Expand-Archive $zip -DestinationPath (Join-Path $env:RUNNER_TEMP "ffmpeg")
+          $dir = Get-ChildItem (Join-Path $env:RUNNER_TEMP "ffmpeg") -Directory | Select-Object -First 1
+          New-Item -ItemType Directory -Force ffmpeg\bin | Out-Null
+          Copy-Item "$($dir.FullName)\bin\*" ffmpeg\bin\
+          Copy-Item "$($dir.FullName)\LICENSE.txt" ffmpeg\ -ErrorAction SilentlyContinue
+          ffmpeg\bin\ffmpeg.exe -hide_banner -version | Select-Object -First 1
+
+      - name: Teste unitare pe Windows
+        run: python -m pytest tests -q
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Build AI-Clipper.exe (PyInstaller)
+        run: python packaging/build_exe.py
+
+      - name: Adaugă FFmpeg, Deno și modelul Whisper base
+        run: |
+          Copy-Item -Recurse ffmpeg dist\AI-Clipper\ffmpeg
+          New-Item -ItemType Directory -Force dist\AI-Clipper\deno | Out-Null
+          Copy-Item (Get-Command deno).Source dist\AI-Clipper\deno\deno.exe
+          python -c "from huggingface_hub import snapshot_download; snapshot_download('Systran/faster-whisper-base', local_dir='dist/AI-Clipper/models/faster-whisper-base', allow_patterns=['*.bin', '*.json', '*.txt'])"
+          Get-ChildItem dist\AI-Clipper\models\faster-whisper-base
+          "{0:N0} MB" -f ((Get-ChildItem dist\AI-Clipper -Recurse | Measure-Object Length -Sum).Sum / 1MB)
+
+      - name: Verificare sistem din exe
+        run: |
+          dist\AI-Clipper\AI-Clipper.exe --selfcheck
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+
+      - name: Videoclip de test cu vorbire (System.Speech)
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File packaging\make_test_speech.ps1 -Out "$env:RUNNER_TEMP\test_speech.mp4" -Ffmpeg ffmpeg\bin\ffmpeg.exe
+
+      - name: Flux complet cu Whisper real, din exe
+        run: |
+          dist\AI-Clipper\AI-Clipper.exe --smoke "$env:RUNNER_TEMP\test_speech.mp4" --language en
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          "OUT=$HOME\Videos\AI Clipper" | Out-File -Append -Encoding utf8 $env:GITHUB_ENV
+
+      - name: Interfața pornește din exe
+        run: |
+          $p = Start-Process dist\AI-Clipper\AI-Clipper.exe -ArgumentList "--no-browser" -PassThru `
+            -RedirectStandardOutput "$env:RUNNER_TEMP\ui.log" -RedirectStandardError "$env:RUNNER_TEMP\ui.err"
+          $ok = $false
+          for ($i = 0; $i -lt 60; $i++) {
+            try {
+              $r = Invoke-WebRequest "http://127.0.0.1:8501/_stcore/health" -UseBasicParsing -TimeoutSec 5
+              if ($r.Content -eq "ok") { $ok = $true; break }
+            } catch { }
+            Start-Sleep -Seconds 2
+          }
+          $page = if ($ok) { (Invoke-WebRequest "http://127.0.0.1:8501/" -UseBasicParsing).StatusCode } else { 0 }
+          Stop-Process -Id $p.Id -Force
+          Get-Content "$env:RUNNER_TEMP\ui.log", "$env:RUNNER_TEMP\ui.err" -ErrorAction SilentlyContinue
+          if (-not $ok -or $page -ne 200) { throw "Interfața nu a pornit (health=$ok, pagina=$page)" }
+          "Interfața răspunde: health=ok, pagina HTTP $page"
+
+      - name: Metadate YouTube (informativ)
+        continue-on-error: true
+        run: dist\AI-Clipper\AI-Clipper.exe --yt-info "https://www.youtube.com/watch?v=jNQXAC9IVRw"
+
+      - name: Installer (Inno Setup)
+        run: |
+          try {
+            Invoke-WebRequest "https://raw.githubusercontent.com/jrsoftware/issrc/main/Files/Languages/Unofficial/Romanian.isl" -OutFile packaging\Romanian.isl
+          } catch { Write-Warning "Romanian.isl indisponibil, installerul va fi în engleză" }
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) {
+            choco install innosetup -y --no-progress
+          }
+          & $iscc "/DSourceDir=$PWD\dist\AI-Clipper" "/DOutputDir=$PWD\dist\installer" packaging\installer.iss
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          Get-Item dist\installer\AI-Clipper-Setup.exe | Format-List Name, Length
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AI-Clipper-Setup
+          path: ai-clipper/dist/installer/AI-Clipper-Setup.exe
+          retention-days: 30
+          compression-level: 0
+
+      - uses: actions/upload-artifact@v4
+        if: always() && env.OUT != ''
+        with:
+          name: clipuri-test-windows
+          path: ${{ env.OUT }}
+          retention-days: 14

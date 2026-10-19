@@ -1,0 +1,22 @@
+﻿AI Clipper transformă un videoclip lung în clipuri verticale 1080 × 1920 cu subtitrări.
+Totul rulează pe calculatorul tău, pe procesor: fără CUDA, fără API-uri plătite, fără
+încărcarea videoclipului pe servicii externe și fără publicare automată.
+
+DREPTURI DE AUTOR
+Folosește aplicația doar pentru materiale pe care ai dreptul să le descarci, să le editezi
+și să le publici (conținut propriu, licență explicită sau acordul titularului). Aplicația nu
+ocolește DRM, restricțiile de vârstă, conținutul privat sau alte măsuri de protecție.
+
+UNDE SE SALVEAZĂ FIȘIERELE
+  Clipuri finale și CSV:   Videoclipuri\AI Clipper\
+  Fișiere intermediare:    %LOCALAPPDATA%\AI-Clipper\workspace\
+  Modelul "small" (dacă îl alegi): %LOCALAPPDATA%\AI-Clipper\models\
+
+CE CONȚINE PACHETUL
+  - Python și bibliotecile aplicației (Streamlit, yt-dlp, faster-whisper, OpenCV)
+  - FFmpeg (build GPL de la github.com/BtbN/FFmpeg-Builds; licența și sursele: ffmpeg.org)
+  - Deno (runtime JavaScript folosit de yt-dlp pentru YouTube; licență MIT)
+  - modelul Whisper "base" (Systran/faster-whisper-base, licență MIT)
+
+Programul nu este semnat digital. Dacă Windows afișează „Windows a protejat computerul”,
+apasă „Mai multe informații”, apoi „Rulează oricum”.

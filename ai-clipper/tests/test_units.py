@@ -188,7 +188,7 @@ class FakeModel:
 @pytest.mark.skipif(find_executable("ffmpeg") is None, reason="necesită ffmpeg")
 def test_transcription_resumes_after_failure(tmp_path, monkeypatch):
     wav = tmp_path / "a.wav"
-    subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i", "sine=f=440:d=20", "-ar", "16000", "-ac", "1",
+    subprocess.run([find_executable("ffmpeg"), "-v", "error", "-f", "lavfi", "-i", "sine=f=440:d=20", "-ar", "16000", "-ac", "1",
                     str(wav)], check=True)
     out, part = tmp_path / "t.json", tmp_path / "t.partial.jsonl"
     FakeModel.calls = []

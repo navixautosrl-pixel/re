@@ -1,11 +1,26 @@
 """Constante și căi folosite de toată aplicația."""
 
+import os
+import sys
 from pathlib import Path
 
-APP_DIR = Path(__file__).resolve().parent.parent
-WORKSPACE_DIR = APP_DIR / "workspace"   # fișiere intermediare (video sursă, audio, transcriere)
-OUTPUT_DIR = APP_DIR / "export"         # clipuri finale + CSV
-MODELS_DIR = APP_DIR / "models"         # modelele Whisper descărcate o singură dată
+FROZEN = bool(getattr(sys, "frozen", False))  # rulează din AI-Clipper.exe (PyInstaller)
+
+if FROZEN:
+    # Programul instalat (eventual într-un folder fără drept de scriere) conține doar fișiere fixe:
+    # ffmpeg\, deno\, models\ incluse. Datele utilizatorului merg în profilul lui.
+    APP_DIR = Path(sys.executable).resolve().parent
+    _local = Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local")
+    DATA_DIR = _local / "AI-Clipper"
+    OUTPUT_DIR = Path.home() / "Videos" / "AI Clipper"  # clipuri finale + CSV
+else:
+    APP_DIR = Path(__file__).resolve().parent.parent
+    DATA_DIR = APP_DIR
+    OUTPUT_DIR = APP_DIR / "export"
+
+BUNDLE_DIR = APP_DIR                    # unde caută ffmpeg\bin, deno\, models\ livrate cu aplicația
+WORKSPACE_DIR = DATA_DIR / "workspace"  # fișiere intermediare (video sursă, audio, transcriere)
+MODELS_DIR = DATA_DIR / "models"        # modelele Whisper descărcate o singură dată
 
 # Limite cerute de specificație
 MAX_SOURCE_MINUTES = 60          # peste această durată descărcarea este refuzată
