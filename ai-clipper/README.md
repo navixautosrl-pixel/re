@@ -30,7 +30,34 @@ YouTube raportează o astfel de restricție, importul se oprește. Clipurile nu 
 
 ---
 
-## Instalare (o singură dată)
+## Varianta simplă: installer `.exe` (recomandat)
+
+`AI-Clipper-Setup.exe` conține tot ce trebuie: Python, bibliotecile, FFmpeg, Deno și modelul Whisper
+`base`. Nu trebuie instalat nimic separat și nu e nevoie de drepturi de administrator.
+
+1. Descarcă installerul: pe GitHub, în repo, deschide **Actions → „AI Clipper - build și test Windows”**,
+   alege ultima rulare reușită (bifă verde) și descarcă artefactul **AI-Clipper-Setup** (o arhivă `.zip`
+   care conține `AI-Clipper-Setup.exe`).
+2. Rulează `AI-Clipper-Setup.exe`. Programul nu este semnat digital, așa că Windows poate afișa
+   *„Windows a protejat computerul”*. Apasă **Mai multe informații → Rulează oricum**.
+3. Pornește **AI Clipper** din meniul Start sau de pe desktop. Se deschide o fereastră neagră (serverul
+   local) și apoi browserul. Închiderea ferestrei negre oprește aplicația.
+
+Unde ajung fișierele în varianta instalată:
+
+| Ce | Unde |
+|---|---|
+| clipuri finale și CSV | `Videoclipuri\AI Clipper\<proiect>\` |
+| fișiere intermediare | `%LOCALAPPDATA%\AI-Clipper\workspace\` |
+| modelul `small`, dacă îl alegi | `%LOCALAPPDATA%\AI-Clipper\models\` (se descarcă la prima folosire) |
+
+Dezinstalarea se face din *Setări → Aplicații*. Clipurile tale din `Videoclipuri` rămân.
+
+Installerul este construit și testat automat pe un Windows real, la fiecare modificare a codului
+(`.github/workflows/ai-clipper-windows.yml`): teste unitare, verificarea programului, flux complet cu
+transcriere Whisper reală și pornirea interfeței.
+
+## Varianta din codul sursă (install.bat)
 
 1. Copiază folderul `ai-clipper` pe calculator, de exemplu în `C:\AI-Clipper\`.
    Evită folderele sincronizate cu OneDrive: clipurile și modelele ocupă mult spațiu.
@@ -56,7 +83,7 @@ YouTube raportează o astfel de restricție, importul se oprește. Clipurile nu 
 Ai nevoie de internet doar pentru instalare, pentru descărcarea modelului (o singură dată) și pentru
 importul de pe YouTube. Transcrierea și exportul merg și offline.
 
-## Pornire
+## Pornire (varianta din codul sursă)
 
 Dă dublu-clic pe **`run.bat`**. Se afișează verificarea sistemului, apoi browserul se deschide singur la
 `http://127.0.0.1:8501` (sau la următorul port liber). **Nu închide fereastra neagră** cât timp folosești
