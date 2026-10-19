@@ -120,7 +120,7 @@ jobs:
           if (-not (Test-Path $iscc)) {
             choco install innosetup -y --no-progress
           }
-          & $iscc "/DSourceDir=$PWD\dist\AI-Clipper" "/DOutputDir=$PWD\dist\installer" packaging\installer.iss
+          & $iscc /Qp "/DSourceDir=$PWD\dist\AI-Clipper" "/DOutputDir=$PWD\dist\installer" packaging\installer.iss
           if ($LASTEXITCODE -ne 0) { exit 1 }
           Get-Item dist\installer\AI-Clipper-Setup.exe | Format-List Name, Length
 
