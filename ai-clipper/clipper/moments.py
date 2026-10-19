@@ -290,32 +290,38 @@ def suggest_description(text: str, source_title: str, start: float, end: float) 
     return desc, keywords
 
 
-def build_moments(transcript: dict, source_title: str, min_d: float, max_d: float,
-                  count_min: int = 5, count_max: int = 10) -> dict:
+def sentences_of(transcript: dict) -> tuple[list[Sentence], float]:
     words = flatten_words(transcript)
     if not words:
+        return [], float(transcript.get("duration") or 0)
+    return split_sentences(words), float(transcript.get("duration") or words[-1].end)
+
+
+def moment_from_span(sents: list[Sentence], i: int, j: int, total: float, source_title: str, nr: int,
+                     score: float | None = None, parts: dict | None = None) -> dict:
+    """Un moment format din propozițiile i..j (inclusiv), cu marginile în pauzele vecine."""
+    start, end = _bounds(sents, i, j, total)
+    if score is None:
+        score, parts = score_window(sents, i, j, start, end)
+    text = " ".join(s.text for s in sents[i: j + 1])
+    desc, kw = suggest_description(text, source_title, start, end)
+    return {
+        "nr": nr, "i": i, "j": j,
+        "start": round(start, 3), "end": round(end, 3), "duration": round(end - start, 2),
+        "text": text, "title": suggest_title(sents[i: j + 1]), "description": desc, "keywords": kw,
+        "score": score, "parts": parts or {}, "selected": True,
+    }
+
+
+def build_moments(transcript: dict, source_title: str, min_d: float, max_d: float,
+                  count_min: int = 5, count_max: int = 10) -> dict:
+    sents, total = sentences_of(transcript)
+    if not sents:
         return {"moments": [], "candidates_total": 0, "note": "Transcrierea nu conține vorbire detectată."}
-    total = float(transcript.get("duration") or words[-1].end)
-    sents = split_sentences(words)
     cands = find_candidates(sents, total, min_d, max_d)
     picked = select(cands, count_max)
-    moments = []
-    for n, c in enumerate(picked, 1):
-        title = suggest_title(sents[c.i: c.j + 1])
-        desc, kw = suggest_description(c.text, source_title, c.start, c.end)
-        moments.append({
-            "nr": n,
-            "start": c.start,
-            "end": c.end,
-            "duration": round(c.duration, 2),
-            "text": c.text,
-            "title": title,
-            "description": desc,
-            "keywords": kw,
-            "score": c.score,
-            "parts": c.parts,
-            "selected": True,
-        })
+    moments = [moment_from_span(sents, c.i, c.j, total, source_title, n, c.score, c.parts)
+               for n, c in enumerate(picked, 1)]
     note = None
     if len(moments) < count_min:
         note = (f"Materialul permite doar {len(moments)} momente distincte cu propoziții complete între "

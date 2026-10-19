@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ro" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Clipper</title>
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script>
+    window.CLIPPER = { token: "__CLIPPER_TOKEN__", version: "__VERSION__" };
+    try { const t = localStorage.getItem("clipper-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <div class="app">
+    <aside class="rail" aria-label="Proiecte">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 8.5v5l4-2.5z" fill="currentColor"/><path d="M9 17.5h6"/></svg>
+        </div>
+        <div>
+          <div class="brand-name">AI Clipper</div>
+          <div class="brand-sub">local, pe procesor</div>
+        </div>
+      </div>
+      <button class="btn primary rail-new" id="new-project" type="button"></button>
+      <div class="rail-label" id="projects-label">Proiecte</div>
+      <ul class="project-list" id="projects" aria-labelledby="projects-label"></ul>
+      <div class="rail-foot">
+        <button class="btn ghost small status-btn" id="system-btn" type="button"><span class="dot" id="system-dot"></span><span id="system-text">Verific sistemul…</span></button>
+        <button class="btn ghost icon small" id="theme-btn" type="button" aria-label="Schimbă tema"></button>
+      </div>
+    </aside>
+    <main class="main" id="main" tabindex="-1">
+      <div class="main-inner" id="view" aria-live="polite"></div>
+    </main>
+  </div>
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+  <dialog id="dialog"></dialog>
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -22,6 +22,10 @@ class ToolError(RuntimeError):
     """Eroare cu mesaj în română, afișabil direct utilizatorului."""
 
 
+class Cancelled(Exception):
+    """Lucrarea a fost anulată de utilizator (ridicată din callback-ul de progres)."""
+
+
 def _local_candidates(name: str) -> list[Path]:
     exe = f"{name}.exe" if os.name == "nt" else name
     cands = [BUNDLE_DIR / "ffmpeg" / "bin" / exe, BUNDLE_DIR / "ffmpeg" / exe]

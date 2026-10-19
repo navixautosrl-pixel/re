@@ -10,3 +10,7 @@ fonts/
 dist/
 build/
 packaging/Romanian.isl
+instance.json
+logs/
+uploads/
+tmp/

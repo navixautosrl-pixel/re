@@ -12,7 +12,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from clipper import moments, subtitles, transcribe, youtube  # noqa: E402
+from clipper import editing, moments, render, subtitles, transcribe, youtube  # noqa: E402
 from clipper.tools import ToolError, find_executable  # noqa: E402
 
 
@@ -129,20 +129,96 @@ def test_empty_transcript():
 def test_subtitle_cues_in_range_and_ordered(tmp_path):
     tr = make_transcript(SAMPLE[:10])
     m = moments.build_moments(tr, "T", 15, 30)["moments"][0]
-    cues = subtitles.group_cues(subtitles.words_in_range(tr, m["start"], m["end"]))
+    cues = subtitles.cues_for_range(tr, m["start"], m["end"])
     assert cues
     prev_end = 0.0
-    for s, e, text in cues:
-        assert 0 <= s < e <= m["duration"] + 0.8
-        assert s >= prev_end - 1e-6
-        assert len(text) <= subtitles.MAX_CHARS + 20
-        prev_end = e
-    spoken = " ".join(t for _, _, t in cues)
-    assert spoken.split()[0] in m["text"]
+    for c in cues:
+        assert 0 <= c["s"] < c["e"] <= m["duration"] + 0.8
+        assert c["s"] >= prev_end - 1e-6
+        assert c["text"] == " ".join(w["w"] for w in c["words"])
+        assert all(c["s"] - 1e-6 <= w["s"] <= w["e"] <= c["e"] + 1e-6 for w in c["words"])
+        prev_end = c["e"]
+    assert cues[0]["text"].split()[0] in m["text"]
     subtitles.write_srt(cues, tmp_path / "a.srt")
-    subtitles.write_ass(cues, tmp_path / "a.ass")
+    for style in subtitles.STYLES:
+        subtitles.write_ass(cues, tmp_path / "a.ass", 1080, 1920, style, "jos", "mediu")
+        ass = (tmp_path / "a.ass").read_text(encoding="utf-8")
+        assert ass.count("Dialogue:") >= len(cues)
+        if style == "karaoke":  # un eveniment pe cuvânt, cuvântul curent colorat
+            assert ass.count("Dialogue:") == sum(len(c["words"]) for c in cues)
+            assert "\\1c&H0000E5FF&" in ass
+        if style == "galben":
+            assert cues[0]["text"].upper() in ass
     assert "-->" in (tmp_path / "a.srt").read_text(encoding="utf-8")
-    assert "Dialogue:" in (tmp_path / "a.ass").read_text(encoding="utf-8")
+
+
+def test_cue_text_edit_keeps_timing():
+    cue = {"s": 1.0, "e": 3.0, "text": "Bear walls reflect", "words": [
+        {"s": 1.0, "e": 1.5, "w": "Bear"}, {"s": 1.6, "e": 2.2, "w": "walls"}, {"s": 2.3, "e": 3.0, "w": "reflect"}]}
+    new = subtitles.set_cue_text(cue, "Bare  walls reflect sound")
+    assert new["text"] == "Bare walls reflect sound" and new["edited"]
+    assert [w["w"] for w in new["words"]] == ["Bare", "walls", "reflect", "sound"]
+    assert new["words"][0]["s"] == 1.0 and abs(new["words"][-1]["e"] - 3.0) < 1e-6
+    assert all(a["e"] <= b["s"] + 1e-6 for a, b in zip(new["words"], new["words"][1:]))
+    assert subtitles.set_cue_text(cue, "Bear walls reflect") is cue  # neschimbat
+
+
+def test_keep_intervals_and_remap():
+    cues = [{"s": 0.5, "e": 2.0, "text": "a b", "words": [{"s": 0.5, "e": 1.0, "w": "a"}, {"s": 1.2, "e": 2.0, "w": "b"}]},
+            {"s": 5.0, "e": 6.0, "text": "c", "words": [{"s": 5.0, "e": 6.0, "w": "c"}]}]
+    iv = subtitles.keep_intervals(cues, 8.0)
+    assert len(iv) == 2  # pauza de 3 s dintre „b” și „c” este scoasă
+    assert iv[0] == (0.0, 2.12) and iv[1][0] == 4.88
+    kept = sum(b - a for a, b in iv)
+    out = subtitles.remap(cues, iv)
+    assert out[0]["s"] == 0.5
+    assert abs(out[1]["s"] - (2.12 + 0.12)) < 1e-6  # „c” începe imediat după pauza scurtată
+    assert out[-1]["e"] <= kept + 1e-6
+    # fără pauze lungi: un singur interval, nimic de tăiat
+    assert len(subtitles.keep_intervals(cues[:1], 2.5)) == 1
+
+
+def test_render_settings_validation():
+    s = render.normalize_settings({"format": "1:1", "sub_style": "karaoke"})
+    assert s["format"] == "1:1" and s["loudnorm"] is True
+    with pytest.raises(ToolError):
+        render.normalize_settings({"format": "16:9"})
+    with pytest.raises(ToolError):
+        render.normalize_settings({"sub_style": "<script>"})
+    m = {"start": 1.0, "end": 20.0, "cues": [{"s": 0, "e": 1, "text": "x", "words": []}]}
+    assert render.clip_signature(m, s) == render.clip_signature(dict(m), dict(s))
+    assert render.clip_signature(m, s) != render.clip_signature({**m, "end": 21.0}, s)
+
+
+def test_editing_adjust_and_manual():
+    tr = make_transcript(SAMPLE)
+    m = moments.build_moments(tr, "T", 15, 30)["moments"][0]
+    editing.attach_cues(m, tr)
+    longer = editing.adjust(m, tr, "T", "end", +1)
+    assert longer["j"] == m["j"] + 1 and longer["end"] > m["end"] and longer["start"] == m["start"]
+    shorter = editing.adjust(longer, tr, "T", "start", -1)
+    assert shorter["i"] == m["i"] + 1
+    assert shorter["cues"] and shorter["cues"][0]["text"].split()[0] in shorter["text"]
+    with pytest.raises(ToolError):
+        editing.adjust({**m, "i": 0, "j": 0}, tr, "T", "start", +1)  # nu există propoziție înainte
+    with pytest.raises(ToolError):
+        editing.adjust(m, tr, "T", "end", +40)  # peste 60 s
+    man = editing.manual(tr, "T", 6, 4, nr=99)
+    assert (man["i"], man["j"], man["nr"], man["manual"]) == (4, 6, 99, True)
+    sl = editing.sentence_list(tr)
+    assert abs(man["start"] - sl[4]["start"]) < 0.3 and abs(man["end"] - sl[6]["end"]) < 0.5
+    edited = editing.edit_cue(man, 1, "Text corectat")
+    assert edited["cues"][1]["text"] == "Text corectat"
+    # corectura supraviețuiește extinderii la sfârșit și scurtării la început
+    longer = editing.adjust(edited, tr, "T", "end", +1)
+    assert "Text corectat" in [c["text"] for c in longer["cues"]]
+    trimmed = editing.adjust(longer, tr, "T", "start", -1)
+    assert trimmed["start"] > longer["start"]
+    kept = [c for c in trimmed["cues"] if c["text"] == "Text corectat"]
+    if edited["cues"][1]["words"][0]["s"] + edited["start"] >= trimmed["start"]:
+        assert kept and kept[0]["words"][0]["s"] >= 0
+    with pytest.raises(ToolError):
+        editing.edit_cue(man, 0, "   ")
 
 
 def test_normalize_diacritics():

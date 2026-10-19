@@ -21,6 +21,8 @@ else:
 BUNDLE_DIR = APP_DIR                    # unde caută ffmpeg\bin, deno\, models\ livrate cu aplicația
 WORKSPACE_DIR = DATA_DIR / "workspace"  # fișiere intermediare (video sursă, audio, transcriere)
 MODELS_DIR = DATA_DIR / "models"        # modelele Whisper descărcate o singură dată
+UPLOADS_DIR = DATA_DIR / "uploads"      # fișiere trase în fereastră, mutate apoi în proiect
+LOGS_DIR = DATA_DIR / "logs"
 
 # Limite cerute de specificație
 MAX_SOURCE_MINUTES = 60          # peste această durată descărcarea este refuzată

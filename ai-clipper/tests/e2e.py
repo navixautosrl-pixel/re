@@ -73,7 +73,7 @@ def main() -> int:
         print(f"  {m['nr']:2d}. {fmt_ts(m['start'])}–{fmt_ts(m['end'])} ({m['duration']:.1f}s) scor {m['score']}: {m['title']}")
 
     try:
-        res = pipeline.step_render(proj, args.framing, True, progress("export"))
+        res = pipeline.step_render(proj, {"framing": args.framing}, progress("export"))
     except ToolError as exc:
         print(f"EȘEC export: {exc}")
         return 1

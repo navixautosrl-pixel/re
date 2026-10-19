@@ -16,7 +16,6 @@ from pathlib import Path
 import PyInstaller.__main__
 
 ROOT = Path(__file__).resolve().parent.parent
-SEP = os.pathsep
 
 
 def main() -> None:
@@ -25,14 +24,17 @@ def main() -> None:
         str(ROOT / "launcher.py"),
         "--noconfirm", "--clean",
         "--name", "AI-Clipper",
-        "--console",  # fereastra de consolă arată starea serverului; închiderea ei oprește aplicația
+        # aplicație de consolă: --selfcheck/--smoke scriu în terminal; la pornirea prin dublu-clic
+        # launcher-ul își ascunde singur consola și deschide fereastra aplicației
+        "--console",
         "--distpath", str(ROOT / "dist"),
         "--workpath", str(ROOT / "build"),
         "--specpath", str(ROOT / "build"),
-        "--add-data", f"{ROOT / 'app.py'}{SEP}.",
+        # interfața (clipper/web: HTML, CSS, JS) și toate modulele aplicației
         "--collect-submodules", "clipper",
-        # Streamlit are nevoie de fișierele statice ale interfeței și de metadatele pachetului
-        "--collect-all", "streamlit",
+        "--collect-data", "clipper",
+        # uvicorn își alege implementările (bucla, protocolul HTTP) prin import dinamic
+        "--collect-submodules", "uvicorn",
         # faster-whisper: modelul VAD Silero (assets/*.onnx); ctranslate2/onnxruntime: biblioteci native
         "--collect-data", "faster_whisper",
         "--collect-binaries", "ctranslate2",

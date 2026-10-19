@@ -12,7 +12,7 @@ from typing import Callable
 from urllib.parse import parse_qs, urlparse
 
 from .config import DOWNLOAD_MAX_HEIGHT, MAX_SOURCE_MINUTES
-from .tools import ToolError, find_executable, js_runtimes
+from .tools import Cancelled, ToolError, find_executable, js_runtimes
 
 YOUTUBE_HOSTS = {
     "youtube.com", "www.youtube.com", "m.youtube.com", "music.youtube.com",
@@ -163,9 +163,18 @@ def download(url: str, dest_dir: Path, progress: Callable[[float, str], None] | 
     dest_dir.mkdir(parents=True, exist_ok=True)
     h = DOWNLOAD_MAX_HEIGHT
 
+    cancelled: list[BaseException] = []
+
     def hook(d: dict) -> None:
         if not progress:
             return
+        try:
+            _report(d)
+        except Cancelled as exc:  # yt-dlp poate împacheta excepția; o ținem minte ca s-o recunoaștem
+            cancelled.append(exc)
+            raise
+
+    def _report(d: dict) -> None:
         if d.get("status") == "downloading":
             total = d.get("total_bytes") or d.get("total_bytes_estimate") or 0
             done = d.get("downloaded_bytes") or 0
@@ -193,6 +202,8 @@ def download(url: str, dest_dir: Path, progress: Callable[[float, str], None] | 
             info = ydl.extract_info(url, download=True)
             path = Path(ydl.prepare_filename(info)).with_suffix(".mp4")
     except yt_dlp.utils.DownloadError as exc:
+        if cancelled:
+            raise Cancelled() from exc
         raise ToolError(_friendly_error(exc)) from exc
 
     if not path.exists():

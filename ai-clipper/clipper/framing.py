@@ -1,9 +1,9 @@
-"""Încadrare verticală: decupaj fix pe fața detectată, cu rezervă pe fundal blurat.
+"""Încadrare: decupaj fix pe fața detectată, cu rezervă pe fundal blurat.
 
 Ce face, concret: eșantionează cadre din intervalul clipului, detectează fețe frontale
 cu clasificatorul Haar inclus în OpenCV și calculează poziția orizontală mediană a celei
 mai mari fețe. Dacă fața apare în suficiente cadre și nu se deplasează mult, clipul se
-decupează 9:16 FIX în jurul acelei poziții. NU este urmărire continuă cadru cu cadru.
+decupează în formatul ales, FIX, în jurul acelei poziții. NU este urmărire continuă cadru cu cadru.
 Dacă detectarea eșuează (fără față, mai multe persoane depărtate, mișcare mare),
 se folosește fundalul blurat — nu se ghicește o poziție.
 """
@@ -23,11 +23,16 @@ class Framing:
     detail: str
 
 
+def crop_width(src_h: int, out_w: int, out_h: int) -> int:
+    return int(round(src_h * out_w / out_h)) // 2 * 2
+
+
 def detect_face_framing(video: Path, start: float, end: float, src_w: int, src_h: int,
+                        out_w: int = 1080, out_h: int = 1920,
                         samples: int = 24, min_hit_ratio: float = 0.5) -> Framing:
-    crop_w = int(round(src_h * 9 / 16)) // 2 * 2
+    crop_w = crop_width(src_h, out_w, out_h)
     if src_w <= crop_w:
-        return Framing("blur", None, None, "Sursa este deja verticală/îngustă — se folosește încadrare cu fundal.")
+        return Framing("blur", None, None, "Sursa este mai îngustă decât formatul ales — încadrare cu fundal.")
     try:
         import cv2
     except ImportError:
@@ -81,8 +86,8 @@ def detect_face_framing(video: Path, start: float, end: float, src_w: int, src_h
                    f"Față detectată în {len(centers)}/{checked} cadre; decupaj fix centrat pe x≈{median_x:.0f}px.")
 
 
-def center_framing(src_w: int, src_h: int) -> Framing:
-    crop_w = int(round(src_h * 9 / 16)) // 2 * 2
+def center_framing(src_w: int, src_h: int, out_w: int = 1080, out_h: int = 1920) -> Framing:
+    crop_w = crop_width(src_h, out_w, out_h)
     if src_w <= crop_w:
-        return Framing("blur", None, None, "Sursa este deja verticală — încadrare cu fundal.")
-    return Framing("center", (src_w - crop_w) // 2 // 2 * 2, crop_w, "Decupaj vertical centrat.")
+        return Framing("blur", None, None, "Sursa este mai îngustă decât formatul ales — încadrare cu fundal.")
+    return Framing("center", (src_w - crop_w) // 2 // 2 * 2, crop_w, "Decupaj centrat.")

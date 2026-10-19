@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Callable
 
 from .config import BUNDLE_DIR, MODELS_DIR
-from .tools import CREATE_NO_WINDOW, ToolError, ffmpeg_path, probe
+from .tools import CREATE_NO_WINDOW, Cancelled, ToolError, ffmpeg_path, probe
 
 Progress = Callable[[float, str], None]
 
@@ -51,14 +51,19 @@ def run_ffmpeg_with_progress(args: list[str], total_seconds: float, progress: Pr
     t = threading.Thread(target=drain, daemon=True)
     t.start()
     assert proc.stdout is not None
-    for line in proc.stdout:
-        if line.startswith("out_time_us=") or line.startswith("out_time_ms="):
-            try:
-                secs = int(line.split("=", 1)[1]) / 1_000_000
-            except ValueError:
-                continue
-            if progress and total_seconds > 0:
-                progress(min(secs / total_seconds, 1.0), f"{label}: {secs:.0f}s / {total_seconds:.0f}s")
+    try:
+        for line in proc.stdout:
+            if line.startswith("out_time_us=") or line.startswith("out_time_ms="):
+                try:
+                    secs = int(line.split("=", 1)[1]) / 1_000_000
+                except ValueError:
+                    continue
+                if progress and total_seconds > 0:
+                    progress(min(secs / total_seconds, 1.0), f"{label}: {secs:.0f}s / {total_seconds:.0f}s")
+    except BaseException:
+        proc.kill()  # anulare sau eroare în callback: nu lăsăm ffmpeg să ruleze în fundal
+        proc.wait()
+        raise
     proc.wait()
     t.join(timeout=5)
     if proc.returncode != 0:
@@ -217,7 +222,7 @@ def transcribe(audio_wav: Path, transcript_path: Path, partial_path: Path, model
                     if progress:
                         progress(min(item["end"] / total, 1.0),
                                  f"Transcriere: {item['end']:.0f}s / {total:.0f}s — „{text[:70]}”")
-        except ToolError:
+        except (ToolError, Cancelled):
             raise
         except Exception as exc:
             raise ToolError(f"Transcrierea a eșuat: {exc}. Apasă din nou pe buton pentru a relua.") from exc

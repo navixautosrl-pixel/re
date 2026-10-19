@@ -20,7 +20,8 @@ from .tools import ToolError
 
 
 def run(video: str, language: str = "ro", model: str = "base", min_d: float = 15, max_d: float = 30,
-        count: int = 10, framing: str = "auto", transcript_file: str | None = None) -> int:
+        count: int = 10, framing: str = "auto", transcript_file: str | None = None,
+        cut_pauses: bool = False, sub_style: str = "clasic") -> int:
     t0 = time.time()
     last = {"t": 0.0}
 
@@ -50,9 +51,10 @@ def run(video: str, language: str = "ro", model: str = "base", min_d: float = 15
         md = pipeline.step_moments(proj, min_d, max_d, count)
         report["moments"] = [{"nr": m["nr"], "start": m["start"], "end": m["end"], "title": m["title"]}
                              for m in md["moments"]]
-        res = pipeline.step_render(proj, framing, True, progress)
+        res = pipeline.step_render(proj, {"framing": framing, "cut_pauses": cut_pauses, "sub_style": sub_style}, progress)
         report["clips"] = [{"file": r["file"], **r["verify"], "framing": r["framing"],
-                            "subtitles": r["subtitle_cues"]}
+                            "subtitles": r["subtitle_cues"], "cover": r.get("cover"),
+                            "pauses_removed_s": r.get("duration_cut")}
                            for r in sorted(res["results"].values(), key=lambda r: r["nr"])]
         report["csv"] = res["csv"]
         report["ok"] = bool(report["clips"]) and all(c["ok"] for c in report["clips"])
@@ -71,11 +73,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--model", default="base")
     ap.add_argument("--min", type=float, default=15)
     ap.add_argument("--max", type=float, default=30)
+    ap.add_argument("--cut-pauses", action="store_true")
+    ap.add_argument("--style", default="clasic")
     ap.add_argument("--transcript", help="transcriere de referință în loc de Whisper (doar pentru dezvoltare)")
     a = ap.parse_args(argv)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    return run(a.video, a.language, a.model, a.min, a.max, transcript_file=a.transcript)
+    return run(a.video, a.language, a.model, a.min, a.max, transcript_file=a.transcript,
+               cut_pauses=a.cut_pauses, sub_style=a.style)
 
 
 if __name__ == "__main__":

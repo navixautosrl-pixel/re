@@ -9,10 +9,10 @@ from pathlib import Path
 from typing import Callable
 
 from . import moments as moments_mod
-from . import render, transcribe, youtube
-from .config import MAX_SOURCE_MINUTES
+from . import editing, render, transcribe, youtube
+from .config import MAX_SOURCE_MINUTES, UPLOADS_DIR
 from .project import Project, id_for_local_file, safe_id
-from .tools import ToolError, probe
+from .tools import Cancelled, ToolError, probe
 
 Progress = Callable[[float, str], None]
 
@@ -23,6 +23,9 @@ def _guard(project: Project, step: str, fn):
     project.mark(step, False)  # rezultatele etapelor ulterioare nu mai sunt valabile
     try:
         result = fn()
+    except Cancelled:
+        project.set_error(step, "Anulat. Fișierele intermediare au fost păstrate; poți relua oricând.")
+        raise
     except ToolError as exc:
         project.set_error(step, str(exc))
         raise
@@ -42,7 +45,7 @@ def project_for_youtube(info: dict) -> Project:
     return proj
 
 
-def project_for_local_file(path: Path) -> Project:
+def project_for_local_file(path: Path, title: str | None = None) -> Project:
     path = path.expanduser()
     if not path.is_file():
         raise ToolError(f"Fișierul nu există: {path}")
@@ -53,7 +56,7 @@ def project_for_local_file(path: Path) -> Project:
         raise ToolError(f"Fișierul are {info.duration/60:.0f} minute. Limita este de {MAX_SOURCE_MINUTES} de minute.")
     proj = Project.load_or_create(id_for_local_file(path))
     proj.state["source_type"] = "local"
-    proj.state["info"] = {"id": proj.id, "title": path.stem, "channel": "", "duration": info.duration,
+    proj.state["info"] = {"id": proj.id, "title": title or path.stem, "channel": "", "duration": info.duration,
                           "webpage_url": str(path), "original_path": str(path)}
     proj.save()
     proj.mark("info")
@@ -66,7 +69,16 @@ def step_download(project: Project, progress: Progress | None = None) -> Path:
             # copiem în workspace ca să nu depindem de fișierul original și ca ștergerea să fie sigură
             src = Path(project.state["info"]["original_path"])
             dest = project.dir / f"source{src.suffix.lower() or '.mp4'}"
-            if not dest.exists() or dest.stat().st_size != src.stat().st_size:
+            if dest.exists() and (not src.exists() or dest.stat().st_size == src.stat().st_size):
+                pass  # deja în spațiul de lucru (reluare după o eroare ulterioară)
+            elif not src.exists():
+                raise ToolError(f"Fișierul original nu mai există: {src}")
+            elif UPLOADS_DIR in src.resolve().parents:
+                # fișier încărcat prin interfață: îl mutăm (fără a ocupa de două ori spațiul pe disc)
+                if progress:
+                    progress(0.1, "Se mută fișierul în spațiul de lucru…")
+                shutil.move(str(src), dest)
+            else:
                 if progress:
                     progress(0.1, "Se copiază fișierul local în spațiul de lucru…")
                 shutil.copy2(src, dest)
@@ -116,69 +128,90 @@ def load_transcript(project: Project) -> dict:
 
 def step_moments(project: Project, min_d: float, max_d: float, count_max: int) -> dict:
     def run() -> dict:
-        data = moments_mod.build_moments(load_transcript(project), project.title(), min_d, max_d,
-                                         count_max=count_max)
-        project.moments_path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+        transcript = load_transcript(project)
+        data = moments_mod.build_moments(transcript, project.title(), min_d, max_d, count_max=count_max)
+        for m in data["moments"]:
+            editing.attach_cues(m, transcript)
+        save_moments(project, data)
         return data
     return _guard(project, "moments", run)
 
 
 def load_moments(project: Project) -> dict:
-    return json.loads(project.moments_path.read_text(encoding="utf-8"))
+    data = json.loads(project.moments_path.read_text(encoding="utf-8"))
+    # momente salvate de versiunea 0.1 nu aveau subtitrări editabile atașate
+    if any("cues" not in m for m in data.get("moments", [])):
+        transcript = load_transcript(project)
+        for m in data["moments"]:
+            if "cues" not in m:
+                editing.attach_cues(m, transcript)
+    return data
 
 
 def save_moments(project: Project, data: dict) -> None:
-    project.moments_path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    data["moments"].sort(key=lambda m: m["start"])
+    tmp = project.moments_path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    tmp.replace(project.moments_path)
 
 
-def step_render(project: Project, framing_mode: str, burn_subtitles: bool = True,
-                progress: Progress | None = None) -> dict:
-    """Randează clipurile bifate, unul câte unul. Clipurile deja verificate OK nu se refac (reluare)."""
+def find_moment(data: dict, nr: int) -> dict:
+    for m in data["moments"]:
+        if m["nr"] == nr:
+            return m
+    raise ToolError(f"Clipul {nr} nu există.")
+
+
+def render_results(project: Project) -> dict[int, dict]:
+    return {int(k): v for k, v in (project.state.get("render_results") or {}).items()}
+
+
+def step_render(project: Project, settings: dict | None = None, progress: Progress | None = None,
+                only: int | None = None) -> dict:
+    """Randează clipurile bifate, unul câte unul. Un clip deja exportat și verificat nu se reface
+    dacă nu s-a schimbat nimic din ce îl influențează (interval, subtitrări, setări)."""
+    settings = render.normalize_settings(settings)
+
     def run() -> dict:
         src = project.source_path
         if not src or not src.exists():
             raise ToolError("Videoclipul sursă lipsește (poate a fost șters după confirmarea exportului).")
-        transcript = load_transcript(project)
         data = load_moments(project)
         selected = [m for m in data["moments"] if m.get("selected", True)]
+        if only is not None:
+            selected = [m for m in selected if m["nr"] == only]
         if not selected:
-            raise ToolError("Niciun moment selectat pentru export.")
+            raise ToolError("Niciun clip selectat pentru export.")
         out = project.out_dir
         out.mkdir(parents=True, exist_ok=True)
-        results: dict[int, dict] = {int(k): v for k, v in project.state.get("render_results", {}).items()}
-        settings_key = f"{framing_mode}|{burn_subtitles}"
-        if project.state.get("render_settings") != settings_key:
-            results = {}
+        results = render_results(project)
         for idx, m in enumerate(selected):
             prev = results.get(m["nr"])
-            if prev and prev["verify"]["ok"] and prev.get("start") == m["start"] and prev.get("end") == m["end"] \
-                    and (out / prev["file"]).exists():
+            if (only is None and prev and prev["verify"]["ok"] and (out / prev["file"]).exists()
+                    and prev.get("signature") == render.clip_signature(m, settings)):
                 continue
 
             def sub_progress(frac: float, msg: str, idx=idx) -> None:
                 if progress:
-                    progress((idx + frac) / len(selected), f"[{idx + 1}/{len(selected)}] {msg}")
+                    progress((idx + frac) / len(selected), f"Clip {idx + 1} din {len(selected)}: {msg}")
 
-            r = render.render_clip(src, m, transcript, out, framing_mode, burn_subtitles, sub_progress)
-            r["start"], r["end"] = m["start"], m["end"]
-            results[m["nr"]] = r
+            results[m["nr"]] = render.render_clip(src, m, out, settings, sub_progress)
             project.state["render_results"] = {str(k): v for k, v in results.items()}
-            project.state["render_settings"] = settings_key
             project.save()
-        # rezultatele momentelor deselectate nu mai fac parte din export
-        keep = {m["nr"] for m in selected}
+
+        # fișierele clipurilor care nu mai fac parte din export
+        keep = {m["nr"] for m in data["moments"] if m.get("selected", True)}
         results = {k: v for k, v in results.items() if k in keep}
-        for f in out.glob("clip_*.mp4"):
-            n = int(f.stem.split("_")[1]) if f.stem.split("_")[1].isdigit() else None
-            if n is not None and n not in keep:
-                f.unlink()
-                srt = f.with_suffix(".srt")
-                if srt.exists():
-                    srt.unlink()
+        for f in out.glob("clip_*.*"):
+            num = f.stem.split("_")[1].split(".")[0]
+            if num.isdigit() and int(num) not in keep:
+                f.unlink(missing_ok=True)
         project.state["render_results"] = {str(k): v for k, v in results.items()}
+        project.state["render_settings"] = settings
         project.save()
         info = project.state.get("info", {})
-        csv_path = render.write_csv(selected, results, out / "clipuri.csv", project.title(),
+        exported = [m for m in data["moments"] if m["nr"] in results]
+        csv_path = render.write_csv(exported, results, out / "clipuri.csv", project.title(),
                                     info.get("webpage_url", ""))
         failed = [r for r in results.values() if not r["verify"]["ok"]]
         if failed:

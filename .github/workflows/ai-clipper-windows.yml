@@ -36,7 +36,7 @@ jobs:
       - name: Pachete Python
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt pyinstaller pytest
+          pip install -r requirements.txt pyinstaller pytest httpx playwright
 
       - name: FFmpeg (BtbN, build GPL shared)
         run: |
@@ -56,7 +56,7 @@ jobs:
           Copy-Item "$($dir.FullName)\LICENSE.txt" ffmpeg\ -ErrorAction SilentlyContinue
           ffmpeg\bin\ffmpeg.exe -hide_banner -version | Select-Object -First 1
 
-      - name: Teste unitare pe Windows
+      - name: Teste unitare și de API pe Windows
         run: python -m pytest tests -q
 
       - uses: denoland/setup-deno@v2
@@ -85,27 +85,32 @@ jobs:
 
       - name: Flux complet cu Whisper real, din exe
         run: |
-          dist\AI-Clipper\AI-Clipper.exe --smoke "$env:RUNNER_TEMP\test_speech.mp4" --language en
+          dist\AI-Clipper\AI-Clipper.exe --smoke "$env:RUNNER_TEMP\test_speech.mp4" --language en --cut-pauses --style karaoke
           if ($LASTEXITCODE -ne 0) { exit 1 }
           "OUT=$HOME\Videos\AI Clipper" | Out-File -Append -Encoding utf8 $env:GITHUB_ENV
 
-      - name: Interfața pornește din exe
+      - name: Interfața, folosită de un robot (Edge + Whisper real), din exe
         run: |
-          $p = Start-Process dist\AI-Clipper\AI-Clipper.exe -ArgumentList "--no-browser" -PassThru `
+          $p = Start-Process dist\AI-Clipper\AI-Clipper.exe -ArgumentList "--no-browser", "--port", "8600" -PassThru `
             -RedirectStandardOutput "$env:RUNNER_TEMP\ui.log" -RedirectStandardError "$env:RUNNER_TEMP\ui.err"
           $ok = $false
           for ($i = 0; $i -lt 60; $i++) {
-            try {
-              $r = Invoke-WebRequest "http://127.0.0.1:8501/_stcore/health" -UseBasicParsing -TimeoutSec 5
-              if ($r.Content -eq "ok") { $ok = $true; break }
-            } catch { }
+            try { if ((Invoke-WebRequest "http://127.0.0.1:8600/api/ping" -UseBasicParsing -TimeoutSec 5).StatusCode -eq 200) { $ok = $true; break } } catch { }
             Start-Sleep -Seconds 2
           }
-          $page = if ($ok) { (Invoke-WebRequest "http://127.0.0.1:8501/" -UseBasicParsing).StatusCode } else { 0 }
+          if (-not $ok) { Get-Content "$env:RUNNER_TEMP\ui.log", "$env:RUNNER_TEMP\ui.err" -ErrorAction SilentlyContinue; throw "Serverul nu a pornit" }
+          python tests\ui_flow.py --url http://127.0.0.1:8600 --video "$env:RUNNER_TEMP\test_speech.mp4" --mode real --language en --channel msedge --out "$env:RUNNER_TEMP\ui-shots"
+          $code = $LASTEXITCODE
           Stop-Process -Id $p.Id -Force
-          Get-Content "$env:RUNNER_TEMP\ui.log", "$env:RUNNER_TEMP\ui.err" -ErrorAction SilentlyContinue
-          if (-not $ok -or $page -ne 200) { throw "Interfața nu a pornit (health=$ok, pagina=$page)" }
-          "Interfața răspunde: health=ok, pagina HTTP $page"
+          Get-Content "$env:RUNNER_TEMP\ui.err" -ErrorAction SilentlyContinue | Select-Object -Last 40
+          if ($code -ne 0) { exit 1 }
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturi-interfata
+          path: ${{ runner.temp }}/ui-shots
+          retention-days: 14
 
       - name: Metadate YouTube (informativ)
         continue-on-error: true
