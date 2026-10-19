@@ -1,0 +1,7 @@
+# Testat cu Python 3.13. Necesită Python 3.10 sau mai nou.
+streamlit>=1.50,<2
+# [default] include yt-dlp-ejs, necesar pentru extragerea formatelor YouTube actuale
+yt-dlp[default]>=2025.11.12
+faster-whisper>=1.1,<2
+# OpenCV 5 nu mai include clasificatorii Haar folosiți pentru detectarea feței
+opencv-python-headless>=4.8,<5
