@@ -310,45 +310,45 @@ cu o transcriere de referință și este afișată explicit în raport.
 
 ## Stadiul testării
 
-Testat în mediul de dezvoltare (Linux, Python 3.13, FFmpeg 6.1, 4 nuclee CPU, fără GPU):
+La fiecare modificare a codului, GitHub construiește și testează automat aplicația pe un **Windows real**
+(`windows-latest`), cu programul împachetat, exact cum îl instalezi tu. Ultima rulare, cu interfața nouă,
+a trecut integral:
 
-- **18 teste unitare trec**: validarea linkurilor YouTube, limitele de durată/live/DRM, mesajele de
-  eroare yt-dlp, selecția momentelor (fără suprapuneri, propoziții întregi, durate în interval),
-  subtitrările, diacriticele, **reluarea transcrierii după o întrerupere simulată**;
-- **flux complet pe videoclipuri de test autorizate** de 2:32: import local, extragere audio, selecția
-  momentelor, export 1080 × 1920 cu subtitrări, verificare ffprobe, CSV;
-- **încadrare pe față verificată**: fața a fost detectată în 24/24 cadre, iar decupajul a fost centrat
-  la x≈808–829 px față de poziția reală ≈815 px;
-- **rezerva cu fundal blurat**, pe un videoclip fără fețe (0/24 cadre);
-- reluarea exportului (se refac doar clipurile lipsă) și confirmarea exportului;
-- interfața Streamlit într-un browser real (Chromium, Playwright): link invalid, eroare de rețea,
-  import, generarea clipurilor, butoanele de descărcare, layout pe mobil fără depășire orizontală.
+- **27 de teste unitare și de API**: securitate, tot fluxul prin HTTP, editări, export cu karaoke și
+  pauze eliminate, ZIP, anulare și reluare;
+- **flux complet cu Whisper real** pe vorbire sintetică Windows (engleză): 6 clipuri verificate, pauze
+  scoase, coperți;
+- **un robot care folosește interfața în Edge**, cu transcriere Whisper reală:
+  - încărcare și transcriere;
+  - editarea titlului și a unei subtitrări, adăugarea unei propoziții, clip manual, scoaterea unui clip
+    din export;
+  - export karaoke cu pauze eliminate: toate clipurile verificate 1080 × 1920;
+  - **redarea unui clip în Edge** (1080 × 1920, a rulat efectiv);
+  - descărcarea ZIP-ului și a CSV-ului;
+  - anularea unui export și reluarea lui în 1:1;
+  - confirmarea exportului;
+- **pornirea ca la dublu-clic**: s-a deschis fereastra Edge în modul aplicație, interfața s-a încărcat,
+  iar după închiderea ferestrei aplicația s-a oprit singură (cod 0);
+- installerul `AI-Clipper-Setup.exe` (~330 MB) se construiește fără erori.
 
-Testat pe **Windows (GitHub Actions, `windows-latest`)**, cu programul `AI-Clipper.exe` împachetat, la
-fiecare modificare a codului:
-
-- testele unitare trec și pe Windows;
-- verificarea sistemului din `.exe` găsește FFmpeg, Deno și modelul incluse;
-- **flux complet cu transcriere faster-whisper reală** (model `base`, CPU, int8) pe un videoclip de 2:19
-  cu voce sintetică Windows în engleză: 27 de segmente transcrise în 9,7 s pe runner-ul GitHub,
-  6 momente, 6 clipuri 1080 × 1920 verificate, CSV. Transcrierea a avut o greșeală reală („Bear walls”
-  în loc de „Bare walls”), deci verifică textele înainte de publicare;
-- interfața pornește din `.exe` și răspunde la `127.0.0.1:8501`;
-- installerul `AI-Clipper-Setup.exe` (~350 MB) se construiește cu Inno Setup.
-
-Testul pe Windows a găsit un bug pe care mediul de dezvoltare nu îl putea găsi: faster-whisper 1.2.1
-este incompatibil cu PyAV 17+ la decodarea audio. Bugul a fost corectat: aplicația citește direct
-fișierul WAV extras cu FFmpeg.
+Testele pe Windows au găsit și au dus la corectarea unor buguri reale, printre care:
+- incompatibilitatea faster-whisper 1.2.1 cu PyAV 17+, care făcea orice transcriere să eșueze;
+- fișierele interfeței, lipsă din `.exe`;
+- editor de subtitrări gol;
+- corecturi de subtitrare pierdute la scurtarea unui clip.
 
 **Ce rămâne netestat:**
 
-- **descărcarea de pe YouTube**: din mediul de dezvoltare, YouTube era blocat; de pe serverele GitHub,
-  YouTube a cerut confirmarea „nu ești robot”, cum face des cu adresele IP din centre de date. Pe o
-  conexiune de acasă, de obicei nu se întâmplă, dar nu am putut verifica;
-- **transcrierea în limba română** cu Whisper real: vocea sintetică de pe Windows e doar în engleză. Pentru
-  română, modelul `small` este de obicei vizibil mai precis decât `base`;
-- **instalarea efectivă** a `AI-Clipper-Setup.exe` printr-un dublu-clic pe un PC Windows 11 obișnuit și
-  scripturile `install.bat`/`run.bat` (varianta din codul sursă).
+- **descărcarea de pe YouTube**: de pe serverele GitHub, YouTube cere confirmarea „nu ești robot”, cum
+  face des cu adresele IP din centre de date, iar mediul de dezvoltare nu are acces la YouTube. Pe o
+  conexiune de acasă de obicei merge, dar nu am putut verifica. Validarea linkului și mesajele de eroare
+  sunt testate;
+- **transcrierea în limba română** cu Whisper real: vocea sintetică de pe Windows e doar în engleză.
+  Pentru română, modelul `small` este de obicei vizibil mai precis decât `base`;
+- **instalarea prin dublu-clic** pe `AI-Clipper-Setup.exe` pe un PC obișnuit: programul instalat e cel
+  testat, dar installerul în sine nu a fost rulat;
+- **încadrarea pe față pe Windows**: a fost testată pe Linux, cu o fotografie reală; pe Windows, testele
+  au folosit un model de test fără fețe.
 
 **Primul test pe calculatorul tău**: un videoclip propriu, scurt (2–5 minute), vorbit în română, cu
 modelul `base`, apoi același videoclip cu `small`, ca să compari.
