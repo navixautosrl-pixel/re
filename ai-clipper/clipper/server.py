@@ -103,7 +103,8 @@ def create_app(token: str, jobs: JobManager | None = None, heartbeat: Heartbeat 
     # ---------------------------------------------------------------- sistem
     @app.get("/api/ping")
     def ping():
-        return {"app": "ai-clipper", "version": __version__}
+        # „window”: o fereastră a aplicației a încărcat interfața și trimite semnal de viață
+        return {"app": "ai-clipper", "version": __version__, "window": hb.seen}
 
     @app.post("/api/heartbeat")
     def heartbeat_():

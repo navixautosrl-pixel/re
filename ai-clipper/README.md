@@ -1,8 +1,27 @@
 # AI Clipper local (Windows 11, procesare pe CPU)
 
-Aplicația transformă un videoclip lung (de pe YouTube sau de pe calculator) în **5–10 clipuri verticale
-1080 × 1920**, cu subtitrări sincronizate integrate în video, plus un **CSV** cu timpii, titlurile și
-descrierile sugerate.
+Aplicația transformă un videoclip lung (de pe YouTube sau de pe calculator) în **5–10 clipuri scurte**
+(vertical 1080 × 1920, portret 4:5 sau pătrat), cu subtitrări sincronizate integrate în video, copertă
+și un **CSV** cu timpii, titlurile și descrierile sugerate.
+
+Ce poți face în aplicație:
+
+- **încarci** un fișier trăgându-l în fereastră sau imporți un link YouTube;
+- **transcrii** local, cu progres, timp estimat și buton de anulare. Poți închide fereastra; lucrarea continuă;
+- **primești automat momentele** potrivite pentru clipuri (propoziții întregi, fără suprapuneri), apoi:
+  - editezi titlurile;
+  - extinzi sau scurtezi fiecare clip cu câte o propoziție;
+  - adaugi clipuri alese manual din transcriere;
+  - **corectezi textul subtitrărilor** acolo unde transcrierea a greșit;
+- **alegi stilul subtitrărilor**, cu previzualizare imediată:
+  - clasic, galben cu majuscule, pe fundal închis sau **karaoke** (cuvântul rostit colorat);
+  - 3 poziții și 3 mărimi;
+- **elimini pauzele lungi** din clipuri: video, audio și subtitrări rămân sincronizate;
+- **normalizezi volumul** la nivelul platformelor (-14 LUFS);
+- **exporți și verifici** fiecare clip automat:
+  - descarci MP4, SRT, copertă sau totul ca **ZIP**;
+  - copiezi titlul și descrierea cu un clic;
+  - refaci un singur clip; la reexport se refac doar clipurile modificate.
 
 Totul rulează local, pe procesor:
 
@@ -13,10 +32,11 @@ Totul rulează local, pe procesor:
 
 | Componentă | Rol |
 |---|---|
-| Python + Streamlit | logica aplicației și interfața locală (doar la `127.0.0.1`) |
+| Python + FastAPI | logica aplicației și serverul local al interfeței (doar la `127.0.0.1`) |
+| HTML/CSS/JavaScript | interfața, deschisă ca fereastră de aplicație Edge; funcționează offline |
 | yt-dlp | verificarea linkului și importul de pe YouTube (maximum 720p) |
 | faster-whisper (`base` sau `small`, `device=cpu`, `compute_type=int8`) | transcriere locală cu marcaje temporale pe cuvinte |
-| FFmpeg | extragere audio, decupare, încadrare 9:16, subtitrări, export MP4 |
+| FFmpeg | extragere audio, decupare, încadrare, subtitrări, eliminarea pauzelor, normalizare, export MP4 |
 | OpenCV (opțional) | detectarea feței pentru încadrare |
 
 ---
@@ -40,8 +60,10 @@ YouTube raportează o astfel de restricție, importul se oprește. Clipurile nu 
    care conține `AI-Clipper-Setup.exe`).
 2. Rulează `AI-Clipper-Setup.exe`. Programul nu este semnat digital, așa că Windows poate afișa
    *„Windows a protejat computerul”*. Apasă **Mai multe informații → Rulează oricum**.
-3. Pornește **AI Clipper** din meniul Start sau de pe desktop. Se deschide o fereastră neagră (serverul
-   local) și apoi browserul. Închiderea ferestrei negre oprește aplicația.
+3. Pornește **AI Clipper** din meniul Start sau de pe desktop. Se deschide fereastra aplicației: o
+   fereastră Edge fără bară de adrese, sau browserul implicit, dacă Edge lipsește. Aplicația se oprește
+   singură la scurt timp după ce închizi fereastra, dacă nu rulează nicio lucrare. Repornirea ei redeschide
+   aceeași sesiune, inclusiv o lucrare care încă rulează.
 
 Unde ajung fișierele în varianta instalată:
 
@@ -54,8 +76,8 @@ Unde ajung fișierele în varianta instalată:
 Dezinstalarea se face din *Setări → Aplicații*. Clipurile tale din `Videoclipuri` rămân.
 
 Installerul este construit și testat automat pe un Windows real, la fiecare modificare a codului
-(`.github/workflows/ai-clipper-windows.yml`): teste unitare, verificarea programului, flux complet cu
-transcriere Whisper reală și pornirea interfeței.
+(`.github/workflows/ai-clipper-windows.yml`): teste unitare și de API, verificarea programului, flux
+complet cu transcriere Whisper reală și un robot care folosește toată interfața în Edge.
 
 ## Varianta din codul sursă (install.bat)
 
@@ -85,48 +107,48 @@ importul de pe YouTube. Transcrierea și exportul merg și offline.
 
 ## Pornire (varianta din codul sursă)
 
-Dă dublu-clic pe **`run.bat`**. Se afișează verificarea sistemului, apoi browserul se deschide singur la
-`http://127.0.0.1:8501` (sau la următorul port liber). **Nu închide fereastra neagră** cât timp folosești
-aplicația. Pentru oprire, închide fereastra sau apasă `Ctrl+C` în ea.
-
-Aplicația ascultă doar pe `127.0.0.1`, deci nu este accesibilă din rețea.
+Dă dublu-clic pe **`run.bat`**. Se afișează verificarea sistemului, apoi se deschide fereastra aplicației.
+Serverul local ascultă doar pe `127.0.0.1`, deci nu este accesibil din rețea. Fiecare modificare cere un
+cod generat la pornire, deci nici alte site-uri deschise în browser nu pot comanda aplicația.
 
 ---
 
 ## Utilizare, pas cu pas
 
-1. **Confirmă drepturile.** Bifează caseta de sub avertisment.
-2. **Sursa.** Lipește linkul YouTube și apasă *Verifică linkul*. Aplicația validează linkul (un singur
-   videoclip, nu o listă de redare) și citește metadatele **fără să descarce nimic**: titlul, canalul,
-   durata, data publicării, vizualizările și miniatura.
-   - Videoclipurile de peste **60 de minute**, transmisiunile live și materialele cu DRM sau restricții
-     sunt refuzate.
-   - Peste **30 de minute** apare un avertisment și trebuie să confirmi explicit.
-   - Bifează *Confirm descărcarea…* și apasă *Descarcă videoclipul* (maximum 720p, de preferat H.264).
-   - Alternativ, alege *Fișier de pe calculator* și scrie calea completă (de exemplu
-     `C:\Users\Nume\Videos\interviu.mp4`). Fișierul este copiat în spațiul de lucru.
-3. **Transcriere locală.** Apasă *Extrage audio și transcrie*. Bara de progres arată poziția curentă și
-   ultima frază recunoscută. Rezultatul poate fi citit sau descărcat ca `.txt`.
-4. **Momente candidate.** Apasă *Găsește momentele*. Apare un tabel în care poți debifa momente și
-   edita titlurile. Explicația scorurilor este în *De ce au fost alese aceste momente?*.
-5. **Clipuri.** Apasă *Generează N clipuri*. Fiecare clip apare cu previzualizare, rezultatul verificării
-   (rezoluție, durată, dimensiune), modul de încadrare folosit, descrierea sugerată și butoane de
-   descărcare MP4 și SRT. Mai sus găsești *Descarcă CSV* și *Deschide folderul cu clipuri*.
-6. **Confirmă exportul.** După ce ai verificat clipurile, poți șterge fișierele intermediare (video sursă,
-   audio). Clipurile, CSV-ul și transcrierea rămân.
+Bara din stânga listează proiectele, cu starea fiecăruia. În partea de sus a unui proiect sunt cei
+4 pași, pe care poți naviga oricând înapoi.
 
-### Setări (bara din stânga)
+1. **Proiect nou.** Bifează confirmarea privind drepturile, apoi:
+   - **trage un videoclip** în zona punctată (sau apasă pe ea ca să-l alegi). Formatele acceptate sunt
+     MP4, MOV, MKV, AVI, WMV și altele, cu durata de maximum 60 de minute; sau
+   - **lipește un link YouTube** și apasă *Verifică*. Vezi titlul, canalul, durata și miniatura **fără
+     să se descarce nimic**:
+     - linkurile spre liste de redare, transmisiunile live, materialele de peste 60 de minute și cele
+       cu DRM sau restricții sunt refuzate;
+     - peste 30 de minute trebuie să confirmi explicit;
+     - apoi *Descarcă și creează proiectul* (maximum 720p).
+2. **Transcriere.** Alege modelul (`base`, rapid, sau `small`, mai precis) și limba, apoi *Pornește
+   transcrierea*. Cardul de progres arată ultima frază recunoscută, timpul scurs și timpul rămas, cu
+   buton *Anulează*. La final poți căuta în transcriere și o poți descărca ca `.txt`.
+3. **Momente.** Se aleg automat după transcriere, cu ultimele setări de durată (implicit 20–45 s,
+   8 clipuri). Pentru fiecare clip poți:
+   - edita titlul: se salvează la Enter sau când părăsești câmpul;
+   - **Început/Sfârșit +/−**: adaugi sau scoți câte o propoziție întreagă;
+   - **Subtitrări**: corectezi textul fiecărei subtitrări, cu timpii păstrați;
+   - debifa **În export**, sau șterge clipul;
+   - **Clip manual**: apeși pe prima și pe ultima propoziție din transcriere.
+4. **Export.** Alegi formatul, încadrarea, stilul, poziția și mărimea subtitrărilor. Previzualizarea arată
+   aproximativ rezultatul. Mai alegi normalizarea volumului, eliminarea pauzelor și coperta, apoi
+   *Exportă*. Fiecare clip apare cu:
+   - player și rezultatul verificării (rezoluție, durată, dimensiune, pauzele scoase);
+   - modul de încadrare folosit;
+   - butoanele *MP4*, *SRT*, *Copertă*, *Titlu* și *Descriere* (copiere), *Refă*.
 
-| Setare | Implicit | Explicație |
-|---|---|---|
-| Model Whisper | `base` | `small` este mai precis, mai ales la română, dar cam de 2–3 ori mai lent și mai mare (~480 MB) |
-| Limba vorbită | Română | se poate alege și detectare automată sau engleză |
-| Durata clipurilor | 20–45 s | orice interval între 15 și 60 de secunde |
-| Număr maxim de clipuri | 8 | între 5 și 10 |
-| Încadrare | Automat | față detectată, cu rezervă pe fundal blurat; poți alege și fundal blurat sau decupaj centrat |
-| Integrează subtitrările | da | fișierele `.srt` se creează oricum |
+   Deasupra găsești *Descarcă tot (ZIP)*, *CSV*, *Deschide folderul* și *Confirmă exportul*. Confirmarea
+   șterge videoclipul sursă și audio-ul; clipurile rămân.
 
----
+Dacă modifici ceva după export (un interval, o subtitrare), clipul apare marcat „modificat după export”.
+*Actualizează exportul* reface doar clipurile modificate sau cele cu setări schimbate.
 
 ## Cum funcționează, concret
 
@@ -166,19 +188,26 @@ automată poate greși cuvinte.
 
 ### Subtitrări
 
-Subtitrările sunt **în limba vorbită**, exact cum au fost transcrise, fără traducere și fără rescriere.
-Pentru subtitrări în română, videoclipul trebuie să fie vorbit în română. Diacriticele cu sedilă (ş, ţ)
-sunt corectate automat în forma corectă (ș, ț). Subtitrările apar în bucăți scurte, de cel mult ~24 de
-caractere, sincronizate pe cuvinte și poziționate deasupra zonei ocupate de interfața aplicațiilor de
-clipuri.
+Subtitrările sunt **în limba vorbită**, exact cum au fost transcrise, fără traducere. Singurele
+modificări de text sunt cele pe care le faci tu în editor. Pentru subtitrări în română, videoclipul
+trebuie să fie vorbit în română. Diacriticele cu sedilă (ş, ţ) sunt corectate automat în forma corectă
+(ș, ț). Subtitrările apar în bucăți scurte, de cel mult ~24 de caractere, sincronizate pe cuvinte.
+Poziția *Jos* le pune deasupra zonei ocupate de butoanele aplicațiilor de clipuri.
 
-### Încadrarea verticală
+- **Karaoke** colorează în galben cuvântul rostit, folosind timpii reali ai fiecărui cuvânt din transcriere.
+  Dacă ai corectat textul unei subtitrări, timpii cuvintelor din ea se împart proporțional cu lungimea lor.
+- **Eliminarea pauzelor** scurtează orice tăcere de peste 0,6 s dintre cuvinte la ~0,25 s. Aceleași
+  intervale se taie din video și din audio, iar subtitrările sunt recalculate pe noua axă de timp.
+  Cuvintele nu sunt tăiate niciodată.
+
+### Încadrarea
 
 Ce face modul **Automat**, exact:
 
 1. citește 24 de cadre din intervalul clipului;
 2. detectează fețe frontale cu clasificatorul Haar inclus în OpenCV;
-3. dacă fața apare în cel puțin jumătate din cadre și nu se mută mult, clipul este decupat 9:16 **fix**,
+3. dacă fața apare în cel puțin jumătate din cadre și nu se mută mult, clipul este decupat în formatul ales
+   (9:16, 4:5 sau 1:1), **fix**,
    centrat pe poziția mediană a feței;
 4. altfel (nicio față, mai multe persoane depărtate, mișcare mare) folosește **fundal blurat**: tot cadrul
    original rămâne vizibil, peste o versiune mărită și blurată a lui.
@@ -191,37 +220,42 @@ nu din profil. Modul ales pentru fiecare clip și motivul apar sub previzualizar
 
 După fiecare clip, `ffprobe` verifică:
 
-- rezoluția 1080 × 1920;
+- rezoluția formatului ales (1080 × 1920, 1080 × 1350 sau 1080 × 1080);
 - prezența fluxurilor video și audio;
-- durata (toleranță ±0,5 s față de intervalul ales).
+- durata (toleranță ±0,5 s față de intervalul ales, minus pauzele eliminate);
+- existența copertei, dacă ai cerut-o.
 
 Rezultatul apare în interfață și în coloana `verificare` din CSV.
 
 ### Fișierele generate
 
+În varianta instalată, clipurile sunt în `Videoclipuri\AI Clipper\<proiect>\`, iar restul în
+`%LOCALAPPDATA%\AI-Clipper\`. În varianta din codul sursă, totul este în folderul aplicației:
+
 ```
-ai-clipper\
-  workspace\<proiect>\   fișiere intermediare: source.mp4, audio_16k.wav, transcript.json,
-                         moments.json, state.json (starea etapelor, pentru reluare)
-  export\<proiect>\      clip_01.mp4, clip_01.srt, ..., clipuri.csv
-  models\                modelele Whisper descărcate
+workspace\<proiect>\   fișiere intermediare: source.mp4, audio_16k.wav, transcript.json,
+                       moments.json (cu subtitrările editate), state.json, thumbs\
+export\<proiect>\      clip_01.mp4, clip_01.srt, clip_01.jpg (copertă), ..., clipuri.csv
+models\                modelele Whisper descărcate
+logs\app.log           jurnalul aplicației (util când raportezi o problemă)
 ```
 
 `clipuri.csv` folosește separatorul `;` și codificarea UTF-8 cu BOM, ca să se deschidă corect, cu
-diacritice, în Excel cu setări românești. Coloane: `nr`, `fisier`, `start`, `sfarsit`, `durata_sec`,
-`titlu_sugerat`, `descriere_sugerata`, `cuvinte_cheie`, `scor`, `incadrare`, `verificare`,
-`text_transcris`, `sursa`, `url_sursa`.
+diacritice, în Excel cu setări românești. Coloane: `nr`, `fisier`, `coperta`, `format`, `start`, `sfarsit`,
+`durata_sec`, `pauze_eliminate_sec`, `titlu_sugerat`, `descriere_sugerata`, `cuvinte_cheie`, `scor`,
+`incadrare`, `verificare`, `text_transcris` (cu corecturile tale), `sursa`, `url_sursa`.
 
 ### Reluarea după o eroare
 
-- Fiecare etapă își salvează rezultatul pe disc. Dacă apare o eroare, mesajul rămâne afișat la etapa
-  respectivă, iar fișierele intermediare sunt păstrate.
-- Apasă din nou butonul etapei pentru reluare.
+- Fiecare etapă își salvează rezultatul pe disc. Dacă apare o eroare sau anulezi, mesajul rămâne afișat
+  la etapa respectivă, iar fișierele intermediare sunt păstrate.
+- Apasă din nou butonul etapei pentru reluare (la un import neterminat: *Reia importul*).
 - **Transcrierea** se salvează segment cu segment. După o întrerupere (eroare, aplicație închisă, PC
   repornit), continuă de la ultimul segment salvat, dacă modelul și limba sunt aceleași.
 - **Descărcarea** de pe YouTube continuă fișierul parțial.
 - La **export**, clipurile deja verificate nu se refac. Se generează doar cele lipsă sau modificate.
-- Proiectele anterioare se redeschid din bara laterală, la *Proiecte salvate*.
+- Proiectele anterioare se redeschid din bara laterală. Pot fi șterse din antetul proiectului, cu sau fără
+  clipurile exportate.
 
 ### Folosire fără internet (model copiat manual)
 
@@ -244,16 +278,25 @@ Dacă modelul nu se poate descărca automat, copiază fișierele modelului (`mod
 | `DLL load failed` la transcriere | Instalează Microsoft Visual C++ Redistributable: <https://aka.ms/vs/17/release/vc_redist.x64.exe>. |
 | `Nu a fost detectată vorbire` | Videoclipul nu are vorbire clară. Clipurile se bazează pe transcriere. |
 | Transcrierea pare greșită | Alege modelul `small` și limba corectă, apoi apasă *Refă transcrierea*. |
-| Previzualizarea nu pornește în browser | Folosește Edge sau Chrome. Clipurile sunt MP4 H.264/AAC, formatul acceptat de platformele de clipuri. |
+| Previzualizarea nu pornește | Aplicația se deschide în Edge, care redă MP4 H.264/AAC (formatul platformelor de clipuri). Dacă s-a deschis alt browser fără H.264, folosește Edge sau Chrome. |
+| Fereastra nu s-a deschis | Deschide `http://127.0.0.1:8501` (sau portul afișat). Jurnalul este în `%LOCALAPPDATA%\AI-Clipper\logs\app.log`. |
 
 ## Teste (pentru dezvoltatori)
 
 ```
-.venv\Scripts\python -m pip install pytest
+.venv\Scripts\python -m pip install pytest httpx playwright
 .venv\Scripts\python -m pytest tests -q
 .venv\Scripts\python tests\make_test_media.py test_media
 .venv\Scripts\python tests\e2e.py test_media\test_face.mp4 --model base --language ro
+.venv\Scripts\python launcher.py --no-browser --port 8600
+.venv\Scripts\python tests\ui_flow.py --url http://127.0.0.1:8600 --video video.mp4 --channel msedge
 ```
+
+- `tests/test_units.py`: selecția momentelor, subtitrările, editarea, eliminarea pauzelor, setările,
+  reluarea transcrierii;
+- `tests/test_api.py`: serverul real, prin HTTP: securitate (Host, token), încărcare, tot fluxul,
+  editări, export cu karaoke și pauze eliminate, ZIP, anulare și reluare, ștergere;
+- `tests/ui_flow.py`: un robot Playwright care folosește interfața cap-coadă, ca un utilizator.
 
 `make_test_media.py` generează un videoclip de test autorizat, creat integral local:
 

@@ -105,6 +105,26 @@ jobs:
           Get-Content "$env:RUNNER_TEMP\ui.err" -ErrorAction SilentlyContinue | Select-Object -Last 40
           if ($code -ne 0) { exit 1 }
 
+      - name: Pornire ca la dublu-clic (fereastra Edge) și oprire la închiderea ferestrei
+        run: |
+          $inst = Join-Path $env:LOCALAPPDATA "AI-Clipper\instance.json"
+          Remove-Item $inst -ErrorAction SilentlyContinue
+          $p = Start-Process dist\AI-Clipper\AI-Clipper.exe -PassThru
+          $port = $null; $window = $false
+          for ($i = 0; $i -lt 90; $i++) {
+            Start-Sleep -Seconds 2
+            if (-not $port -and (Test-Path $inst)) { $port = (Get-Content $inst | ConvertFrom-Json).port }
+            if ($port) {
+              try { $ping = Invoke-RestMethod "http://127.0.0.1:$port/api/ping" -TimeoutSec 5; if ($ping.window) { $window = $true; break } } catch { }
+            }
+          }
+          Get-CimInstance Win32_Process -Filter "Name='msedge.exe'" | Where-Object { $_.CommandLine -like "*--app=*" } | Select-Object -First 1 -ExpandProperty CommandLine
+          if (-not $window) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue; throw "Fereastra aplicației nu a încărcat interfața (port=$port)" }
+          "Fereastra Edge a încărcat interfața (port $port). Închid fereastra…"
+          Get-Process msedge -ErrorAction SilentlyContinue | Stop-Process -Force
+          if (-not $p.WaitForExit(240000)) { Stop-Process -Id $p.Id -Force; throw "Aplicația nu s-a oprit după închiderea ferestrei" }
+          "Aplicația s-a oprit singură după închiderea ferestrei (cod $($p.ExitCode))."
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:

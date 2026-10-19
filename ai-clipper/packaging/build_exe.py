@@ -32,7 +32,7 @@ def main() -> None:
         "--specpath", str(ROOT / "build"),
         # interfața (clipper/web: HTML, CSS, JS) și toate modulele aplicației
         "--collect-submodules", "clipper",
-        "--collect-data", "clipper",
+        "--add-data", f"{ROOT / 'clipper' / 'web'}{os.pathsep}clipper/web",
         # uvicorn își alege implementările (bucla, protocolul HTTP) prin import dinamic
         "--collect-submodules", "uvicorn",
         # faster-whisper: modelul VAD Silero (assets/*.onnx); ctranslate2/onnxruntime: biblioteci native
@@ -46,6 +46,11 @@ def main() -> None:
         # OpenCV: clasificatorii Haar (cv2/data/*.xml) pentru detectarea feței
         "--collect-data", "cv2",
         "--exclude-module", "tkinter",
+        # biblioteci grele care nu sunt folosite (pot fi trase de pachete opționale din mediu)
+        "--exclude-module", "pyarrow",
+        "--exclude-module", "pandas",
+        "--exclude-module", "streamlit",
+        "--exclude-module", "matplotlib",
     ]
     icon = ROOT / "packaging" / "icon.ico"
     if icon.exists():

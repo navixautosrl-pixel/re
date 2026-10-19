@@ -18,6 +18,10 @@ else:
     DATA_DIR = APP_DIR
     OUTPUT_DIR = APP_DIR / "export"
 
+if os.environ.get("AI_CLIPPER_DATA_DIR"):  # folder de date ales explicit (teste, instalare portabilă)
+    DATA_DIR = Path(os.environ["AI_CLIPPER_DATA_DIR"]).resolve()
+    OUTPUT_DIR = DATA_DIR / "export"
+
 BUNDLE_DIR = APP_DIR                    # unde caută ffmpeg\bin, deno\, models\ livrate cu aplicația
 WORKSPACE_DIR = DATA_DIR / "workspace"  # fișiere intermediare (video sursă, audio, transcriere)
 MODELS_DIR = DATA_DIR / "models"        # modelele Whisper descărcate o singură dată
