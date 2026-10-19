@@ -170,8 +170,9 @@ class FakeModel:
     def __init__(self, fail_after=None):
         self.fail_after = fail_after
 
-    def transcribe(self, path, **kw):
-        dur = transcribe.probe(path).duration
+    def transcribe(self, audio, **kw):
+        assert audio.dtype.name == "float32" and audio.ndim == 1  # ca la faster-whisper: eșantioane 16 kHz
+        dur = len(audio) / 16000
         FakeModel.calls.append(dur)
 
         def gen():

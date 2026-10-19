@@ -11,6 +11,7 @@ import json
 import os
 import re
 import subprocess
+import wave
 from pathlib import Path
 from typing import Callable
 
@@ -79,6 +80,20 @@ def extract_audio(video: Path, out_wav: Path, progress: Progress | None = None,
     run_ffmpeg_with_progress(args, max(info.duration - start, 0.1), progress, "Extragere audio")
     tmp.replace(out_wav)
     return out_wav
+
+
+def load_wav_16k(path: Path):
+    """Citește WAV-ul mono 16 kHz produs de extract_audio ca float32 în [-1, 1].
+
+    Îl dăm direct modelului: faster-whisper 1.2.1 decodează altfel cu PyAV și apelează
+    av.open(..., metadata_errors=...), parametru eliminat în PyAV 17+ (transcrierea ar eșua)."""
+    import numpy as np
+
+    with wave.open(str(path), "rb") as w:
+        if w.getframerate() != 16000 or w.getnchannels() != 1 or w.getsampwidth() != 2:
+            raise ToolError(f"Format audio neașteptat în {path.name}; reia etapa de extragere audio.")
+        data = w.readframes(w.getnframes())
+    return np.frombuffer(data, dtype=np.int16).astype(np.float32) / 32768.0
 
 
 def _local_model_dir(model_name: str) -> Path | None:
@@ -165,7 +180,7 @@ def transcribe(audio_wav: Path, transcript_path: Path, partial_path: Path, model
         lang = header.get("detected_language") if language == "auto" else language
         try:
             seg_iter, info = model.transcribe(
-                str(work_audio),
+                load_wav_16k(work_audio),
                 language=lang,
                 task="transcribe",
                 beam_size=5,
