@@ -13,10 +13,13 @@ Last updated: 2026-10-21. Everything below was produced in a Linux sandbox **wit
 - **Client library + desktop logic layer** (platform-neutral): retry policy, session-expiry handling, view-models for login, shell, dashboard, VM list, audit, 7-step wizard, RO/EN localisation.
 - **Host preflight script** (`host/preflight.sh`).
 
-## Written but UNVERIFIED (never compiled/run: no Windows here)
+## Windows build: COMPILED and PACKAGED on a real Windows runner (GitHub Actions run 39554565017, 2026-10-21)
+The WPF app compiled (after 2 real errors were found and fixed), published self-contained, and Inno Setup produced a 51 MB installer. **Never launched or clicked through by a human: runtime behaviour, layout and the installer's install/uninstall are still UNVERIFIED.**
+
+## Written but UNVERIFIED at runtime
 - WPF Control Center (`desktop/RobixHost.ControlCenter`): app, composition root, dark/light themes, RO/EN toggle, sign-in, shell with 19-item navigation, dashboard, VM list with actions, audit log, create-VPS wizard, type-to-confirm dialog, toasts. Not in the main solution. The sign-in token is held in memory only (no DPAPI persistence yet). Sparkline control and several panels (storage, retained VMs) are not drawn yet.
-- CI: `.github/workflows/windows-build.yml` compiles the WPF app and builds the installer on a Windows runner (never run; needs a GitHub repo).
-- Installer: `installer/RobixHostControlCenter.iss` (Inno Setup) and `installer/build.ps1`. Installs the client only.
+- CI: `.github/workflows/windows-build.yml` compiles the WPF app and builds the installer on a Windows runner (ran successfully; branch claude/robixhost-platform of navixautosrl-pixel/re).
+- Installer: `installer/RobixHostControlCenter.iss` (Inno Setup) and `installer/build.ps1`. Installs the client only; English wizard (Inno Setup has no bundled Romanian file).
 - `docs/HOST-INSTALL.md`: host install, upgrade and recovery procedures (not run on a real host).
 
 ## In progress
