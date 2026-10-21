@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Everything the Control Center does EXCEPT drawing it: view-models, commands, localization, formatting.
+       Platform-neutral so it is unit-tested on any OS; the WPF project (desktop/) only binds to it. -->
+  <ItemGroup>
+    <ProjectReference Include="../RobixHost.Core/RobixHost.Core.csproj" />
+    <ProjectReference Include="../RobixHost.Client/RobixHost.Client.csproj" />
+  </ItemGroup>
+</Project>

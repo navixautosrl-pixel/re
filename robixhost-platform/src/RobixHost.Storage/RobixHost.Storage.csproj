@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../RobixHost.Core/RobixHost.Core.csproj" />
+    <ProjectReference Include="../RobixHost.Virtualization/RobixHost.Virtualization.csproj" />
+  </ItemGroup>
+</Project>

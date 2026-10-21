@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="../RobixHost.Core/RobixHost.Core.csproj" />
+    <ProjectReference Include="../RobixHost.Data/RobixHost.Data.csproj" />
+    <ProjectReference Include="../RobixHost.Jobs/RobixHost.Jobs.csproj" />
+    <ProjectReference Include="../RobixHost.Virtualization/RobixHost.Virtualization.csproj" />
+    <ProjectReference Include="../RobixHost.Networking/RobixHost.Networking.csproj" />
+    <ProjectReference Include="../RobixHost.Auth/RobixHost.Auth.csproj" />
+    <ProjectReference Include="../RobixHost.Provisioning/RobixHost.Provisioning.csproj" />
+    <ProjectReference Include="../RobixHost.Monitoring/RobixHost.Monitoring.csproj" />
+    <ProjectReference Include="../RobixHost.Whmcs/RobixHost.Whmcs.csproj" />
+    <ProjectReference Include="../RobixHost.Storage/RobixHost.Storage.csproj" />
+  </ItemGroup>
+</Project>

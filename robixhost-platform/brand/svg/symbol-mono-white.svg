@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="RobixHost">
+  <defs>
+  <linearGradient id="s-g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#22D3EE"/><stop offset="1" stop-color="#2F6BFF"/>
+  </linearGradient>
+  <linearGradient id="s-tile" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#101B3D"/><stop offset="1" stop-color="#060B1A"/>
+  </linearGradient>
+</defs>
+  
+  <g fill="none" stroke="#F4F7FC" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M94 192V64H150a32 32 0 0 1 0 64H94"/>
+    <path d="M140 128 L176 190"/>
+  </g>
+  <circle cx="182" cy="198" r="19" fill="none" stroke="#F4F7FC" stroke-width="14"/>
+</svg>

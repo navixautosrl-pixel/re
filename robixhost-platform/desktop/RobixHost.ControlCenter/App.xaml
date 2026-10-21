@@ -1,0 +1,11 @@
+<Application x:Class="RobixHost.ControlCenter.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Startup is in code (App.xaml.cs) so the window is created only after the composition root exists. -->
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Themes/Dark.xaml"/>
+        <ResourceDictionary Source="Themes/Common.xaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Application.Resources>
+</Application>

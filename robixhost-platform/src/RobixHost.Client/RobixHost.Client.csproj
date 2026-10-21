@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Typed client for the RobixHost admin API. Platform-neutral on purpose: the desktop app, tests and future tools share it. -->
+  <ItemGroup>
+    <ProjectReference Include="../RobixHost.Core/RobixHost.Core.csproj" />
+    <ProjectReference Include="../RobixHost.Storage/RobixHost.Storage.csproj" />
+  </ItemGroup>
+</Project>

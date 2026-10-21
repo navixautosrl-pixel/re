@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><AllowUnsafeBlocks>true</AllowUnsafeBlocks></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../RobixHost.Core/RobixHost.Core.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../RobixHost.Data/RobixHost.Data.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../RobixHost.Jobs/RobixHost.Jobs.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../RobixHost.Virtualization/RobixHost.Virtualization.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../RobixHost.Networking/RobixHost.Networking.csproj" /></ItemGroup>
+</Project>

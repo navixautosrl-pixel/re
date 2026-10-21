@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><AllowUnsafeBlocks>true</AllowUnsafeBlocks></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/RobixHost.Core/RobixHost.Core.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Data/RobixHost.Data.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Jobs/RobixHost.Jobs.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Virtualization/RobixHost.Virtualization.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Networking/RobixHost.Networking.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Auth/RobixHost.Auth.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Provisioning/RobixHost.Provisioning.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Monitoring/RobixHost.Monitoring.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Whmcs/RobixHost.Whmcs.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Client/RobixHost.Client.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Storage/RobixHost.Storage.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Desktop.Core/RobixHost.Desktop.Core.csproj" />
+  </ItemGroup>
+</Project>

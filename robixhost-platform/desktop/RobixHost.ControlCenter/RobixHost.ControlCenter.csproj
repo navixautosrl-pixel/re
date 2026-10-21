@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- UNVERIFIED: written without a Windows machine or the WPF targeting pack; it has never been compiled.
+       Intentionally NOT part of RobixHost.sln so the Linux build and tests stay green. Build on Windows:
+       dotnet build desktop/RobixHost.ControlCenter -c Release -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseAppHost>true</UseAppHost>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <AssemblyName>RobixHostControlCenter</AssemblyName>
+    <RootNamespace>RobixHost.ControlCenter</RootNamespace>
+    <ApplicationIcon>../../brand/ico/RobixHost.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/RobixHost.Desktop.Core/RobixHost.Desktop.Core.csproj" />
+    <ProjectReference Include="../../src/RobixHost.Client/RobixHost.Client.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="../../brand/png/*.png" Link="Assets/%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

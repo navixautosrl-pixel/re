@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="no-alerts">
+  <defs>
+  <linearGradient id="e-g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#22D3EE"/><stop offset="1" stop-color="#2F6BFF"/>
+  </linearGradient>
+  <linearGradient id="e-tile" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#101B3D"/><stop offset="1" stop-color="#060B1A"/>
+  </linearGradient>
+</defs>
+  <ellipse cx="160" cy="176" rx="104" ry="10" fill="#101B3D"/><path d="M160 36 L216 56 V104 c0 34-24 52-56 64 c-32-12-56-30-56-64 V56 Z" fill="#0A1128" stroke="url(#e-g)" stroke-width="3"/><path d="M136 104 l18 18 l32-36" fill="none" stroke="url(#e-g)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

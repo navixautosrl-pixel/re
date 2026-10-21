@@ -1,0 +1,24 @@
+# UNVERIFIED: never run. Builds and tests everything on a real Windows runner and produces the installer,
+# so nobody has to build by hand. Trigger manually (Actions tab -> Run workflow) or on push.
+name: windows-build
+on: { workflow_dispatch: {}, push: { branches: ['claude/robixhost-platform'], paths: ['robixhost-platform/**', '.github/workflows/robixhost-windows-build.yml'] } }
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults: { run: { working-directory: robixhost-platform } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Restore nuget.org (the repo's nuget.config is sandbox-only)
+        run: dotnet nuget add source https://api.nuget.org/v3/index.json --name nuget.org --configfile nuget.config
+      - name: Build WPF app (the first real compile of the Windows UI)
+        run: dotnet build desktop/RobixHost.ControlCenter -c Release
+      - name: Publish self-contained
+        run: dotnet publish desktop/RobixHost.ControlCenter -c Release -r win-x64 --self-contained true -o artifacts/publish/ControlCenter
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+      - name: Build installer
+        run: '& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" installer/RobixHostControlCenter.iss'
+      - uses: actions/upload-artifact@v4
+        with: { name: RobixHost-ControlCenter-Setup, path: robixhost-platform/artifacts/installer/*.exe }
