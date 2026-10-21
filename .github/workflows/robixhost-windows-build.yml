@@ -15,7 +15,9 @@ jobs:
       - name: Build WPF app (the first real compile of the Windows UI)
         run: dotnet build desktop/RobixHost.ControlCenter -c Release
       - name: Publish self-contained
-        run: dotnet publish desktop/RobixHost.ControlCenter -c Release -r win-x64 --self-contained true -o artifacts/publish/ControlCenter
+        run: |
+          dotnet publish desktop/RobixHost.ControlCenter -c Release -r win-x64 --self-contained true -o artifacts/publish/ControlCenter *>&1 | Tee-Object -FilePath publish.log
+          if ($LASTEXITCODE -ne 0) { $t = ((Get-Content publish.log | Select-String -Pattern 'error|warn' | Select-Object -First 8) -join ' | '); Write-Host "::error::PUBLISH FAILED: $t"; exit 1 }
       - name: Install Inno Setup
         run: choco install innosetup --no-progress -y
       - name: Build installer
