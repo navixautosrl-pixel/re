@@ -68,7 +68,7 @@
           <TextBox Width="280" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
           <Button Content="{Binding [vms.refresh], Source={StaticResource Loc}}" Command="{Binding RefreshCommand}"/>
         </StackPanel>
-        <TextBlock DockPanel.Dock="Top" Text="{Binding [vms.empty], Source={StaticResource Loc}}" Style="{StaticResource Muted}">
+        <TextBlock DockPanel.Dock="Top" Text="{Binding [vms.empty], Source={StaticResource Loc}}">
           <TextBlock.Style><Style TargetType="TextBlock" BasedOn="{StaticResource Muted}"><Setter Property="Visibility" Value="Collapsed"/>
             <Style.Triggers><DataTrigger Binding="{Binding IsEmpty}" Value="True"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style>
         </TextBlock>
