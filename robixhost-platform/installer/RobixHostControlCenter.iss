@@ -23,7 +23,6 @@ Compression=lzma2
 SolidCompression=yes
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
-Name: "ro"; MessagesFile: "compiler:Languages\Romanian.isl"
 [Files]
 ; Self-contained publish output (see installer/build.ps1), so no .NET runtime is required on the admin PC.
 Source: "..\artifacts\publish\ControlCenter\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
