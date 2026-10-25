@@ -1,6 +1,6 @@
 // Geometry helpers for building low-poly props out of primitives with baked
 // vertex colours, merged into one geometry per prop for cheap instancing.
-import * as THREE from '/vendor/three/three.module.js';
+import * as THREE from 'three';
 
 // parts: [{ geo, color, pos?: [x,y,z], rot?: [x,y,z], scale?: [x,y,z] }]
 export function mergeColored(parts) {

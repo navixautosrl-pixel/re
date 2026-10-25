@@ -1,7 +1,7 @@
 // Builds Hollowmere Vale from the shared deterministic terrain: ground mesh,
 // lake, forests, rocks, grass, the town of Emberford, sky and lighting with a
 // day/night cycle. Everything is procedural; no external art assets.
-import * as THREE from '/vendor/three/three.module.js';
+import * as THREE from 'three';
 import { createNoise2D } from '/shared/noise.js';
 import { mulberry32 } from '/shared/rng.js';
 import { mergeColored, gableRoof, jitterGeometry, canvasTexture } from './geo.js';

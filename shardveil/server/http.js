@@ -1,5 +1,6 @@
 // HTTP: the JSON account/character API and static hosting of the game client.
-import { createReadStream, statSync } from 'node:fs';
+import { createReadStream, statSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { ROOT } from './config.js';
 import { createRateLimiter } from './auth.js';
@@ -9,6 +10,7 @@ import { log } from './log.js';
 
 const STATIC_ROOTS = [
   { prefix: '/shared/', dir: path.join(ROOT, 'shared') },
+  { prefix: '/vendor/three/addons/', dir: path.join(ROOT, 'node_modules', 'three', 'examples', 'jsm') },
   { prefix: '/vendor/three/', dir: path.join(ROOT, 'node_modules', 'three', 'build') },
   { prefix: '/vendor/fonts/', dir: path.join(ROOT, 'node_modules', '@fontsource') },
   { prefix: '/', dir: path.join(ROOT, 'client') },
@@ -17,15 +19,24 @@ const STATIC_ROOTS = [
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
   '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.ico': 'image/x-icon',
-  '.ogg': 'audio/ogg', '.wav': 'audio/wav',
+  '.ogg': 'audio/ogg', '.wav': 'audio/wav', '.glb': 'model/gltf-binary', '.gltf': 'model/gltf+json',
+  '.jpg': 'image/jpeg', '.ktx2': 'image/ktx2', '.bin': 'application/octet-stream',
 };
+
+// The page's only inline script is the import map; allow exactly that script
+// by hash instead of loosening script-src.
+function importMapHash() {
+  const html = readFileSync(path.join(ROOT, 'client', 'index.html'), 'utf8');
+  const m = html.match(/<script type="importmap">([\s\S]*?)<\/script>/);
+  return m ? `'sha256-${createHash('sha256').update(m[1]).digest('base64')}'` : '';
+}
 
 const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'no-referrer',
   'Content-Security-Policy':
-    "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' ws: wss:; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+    `default-src 'self'; script-src 'self' ${importMapHash()}; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' ws: wss: blob: data:; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'`,
 };
 
 function sendJson(res, status, body) {
@@ -50,10 +61,12 @@ function readJson(req, limit = 4096) {
   });
 }
 
-function serveStatic(req, res) {
+export function serveStatic(req, res, { allowTools = false } = {}) {
   const url = new URL(req.url, 'http://x');
   let pathname = decodeURIComponent(url.pathname);
   if (pathname === '/') pathname = '/index.html';
+  // The bake tool page only exists for the offline asset build.
+  if (pathname.startsWith('/tools/') && !allowTools) { res.writeHead(404); res.end('Not found'); return; }
   for (const { prefix, dir } of STATIC_ROOTS) {
     if (!pathname.startsWith(prefix)) continue;
     const file = path.normalize(path.join(dir, pathname.slice(prefix.length)));

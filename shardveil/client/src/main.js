@@ -1,11 +1,12 @@
 // App shell: renderer and world (alive for the whole page), the front-end
 // screens (login, character select/create), and entering/leaving the game.
-import * as THREE from '/vendor/three/three.module.js';
+import * as THREE from 'three';
 import { createTerrain } from '/shared/terrain.js';
 import { ZONES, DEFAULT_ZONE } from '/shared/data/zones.js';
 import { CLASSES, CLASS_IDS } from '/shared/data/classes.js';
 import { buildWorld } from './scene/world.js';
-import { buildHumanoid, animate } from './scene/models.js';
+import { Avatar, outfitFor, avatarAssetList } from './scene/avatar.js';
+import { assets } from './assets/library.js';
 import { STARTER_KITS } from '/shared/data/items.js';
 import { api, ApiError } from './api.js';
 import { Connection } from './net.js';
@@ -31,10 +32,23 @@ class App {
     this.dayStart = performance.now() / 1000 - 0.42 * 1440; // late morning until the server tells us otherwise
     addEventListener('resize', () => this.resize());
     this.resize();
-    this.buildPreview();
     this.loop();
+    this.boot();
+  }
+
+  // Load every character, outfit and weapon GLB before showing the menus.
+  async boot() {
+    const label = $('boot').querySelector('p');
+    try {
+      await assets.init();
+      await assets.preload(avatarAssetList(), (n, total) => { label.textContent = `Raising the vale… ${Math.round((n / total) * 100)}%`; });
+    } catch (err) {
+      label.textContent = `Could not load game assets: ${err.message}`;
+      return;
+    }
+    this.buildPreview();
     this.bindFront();
-    requestAnimationFrame(() => $('boot').classList.add('done'));
+    $('boot').classList.add('done');
   }
 
   createRenderer() {
@@ -89,7 +103,7 @@ class App {
         this.camera.lookAt(town.x - Math.sin(a) * 6, town.height + 3, town.z + Math.cos(a) * 6);
         focus = new THREE.Vector3(town.x, town.height, town.z);
         phase = ((performance.now() / 1000 - this.dayStart) / 1440) % 1;
-        if (this.preview) animate(this.preview, { attackT: 9, castT: 9, hitT: 9, speed: 0 }, dt, time);
+        if (this.preview) this.preview.update({ attackT: 9, castT: 9, hitT: 9, speed: 0 }, dt);
       }
       this.world.update(dt, time, focus, phase);
       const ember = this.world.group.userData.ember;
@@ -106,7 +120,7 @@ class App {
   // A character model standing by the brazier for the select/create screens.
   buildPreview(cls = 'vanguard') {
     if (this.previewRoot) this.scene.remove(this.previewRoot);
-    this.preview = buildHumanoid({ cls, weaponDef: STARTER_KITS[cls].weapon });
+    this.preview = new Avatar({ outfit: outfitFor(cls), weapon: STARTER_KITS[cls].weapon });
     this.previewRoot = this.preview.root;
     this.previewRoot.position.set(4.5, this.terrain.heightAt(4.5, 4.5), 4.5);
     this.previewRoot.visible = false;

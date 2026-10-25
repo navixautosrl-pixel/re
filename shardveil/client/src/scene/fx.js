@@ -1,7 +1,7 @@
 // Visual effects: projectiles, hit sparks, skill visuals, boss telegraphs,
 // level-up light. Each effect is short-lived and owns its own transparent
 // material so it can fade independently.
-import * as THREE from '/vendor/three/three.module.js';
+import * as THREE from 'three';
 
 const GEO = {
   spark: new THREE.TetrahedronGeometry(0.07, 0),

@@ -1,7 +1,7 @@
 // In-game interface: unit frames, action bar, XP, chat, pack/character
 // windows with drag and drop, tooltips, settings, nameplates, floating combat
 // text and the minimap. DOM-based so text stays crisp at any UI scale.
-import * as THREE from '/vendor/three/three.module.js';
+import * as THREE from 'three';
 import { CLASSES, SKILLS } from '/shared/data/classes.js';
 import { ITEMS, RARITIES, EQUIP_SLOTS, isEquipment, canClassUse } from '/shared/data/items.js';
 import { MONSTERS } from '/shared/data/monsters.js';

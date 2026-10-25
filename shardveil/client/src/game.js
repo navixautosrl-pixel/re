@@ -1,12 +1,13 @@
 // Client-side game session: owns the entities for one connection, predicts
 // the local player's movement (validated by the server), interpolates
 // everyone else, and turns input into requests. The server decides outcomes.
-import * as THREE from '/vendor/three/three.module.js';
+import * as THREE from 'three';
 import { CLASSES, SKILLS } from '/shared/data/classes.js';
 import { MONSTERS } from '/shared/data/monsters.js';
 import { ITEMS, RARITIES } from '/shared/data/items.js';
 import { PROGRESSION } from '/shared/data/progression.js';
-import { buildHumanoid, buildMonster, buildLoot, animate, setWeapon } from './scene/models.js';
+import { buildMonster, buildLoot, animate } from './scene/models.js';
+import { Avatar, outfitFor } from './scene/avatar.js';
 import { Fx } from './scene/fx.js';
 import { Hud } from './ui/hud.js';
 import { QuestUi } from './ui/quests.js';
@@ -15,11 +16,6 @@ import { sfx, initAudio, setAmbientNight } from './audio.js';
 
 const PLAYER_RADIUS = 0.4;
 const MOVE_SEND_INTERVAL = 0.1;
-const NPC_COLORS = {
-  quest: { primary: '#5b6b7a', secondary: '#a8824f', cloth: '#3b4a58' },
-  merchant: { primary: '#7a5a38', secondary: '#c9b48a', cloth: '#5a4330' },
-  storage: { primary: '#4a4a5a', secondary: '#a8824f', cloth: '#2f3442' },
-};
 const damp = (k, dt) => 1 - Math.exp(-k * dt);
 const angleLerp = (a, b, t) => {
   let d = ((b - a + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
@@ -76,7 +72,7 @@ export class Game {
       hp: 1, mp: 0, mhp: 1, mmp: 1, dead: false, cd: {}, buffs: [], stats: null,
     };
     const weapon = this.inventory.find((i) => i.container === 'equip' && i.slot === 0)?.defId;
-    const model = buildHumanoid({ cls: ch.cls, weaponDef: weapon });
+    const model = new Avatar({ outfit: outfitFor(ch.cls), weapon });
     this.player = model.root;
     this.player.position.set(ch.x, this.terrain.heightAt(ch.x, ch.z), ch.z);
     this.player.rotation.y = ch.ry;
@@ -110,7 +106,7 @@ export class Game {
   spawnNpcs() {
     let id = -1;
     for (const n of this.terrain.zone.npcs) {
-      const model = buildHumanoid({ cls: null, npcRole: n.role, colors: NPC_COLORS[n.role] });
+      const model = new Avatar({ outfit: outfitFor(null, n.role) });
       model.root.position.set(n.x, this.terrain.heightAt(n.x, n.z), n.z);
       model.root.rotation.y = n.ry;
       this.root.add(model.root);
@@ -157,7 +153,7 @@ export class Game {
 
   refreshMyWeapon() {
     const w = this.inventory.find((i) => i.container === 'equip' && i.slot === 0)?.defId || null;
-    setWeapon(this.myEnt.model, w);
+    this.myEnt.model.setWeapon(w);
   }
 
   onSnapshot(s) {
@@ -171,13 +167,13 @@ export class Game {
       let e = this.entities.get(p.i);
       if (!e) {
         if (!p.n) continue; // we'll get the full record next time
-        const model = buildHumanoid({ cls: p.c, weaponDef: p.w });
+        const model = new Avatar({ outfit: outfitFor(p.c), weapon: p.w });
         model.root.position.set(p.x, this.terrain.heightAt(p.x, p.z), p.z);
         this.root.add(model.root);
         e = { id: p.i, type: 'player', name: p.n, cls: p.c, model, anim: this.newAnim(), labelHeight: 2.15, x: p.x, z: p.z, ry: p.r };
         this.entities.set(p.i, e);
       }
-      if (p.w !== undefined) setWeapon(e.model, p.w);
+      if (p.w !== undefined) e.model.setWeapon(p.w);
       if (p.d && !e.dead) e.anim.deathT = 0;
       Object.assign(e, { tx: p.x, tz: p.z, tr: p.r, hp: p.hp, mh: p.mh, level: p.lv, dead: !!p.d });
     }
@@ -659,8 +655,8 @@ export class Game {
       const a = e.anim;
       if (a) { a.attackT += dt; a.castT += dt; a.hitT += dt; if (e.dead) a.deathT += dt; }
       if (e === me || e.type === 'npc' || e.type === 'loot') {
-        if (e.model && a) animate(e.model, { ...a, dead: e === me ? this.me.dead : false }, dt, time);
-        else if (e.type === 'loot') animate(e.model, {}, dt, time);
+        if (e.model.isAvatar) e.model.update({ ...a, dead: e === me ? this.me.dead : false }, dt);
+        else animate(e.model, {}, dt, time);
         continue;
       }
       const root = e.model.root;
@@ -674,7 +670,8 @@ export class Game {
         e.x = root.position.x; e.z = root.position.z;
       }
       root.position.y = this.terrain.heightAt(root.position.x, root.position.z);
-      animate(e.model, { ...a, dead: e.dead }, dt, time);
+      if (e.model.isAvatar) e.model.update({ ...a, dead: e.dead }, dt);
+      else animate(e.model, { ...a, dead: e.dead }, dt, time);
     }
 
     const t = this.target();

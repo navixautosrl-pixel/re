@@ -2,7 +2,7 @@
 // procedural animation (walk, attack, cast, hit, death). Built from primitives
 // so the project ships no third-party art; silhouettes are kept distinct per
 // class and species so they read at a distance.
-import * as THREE from '/vendor/three/three.module.js';
+import * as THREE from 'three';
 import { CLASSES } from '/shared/data/classes.js';
 import { ITEMS, RARITIES } from '/shared/data/items.js';
 
