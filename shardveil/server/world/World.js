@@ -11,6 +11,7 @@ import { TICK_RATE, SNAPSHOT_RATE, INTEREST_RADIUS, S } from '../../shared/proto
 import { mulberry32 } from '../../shared/rng.js';
 import { Combat } from './combat.js';
 import { QuestService } from './quests.js';
+import { handleService } from './services.js';
 import { updateMonster } from './ai.js';
 import * as repo from '../repo/characters.js';
 import { log } from '../log.js';
@@ -295,7 +296,7 @@ export class World {
       case 'questTurnIn': return typeof msg.quest === 'string' && this.quests.turnIn(p, msg.quest);
       case 'questAbandon': return typeof msg.quest === 'string' && this.quests.abandon(p, msg.quest);
       case 'ping': return p.send({ t: S.PONG, t0: msg.t0, serverTime: this.time });
-      default: return undefined;
+      default: return handleService(this, p, msg);
     }
   }
 

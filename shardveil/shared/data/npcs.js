@@ -8,15 +8,15 @@ export const NPC_DIALOGUE = {
     'North, on Shardscar Ridge, pieces of the Veil still glow in the rock. Strike one and it calls things to defend it. Go prepared.',
   ],
   merchant_odd: [
-    'Pell Oddery, purveyor of odds and sundries. My stalls are being rebuilt after the last shardfall.',
-    'Bring me pelts and tusks in the meantime and keep them safe. When the stalls reopen, I will pay fair coin.',
+    'Pell Oddery, purveyor of odds and sundries. Draughts, caps, boots, the odd trinket.',
+    'And I buy, too. Pelts, tusks, whatever the wilds give up. Fair coin, no questions.',
   ],
   smith_harrow: [
     'Harrow Forge. That fire has not gone out in three generations.',
-    'See those blue fragments the shards leave behind? Veil Fragments. Hoard them. A smith who knows the old tempering can make steel take on their strength.',
+    'See those blue fragments the shards leave behind? Veil Fragments. Bring them with coin and I will temper your gear with them. The first few folds are safe; past that, steel can lose a fold if the tempering fails, unless you ward it with wax.',
   ],
   keeper_bram: [
     'The vaults under the Hall of Embers survived the Sundering, and they will survive whatever comes next.',
-    'Your pack only holds so much. Soon I will be keeping wares safe for travellers again. Until then, carry what matters.',
+    'Your pack only holds so much. Leave what you do not need with me; the vault remembers every traveller.',
   ],
 };

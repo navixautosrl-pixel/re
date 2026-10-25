@@ -78,8 +78,8 @@ export const ZONES = {
     npcs: [
       { id: 'warden_ilsa', name: 'Warden Ilsa', role: 'quest', x: 3, z: 9, ry: Math.PI },
       { id: 'merchant_odd', name: 'Pell Oddery', role: 'merchant', shop: 'general', x: 16, z: 9, ry: Math.PI },
-      { id: 'smith_harrow', name: 'Dagny Harrow', role: 'merchant', shop: 'smith', x: 15, z: -9, ry: 0 },
-      { id: 'keeper_bram', name: 'Keeper Bram', role: 'storage', x: -10, z: -8, ry: 0 },
+      { id: 'smith_harrow', name: 'Dagny Harrow', role: 'merchant', shop: 'smith', upgrades: true, x: 15, z: -9, ry: 0 },
+      { id: 'keeper_bram', name: 'Keeper Bram', role: 'storage', storage: true, x: -10, z: -8, ry: 0 },
     ],
   },
 };

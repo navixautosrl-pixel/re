@@ -72,6 +72,11 @@ export const ITEMS = {
     use: { mana: 60, cooldown: 8, group: 'potion_mp' }, icon: 'potion_blue', tradable: true,
   },
 
+  warding_wax: {
+    id: 'warding_wax', name: 'Warding Wax', type: 'material', stack: 20, value: 35, icon: 'wax', tradable: true,
+    description: 'Rubbed into steel before tempering. If the tempering fails, the item keeps its level.',
+  },
+
   // ---- Materials -----------------------------------------------------------
   wolf_pelt:      { id: 'wolf_pelt', name: 'Dusk Wolf Pelt', type: 'material', stack: 200, value: 2, icon: 'pelt', tradable: true },
   boar_tusk:      { id: 'boar_tusk', name: 'Thornback Tusk', type: 'material', stack: 200, value: 3, icon: 'tusk', tradable: true },

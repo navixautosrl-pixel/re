@@ -86,6 +86,11 @@ const DRAW = {
     poly(ctx, [[32, 6], [44, 26], [36, 58], [22, 36]], '#8fd6e8', '#d7f3fa');
     poly(ctx, [[32, 6], [44, 26], [32, 30]], '#d7f3fa');
   },
+  wax(ctx) {
+    ctx.beginPath(); ctx.ellipse(32, 40, 18, 11, 0, 0, Math.PI * 2); ctx.fillStyle = '#b8863a'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(32, 35, 18, 11, 0, 0, Math.PI * 2); ctx.fillStyle = '#e0b860'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(32, 35, 9, 5, 0, 0, Math.PI * 2); ctx.fillStyle = '#f5dc98'; ctx.fill();
+  },
   gold(ctx) {
     for (const [x, y] of [[24, 42], [38, 42], [31, 32]]) {
       circle(ctx, x, y, 10, '#e2b23f', '#7a5a16');
