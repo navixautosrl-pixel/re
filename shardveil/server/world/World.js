@@ -10,6 +10,7 @@ import { computeStats } from '../../shared/stats.js';
 import { TICK_RATE, SNAPSHOT_RATE, INTEREST_RADIUS, S } from '../../shared/protocol.js';
 import { mulberry32 } from '../../shared/rng.js';
 import { Combat } from './combat.js';
+import { QuestService } from './quests.js';
 import { updateMonster } from './ai.js';
 import * as repo from '../repo/characters.js';
 import { log } from '../log.js';
@@ -29,6 +30,7 @@ export class World {
     this.terrain = createTerrain(this.zone);
     this.rng = mulberry32(seed);
     this.combat = new Combat(this);
+    this.quests = new QuestService(this);
     this.hooks = hooks; // optional { onKill(player, monster) } for quests etc.
 
     this.players = new Map();     // entity id -> player
@@ -68,7 +70,11 @@ export class World {
     this.time = now;
     this.tickCount++;
 
-    for (const p of this.players.values()) this.updatePlayer(p, dt);
+    const slowTick = this.tickCount % TICK_RATE === 0; // once per second
+    for (const p of this.players.values()) {
+      this.updatePlayer(p, dt);
+      if (slowTick && !p.dead) this.quests.checkExplore(p);
+    }
 
     for (const m of this.monsters.values()) {
       if (m.dead) {
@@ -160,13 +166,14 @@ export class World {
     this.emit(m.x, m.z, { k: 'despawn', t: m.id });
   }
 
-  onMonsterKilled(m, killer) {
+  onMonsterKilled(m, killer, contributors = []) {
     m.removeAt = this.time + 2.5; // leave the body briefly for the death animation
     if (m.temporary) this.temporaryCount--;
     if (m.slot) {
       m.slot.monster = null;
       m.slot.respawnAt = this.time + m.slot.group.respawn;
     }
+    for (const p of contributors) this.quests.onKill(p, m);
     if (killer && this.hooks.onKill) this.hooks.onKill(killer, m);
   }
 
@@ -186,6 +193,7 @@ export class World {
       chatTimes: [], removed: false, joinedAt: this.time,
     };
     this.recomputeStats(p);
+    this.quests.init(p, ch.quests || []);
     if (p.hp <= 0 || !this.terrain.isWalkable(p.x, p.z)) {
       // Logged out dead (or somewhere invalid): wake up at the brazier.
       p.x = this.zone.respawn.x; p.z = this.zone.respawn.z;
@@ -205,6 +213,7 @@ export class World {
       dayLength: DAY_LENGTH_SEC,
     });
     this.sendSelf(p);
+    this.quests.send(p);
     this.broadcastNotice(`${p.name} has entered ${this.zone.name}.`, 'system', p);
     log.info('player joined', { character: p.characterId, name: p.name, online: this.players.size });
     return p;
@@ -282,6 +291,9 @@ export class World {
       case 'drop': return this.slotOp(p, msg.slot, (s) => repo.destroyBagItem(this.pool, p.characterId, s));
       case 'chat': return this.handleChat(p, msg);
       case 'revive': return this.handleRevive(p);
+      case 'questAccept': return typeof msg.quest === 'string' && this.quests.accept(p, msg.quest);
+      case 'questTurnIn': return typeof msg.quest === 'string' && this.quests.turnIn(p, msg.quest);
+      case 'questAbandon': return typeof msg.quest === 'string' && this.quests.abandon(p, msg.quest);
       case 'ping': return p.send({ t: S.PONG, t0: msg.t0, serverTime: this.time });
       default: return undefined;
     }

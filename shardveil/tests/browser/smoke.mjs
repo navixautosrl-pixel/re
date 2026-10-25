@@ -51,11 +51,31 @@ try {
   await A.page.screenshot({ path: path.join(OUT, '01-character-select.png') });
   // Put A just outside the south gate so a fight is a short walk away.
   const [{ id: aId }] = await query("SELECT id FROM characters WHERE name = 'Wren'");
-  await query('UPDATE characters SET x = 0, z = 60, ry = 3.14 WHERE id = $1', [aId]);
+  // Start beside Warden Ilsa, facing her.
+  await query('UPDATE characters SET x = 3, z = 4.5, ry = 0 WHERE id = $1', [aId]);
   await A.page.click('#enter-world');
   await A.page.waitForSelector('#hud:not([hidden])', { timeout: 15000 });
   await setTimeOfDay(A.page, 0.42);
   await sleep(2500);
+  const mark = await A.page.evaluate(() => window.shardveil.game.questUi.markerFor('warden_ilsa'));
+  check(mark === '!', 'Warden Ilsa shows an available-quest marker');
+  // Click on the NPC model where it is drawn on screen.
+  const spot = await A.page.evaluate(() => {
+    const g = window.shardveil.game;
+    const npc = [...g.entities.values()].find((e) => e.type === 'npc' && e.npc.id === 'warden_ilsa');
+    const v = npc.model.root.position.clone(); v.y += 1.1; v.project(g.camera);
+    return { x: (v.x * 0.5 + 0.5) * innerWidth, y: (-v.y * 0.5 + 0.5) * innerHeight };
+  });
+  await A.page.mouse.click(spot.x, spot.y);
+  await A.page.waitForSelector('#win-dialog:not([hidden]) .quest .btn.primary', { timeout: 10000 });
+  await A.page.screenshot({ path: path.join(OUT, '02a-quest-offer.png') });
+  await A.page.click('#win-dialog .quest .btn.primary');
+  await A.page.waitForFunction(() => document.querySelector('#tracker')?.textContent.includes('Embers at the Gate'), null, { timeout: 10000 });
+  check(true, 'quest accepted through the NPC dialogue and shown in the tracker');
+  await A.page.keyboard.press('Escape');
+  // Server-side teleport (test setup) to the wolf meadow.
+  srv.world.teleportPlayer(srv.world.byCharacter.get(aId), 0, 60);
+  await sleep(1500);
   await A.page.screenshot({ path: path.join(OUT, '02-in-world.png') });
   check(await A.page.$eval('#self-name', (e) => e.textContent) === 'Wren', 'HUD shows the character name');
 
@@ -88,6 +108,8 @@ try {
   await sleep(600);
   const xp = await A.page.evaluate(() => window.shardveil.game.me.xp);
   check(xp > 0, `XP shown in the client (${xp})`);
+  await A.page.waitForFunction(() => document.querySelector('#tracker')?.textContent.includes('1/5'), null, { timeout: 10000 }).catch(() => {});
+  check((await A.page.$eval('#tracker', (e) => e.textContent)).includes('Dusk Wolf slain: 1/5'), 'quest tracker counts the kill');
   await A.page.keyboard.press('KeyZ');
   await sleep(2500);
   await A.page.keyboard.press('KeyZ');

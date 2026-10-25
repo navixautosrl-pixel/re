@@ -567,6 +567,11 @@ export class Hud {
         this.plates.set(ent.id, p);
       }
       if (p.n.textContent !== ent.name) p.n.textContent = ent.name;
+      if (ent.type === 'npc' && g.questUi) {
+        const mark = g.questUi.markerFor(ent.npc.id);
+        if (!p.mark) { p.mark = el('span', 'mark'); p.e.prepend(p.mark); }
+        if (p.mark.textContent !== mark) { p.mark.textContent = mark; p.mark.classList.toggle('ready', mark === '?'); }
+      }
       if (ent.level && ent.type !== 'loot') {
         if (!p.lv) { p.lv = el('span', 'lv'); p.e.prepend(p.lv); }
         const lv = String(ent.level);

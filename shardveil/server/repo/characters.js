@@ -112,7 +112,9 @@ export async function loadCharacter(pool, accountId, characterId) {
   );
   if (!rows[0]) return null;
   const items = await loadItems(pool, characterId);
-  return { ...rows[0], items };
+  const { rows: quests } = await pool.query(
+    'SELECT quest_id, state, progress FROM quest_progress WHERE character_id = $1', [characterId]);
+  return { ...rows[0], items, quests };
 }
 
 export async function loadItems(db, characterId) {
@@ -162,9 +164,17 @@ function freeSlots(rows, total) {
 // is written and INVENTORY_FULL is thrown. Stackables merge into existing
 // unbound stacks first.
 // items: [{ defId, qty, rarity?, affixes? }]
-export async function grantItems(pool, characterId, items, { action, origin, gold = 0, meta = {} }) {
+export async function grantItems(pool, characterId, items, opts) {
   return tx(pool, async (c) => {
     await lockCharacter(c, characterId);
+    return grantItemsTx(c, characterId, items, opts);
+  });
+}
+
+// Same as grantItems, inside a transaction the caller already holds (with the
+// character row locked).
+export async function grantItemsTx(c, characterId, items, { action, origin, gold = 0, meta = {} }) {
+  {
     // Plan against a working copy of the bag, then write the differences.
     const work = (await bagRows(c, characterId)).map((r) => ({ ...r, added: 0 }));
     const free = freeSlots(work, PROGRESSION.inventorySlots);
@@ -224,8 +234,29 @@ export async function grantItems(pool, characterId, items, { action, origin, gol
       );
     }
     return { created, gold: newGold };
-  });
+  }
 }
+
+// Removes `qty` units of defId from the bag (any stacks), or throws.
+export async function takeItemsTx(c, characterId, defId, qty, action, meta = {}) {
+  const { rows } = await c.query(
+    "SELECT id, qty FROM items WHERE character_id = $1 AND container = 'bag' AND def_id = $2 ORDER BY qty, slot",
+    [characterId, defId]);
+  const have = rows.reduce((s, r) => s + r.qty, 0);
+  if (have < qty) throw new GameError('MISSING_ITEMS', `You need ${qty} × ${ITEMS[defId]?.name || defId}.`);
+  let left = qty;
+  for (const r of rows) {
+    if (left <= 0) break;
+    const take = Math.min(left, r.qty);
+    if (take === r.qty) await c.query('DELETE FROM items WHERE id = $1', [r.id]);
+    else await c.query('UPDATE items SET qty = qty - $2 WHERE id = $1', [r.id, take]);
+    await c.query('INSERT INTO item_ledger (character_id, action, item_id, def_id, qty, meta) VALUES ($1, $2, $3, $4, $5, $6)',
+      [characterId, action, r.id, defId, -take, meta]);
+    left -= take;
+  }
+}
+
+export { lockCharacter };
 
 export async function changeGold(pool, characterId, delta, action, meta = {}) {
   return tx(pool, async (c) => {

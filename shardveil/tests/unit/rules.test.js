@@ -95,3 +95,14 @@ test('rarity tiers roll the right number of affixes, roughly at the configured o
   }
   assert.ok(counts.common > counts.uncommon && counts.uncommon > counts.rare && counts.rare > counts.epic);
 });
+
+test('quest data: rewards, objectives and givers all resolve', async () => {
+  const { questRewardItemsValid } = await import('../../server/world/quests.js');
+  const { QUESTS } = await import('../../shared/data/quests.js');
+  assert.equal(questRewardItemsValid(), null);
+  for (const q of Object.values(QUESTS)) {
+    assert.ok(ZONES.hollowmere.npcs.some((n) => n.id === q.giver), `giver for ${q.id}`);
+    for (const r of q.requires) assert.ok(QUESTS[r], `${q.id} requires ${r}`);
+    for (const o of q.objectives) if (o.type === 'kill') assert.ok(MONSTERS[o.monster], `${q.id} monster ${o.monster}`);
+  }
+});

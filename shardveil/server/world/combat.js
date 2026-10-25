@@ -237,7 +237,7 @@ export class Combat {
       const loot = rollLoot(w.rng, m.def.loot, { rarityBonus: m.def.elite ? 0.12 : 0 });
       w.dropLoot(m, loot, top);
     }
-    w.onMonsterKilled(m, top);
+    w.onMonsterKilled(m, top, shares.map(([pl]) => pl));
   }
 
   grantXp(p, amount) {

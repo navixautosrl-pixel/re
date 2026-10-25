@@ -222,7 +222,7 @@ label.check { display: flex; align-items: center; gap: 0.5rem; }
 .window { position: absolute; top: 5.5rem; right: 13rem; width: 22rem; background: var(--panel-bg); border: 1px solid var(--bronze-lo); box-shadow: 0 10px 40px rgb(0 0 0 / 0.55); }
 #win-character { right: auto; left: 19rem; width: 25rem; }
 #win-settings { right: 50%; transform: translateX(50%); width: 26rem; max-height: calc(100vh - 9rem); overflow-y: auto; }
-.window.dialog { right: 50%; transform: translateX(50%); top: 22%; width: 28rem; }
+.window.dialog { right: 50%; transform: translateX(50%); top: 14%; width: 30rem; max-height: 72vh; overflow-y: auto; }
 .window header { display: flex; justify-content: space-between; align-items: center; padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--iron-600); background: linear-gradient(var(--iron-700), transparent); cursor: default; }
 .window h3 { font-size: 1.15rem; color: var(--parchment); }
 .window .x { background: none; border: 0; font-size: 1.4rem; line-height: 1; color: var(--muted); cursor: pointer; padding: 0 0.3rem; }
@@ -308,3 +308,30 @@ label.check { display: flex; align-items: center; gap: 0.5rem; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
 }
+
+/* ---- Quests --------------------------------------------------------- */
+#win-quests { right: auto; left: 19rem; width: 27rem; max-height: calc(100vh - 12rem); overflow-y: auto; }
+.journal { padding: 0.8rem; display: grid; gap: 0.9rem; }
+.journal .empty-note { font-size: 0.92rem; }
+.quest { display: grid; gap: 0.3rem; }
+.quest h4 { font-size: 1.05rem; color: var(--parchment); }
+.quest p { margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.45; }
+.quest .giver { font-size: 0.8rem; color: var(--bronze-hi); }
+.objectives { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; font-size: 0.9rem; }
+.objectives li::before { content: ''; display: inline-block; width: 0.55rem; height: 0.55rem; margin-right: 0.45rem; border: 1px solid var(--iron-400); transform: rotate(45deg); vertical-align: 0.05rem; }
+.objectives li.done { color: var(--good); }
+.objectives li.done::before { background: var(--good); border-color: var(--good); }
+.rewards { font-size: 0.85rem; color: var(--muted); }
+.rewards b { color: var(--parchment); font-weight: 500; }
+.quest .row { margin-top: 0.2rem; }
+.dialog-body .quest { padding-top: 0.7rem; border-top: 1px solid var(--iron-600); }
+.dialog-body .offer { font-style: italic; color: var(--text); }
+.tracker { position: absolute; top: 15.6rem; right: 1rem; width: 15rem; display: grid; gap: 0.55rem; pointer-events: none; }
+.tracker .tq { padding: 0.4rem 0.6rem; background: rgb(13 17 24 / 0.62); border-left: 2px solid var(--bronze); }
+.tracker .tq.ready { border-left-color: var(--good); }
+.tracker .tq-name { font-family: 'Marcellus', serif; font-size: 0.92rem; color: var(--parchment); }
+.tracker .objectives { font-size: 0.82rem; text-shadow: 0 1px 2px #000; }
+.tracker .ready-note { font-size: 0.8rem; color: var(--good); }
+.nameplate .mark { display: block; font-family: 'Marcellus', serif; font-size: 1.5rem; line-height: 1; color: #f2d48c; text-shadow: 0 0 8px rgb(242 212 140 / 0.7), 0 2px 2px #000; }
+.nameplate .mark.ready { color: #9ff09a; text-shadow: 0 0 8px rgb(159 240 154 / 0.7), 0 2px 2px #000; }
+@media (max-width: 900px) { .tracker { display: none; } #win-quests { left: 1rem; } }

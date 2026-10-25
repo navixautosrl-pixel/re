@@ -6,10 +6,10 @@ import { CLASSES, SKILLS } from '/shared/data/classes.js';
 import { MONSTERS } from '/shared/data/monsters.js';
 import { ITEMS, RARITIES } from '/shared/data/items.js';
 import { PROGRESSION } from '/shared/data/progression.js';
-import { NPC_DIALOGUE } from '/shared/data/npcs.js';
 import { buildHumanoid, buildMonster, buildLoot, animate, setWeapon } from './scene/models.js';
 import { Fx } from './scene/fx.js';
 import { Hud } from './ui/hud.js';
+import { QuestUi } from './ui/quests.js';
 import { settings, actionForCode } from './settings.js';
 import { sfx, initAudio, setAmbientNight } from './audio.js';
 
@@ -60,6 +60,7 @@ export class Game {
     this.applyWelcome(welcome);
     this.spawnNpcs();
     this.hud = new Hud(this);
+    this.questUi = new QuestUi(this);
     this.hud.renderInventory();
     this.hud.chatLine('system', null, `Welcome to ${terrain.zone.name}. Press Enter to talk, Esc for settings.`);
     this.bindInput();
@@ -131,7 +132,9 @@ export class Game {
       case 'inv':
         this.inventory = msg.items;
         this.refreshMyWeapon();
+        this.questUi.refresh();
         return this.hud.renderInventory();
+      case 'quests': return this.questUi.update(msg.q);
       case 'self':
         Object.assign(this.me, { stats: msg.stats, gold: msg.gold, level: msg.level, xp: msg.xp, xpn: msg.xpNext });
         return this.hud.renderStats();
@@ -221,7 +224,7 @@ export class Game {
     Object.assign(this.me, { hp: y.hp, mp: y.mp, mhp: y.mhp, mmp: y.mmp, xp: y.xp, xpn: y.xpn ?? Infinity, level: y.lv, gold: y.g, dead: !!y.d, cd: y.cd, buffs: y.bf });
     if (this.me.dead && !wasDead) this.onDeath();
     if (!this.me.dead && wasDead) this.onRevive();
-    if (prevLevel !== y.lv) this.hud.renderStats();
+    if (prevLevel !== y.lv) { this.hud.renderStats(); this.questUi.refresh(); }
     if (y.rg !== this.region) {
       const prev = this.region;
       this.region = y.rg;
@@ -279,6 +282,11 @@ export class Game {
         }
         break;
       }
+      case 'qaccept': case 'qexplore': case 'qdone':
+        this.questUi.onEvent(e);
+        if (e.k === 'qdone') sfx.levelUp();
+        else sfx.pickup();
+        break;
       case 'status': break;
       case 'buff': break;
       case 'die':
@@ -487,7 +495,7 @@ export class Game {
   }
 
   talkTo(e) {
-    this.hud.showDialog(e.name, NPC_DIALOGUE[e.npc.id] || ['…']);
+    this.questUi.openNpc(e.npc.id);
   }
 
   // ---- Input -----------------------------------------------------------------------
@@ -513,6 +521,7 @@ export class Game {
       if (e.repeat) return;
       if (action === 'inventory') return this.hud.toggleWindow('win-inventory');
       if (action === 'character') return this.hud.toggleWindow('win-character');
+      if (action === 'journal') { this.hud.toggleWindow('win-quests'); return this.questUi.renderJournal(); }
       if (action === 'nextTarget') return this.cycleTarget();
       if (action === 'pickup') return this.pickupNearest();
       this.triggerAction(action);
@@ -680,12 +689,34 @@ export class Game {
     const cam = new THREE.Vector3(head.x + Math.sin(this.cameraYaw) * cp * this.camDist, head.y + sp * this.camDist, head.z + Math.cos(this.cameraYaw) * cp * this.camDist);
     const ground = this.terrain.heightAt(cam.x, cam.z) + 0.6;
     if (cam.y < ground) cam.y = ground;
+    this.keepCameraOutOfBuildings(head, cam);
     this.camera.position.lerp(cam, damp(18, dt));
     this.camera.lookAt(head);
 
     this.fx.update(dt);
     setAmbientNight(this.app.world.night);
     this.hud.update(dt);
+  }
+
+  // March from the head toward the desired camera spot and stop short of the
+  // first building volume, so walls and roofs never fill the screen.
+  keepCameraOutOfBuildings(head, cam) {
+    const town = this.terrain.zone.town;
+    if (Math.hypot(head.x - town.x, head.z - town.z) > town.palisadeRadius + 25) return;
+    const dir = cam.clone().sub(head);
+    const len = dir.length();
+    dir.divideScalar(len);
+    const p = new THREE.Vector3();
+    for (let t = 0.5; t <= len; t += 0.25) {
+      p.copy(head).addScaledVector(dir, t);
+      for (const b of town.buildings) {
+        const roof = b.h + Math.min(b.w, b.d) * 0.45 + 1.2;
+        if (Math.abs(p.x - (town.x + b.x)) < b.w / 2 + 0.8 && Math.abs(p.z - (town.z + b.z)) < b.d / 2 + 0.8 && p.y < town.height + roof) {
+          cam.copy(head).addScaledVector(dir, Math.max(1.2, t - 0.5));
+          return;
+        }
+      }
+    }
   }
 
   leave(where) { this.app.leaveGame(where); }

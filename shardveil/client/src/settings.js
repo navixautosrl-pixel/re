@@ -22,6 +22,7 @@ export const ACTIONS = [
   ['pickup', 'Pick up loot', 'KeyZ'],
   ['inventory', 'Pack', 'KeyI'],
   ['character', 'Character', 'KeyC'],
+  ['journal', 'Quest journal', 'KeyL'],
 ];
 
 const DEFAULTS = {

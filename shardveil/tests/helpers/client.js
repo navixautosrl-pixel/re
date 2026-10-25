@@ -80,7 +80,12 @@ export class TestClient {
     }
   }
 
-  waitFor(pred, timeout = 5000) {
+  // includePast: also match messages that already arrived (newest first).
+  waitFor(pred, timeout = 5000, includePast = false) {
+    if (includePast) {
+      const hit = [...this.messages].reverse().find(pred);
+      if (hit) return Promise.resolve(hit);
+    }
     return new Promise((resolve, reject) => {
       const w = { pred, resolve };
       this.waiters.push(w);

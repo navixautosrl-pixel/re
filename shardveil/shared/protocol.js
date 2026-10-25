@@ -23,6 +23,9 @@ export const C = {
   CHAT: 'chat',           // { channel, text }
   REVIVE: 'revive',       // {}
   PING: 'ping',           // { t }
+  QUEST_ACCEPT: 'questAccept',   // { quest }
+  QUEST_TURN_IN: 'questTurnIn',  // { quest }
+  QUEST_ABANDON: 'questAbandon', // { quest }
 };
 
 // Server -> client message types
@@ -38,4 +41,5 @@ export const S = {
   ERROR: 'error',         // { code, message }
   PONG: 'pong',           // { t, serverTime }
   KICK: 'kick',           // { reason }
+  QUESTS: 'quests',       // { q: [{ id, state, progress }] }
 };
