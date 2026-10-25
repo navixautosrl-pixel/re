@@ -5,7 +5,7 @@ export const MONSTERS = {
   dusk_wolf: {
     id: 'dusk_wolf', name: 'Dusk Wolf', level: 2, hp: 70, attack: [5, 8], defense: 1,
     attackRange: 2.0, attackCooldown: 1.4, moveSpeed: 5.4, aggroRadius: 0, aggressive: false,
-    leashRadius: 32, xp: 22, loot: 'dusk_wolf', model: 'wolf', scale: 1.0, color: '#4b4f57', radius: 0.7,
+    leashRadius: 32, xp: 22, loot: 'dusk_wolf', model: 'wolf', scale: 1.0, color: '#6f7480', radius: 0.7,
   },
   old_greymaw: {
     id: 'old_greymaw', name: 'Old Greymaw', title: 'Pack Elder', level: 6, hp: 900, attack: [14, 22], defense: 6,
@@ -23,7 +23,7 @@ export const MONSTERS = {
   thornback_boar: {
     id: 'thornback_boar', name: 'Thornback Boar', level: 5, hp: 170, attack: [11, 16], defense: 4,
     attackRange: 2.2, attackCooldown: 1.6, moveSpeed: 5.8, aggroRadius: 8, aggressive: true,
-    leashRadius: 32, xp: 58, loot: 'thornback_boar', model: 'boar', scale: 1.0, color: '#5a4030', radius: 0.9,
+    leashRadius: 32, xp: 58, loot: 'thornback_boar', model: 'boar', scale: 1.0, color: '#7a5a42', radius: 0.9,
   },
   thornling: {
     id: 'thornling', name: 'Thornling', level: 7, hp: 210, attack: [14, 20], defense: 6,
@@ -33,7 +33,7 @@ export const MONSTERS = {
   shardtouched_wolf: {
     id: 'shardtouched_wolf', name: 'Shard-touched Wolf', level: 8, hp: 260, attack: [17, 24], defense: 6,
     attackRange: 2.1, attackCooldown: 1.3, moveSpeed: 5.8, aggroRadius: 11, aggressive: true,
-    leashRadius: 34, xp: 98, loot: 'shardtouched_wolf', model: 'wolf', scale: 1.15, color: '#3e4760', radius: 0.8,
+    leashRadius: 34, xp: 98, loot: 'shardtouched_wolf', model: 'wolf', scale: 1.15, color: '#566282', radius: 0.8,
     glow: '#79d0ff',
   },
   // Veilshards are the zone's "living stones": they don't move or attack, but

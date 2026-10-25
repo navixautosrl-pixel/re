@@ -1,1 +1,195 @@
-<!doctype html><title>Shardveil</title>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shardveil</title>
+  <meta name="description" content="Shardveil — an online action RPG set in Hollowmere Vale, where shards of a broken sky still fall.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+  <canvas id="world" aria-label="Game world"></canvas>
+
+  <!-- ===== Front end: login, character select, character creation ===== -->
+  <div id="front" class="front">
+    <header class="front-brand">
+      <h1 class="wordmark">Shardveil</h1>
+      <p class="tagline">The sky broke. The pieces are still falling.</p>
+    </header>
+
+    <section id="screen-login" class="panel front-panel" aria-labelledby="login-title">
+      <h2 id="login-title">Enter the Vale</h2>
+      <form id="login-form" novalidate>
+        <label>Account name
+          <input name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]+">
+        </label>
+        <label>Password
+          <input name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="128">
+        </label>
+        <p class="form-error" role="alert" hidden></p>
+        <div class="row">
+          <button type="submit" class="btn primary">Log in</button>
+          <button type="button" class="btn ghost" id="show-register">Create account</button>
+        </div>
+      </form>
+      <form id="register-form" hidden novalidate>
+        <label>Account name <small>3–20 letters, digits or _</small>
+          <input name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]+">
+        </label>
+        <label>Password <small>at least 8 characters</small>
+          <input name="password" type="password" autocomplete="new-password" required minlength="8" maxlength="128">
+        </label>
+        <label>Repeat password
+          <input name="password2" type="password" autocomplete="new-password" required minlength="8" maxlength="128">
+        </label>
+        <p class="form-error" role="alert" hidden></p>
+        <div class="row">
+          <button type="submit" class="btn primary">Create account</button>
+          <button type="button" class="btn ghost" id="show-login">Back</button>
+        </div>
+      </form>
+      <p class="server-line" id="server-line">Checking server…</p>
+    </section>
+
+    <section id="screen-select" class="panel front-panel wide" hidden aria-labelledby="select-title">
+      <h2 id="select-title">Your characters</h2>
+      <ul id="char-list" class="char-list"></ul>
+      <p class="form-error" role="alert" hidden></p>
+      <div class="row">
+        <button type="button" class="btn primary" id="enter-world" disabled>Enter world</button>
+        <button type="button" class="btn" id="new-char">New character</button>
+        <button type="button" class="btn ghost" id="logout">Log out</button>
+      </div>
+    </section>
+
+    <section id="screen-create" class="panel front-panel wide" hidden aria-labelledby="create-title">
+      <h2 id="create-title">A new arrival in Emberford</h2>
+      <form id="create-form" novalidate>
+        <fieldset class="class-pick">
+          <legend>Calling</legend>
+          <div id="class-options" class="class-options"></div>
+        </fieldset>
+        <label>Name <small>3–16 letters</small>
+          <input name="name" required minlength="3" maxlength="16" pattern="[A-Za-z]+" autocomplete="off">
+        </label>
+        <p class="form-error" role="alert" hidden></p>
+        <div class="row">
+          <button type="submit" class="btn primary">Create</button>
+          <button type="button" class="btn ghost" id="cancel-create">Cancel</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- ===== In-game HUD ===== -->
+  <div id="hud" class="hud" hidden>
+    <div id="labels" class="labels" aria-hidden="true"></div>
+
+    <section class="unitframe self" aria-label="Your character">
+      <div class="uf-name"><span id="self-name"></span> <span class="uf-level" id="self-level"></span></div>
+      <div class="bar hp" role="meter" aria-label="Health" id="self-hp"><i></i><span></span></div>
+      <div class="bar mp" role="meter" aria-label="Mana" id="self-mp"><i></i><span></span></div>
+      <div class="buffs" id="self-buffs"></div>
+    </section>
+
+    <section class="unitframe target" id="target-frame" hidden aria-label="Target">
+      <div class="uf-name"><span id="target-name"></span> <span class="uf-level" id="target-level"></span></div>
+      <div class="bar hp" id="target-hp"><i></i><span></span></div>
+      <div class="buffs" id="target-status"></div>
+    </section>
+
+    <section class="minimap-wrap" aria-label="Minimap">
+      <canvas id="minimap" width="176" height="176"></canvas>
+      <div class="minimap-meta"><span id="region-name"></span><span id="clock"></span></div>
+    </section>
+
+    <div class="actionbar" id="actionbar" role="toolbar" aria-label="Skills"></div>
+    <div class="xpbar" id="xpbar" role="meter" aria-label="Experience"><i></i><span></span></div>
+
+    <section class="chat" id="chat" aria-label="Chat">
+      <div class="chat-tabs" role="tablist">
+        <button role="tab" data-ch="all" aria-selected="true">All</button>
+        <button role="tab" data-ch="say">Nearby</button>
+        <button role="tab" data-ch="global">Vale</button>
+      </div>
+      <ol class="chat-log" id="chat-log" aria-live="polite"></ol>
+      <form id="chat-form" class="chat-form">
+        <select id="chat-channel" aria-label="Channel"><option value="say">Nearby</option><option value="global">Vale</option></select>
+        <input id="chat-input" maxlength="200" autocomplete="off" placeholder="Press Enter to talk" aria-label="Message">
+      </form>
+    </section>
+
+    <section class="window" id="win-inventory" hidden aria-labelledby="inv-title">
+      <header><h3 id="inv-title">Pack</h3><button class="x" data-close aria-label="Close">×</button></header>
+      <div class="inv-grid" id="inv-grid"></div>
+      <footer><span class="gold" id="inv-gold"></span><small>Right-click to use or equip. Drag to rearrange.</small></footer>
+    </section>
+
+    <section class="window" id="win-character" hidden aria-labelledby="char-title">
+      <header><h3 id="char-title">Character</h3><button class="x" data-close aria-label="Close">×</button></header>
+      <div class="char-body">
+        <div class="equip-grid" id="equip-grid"></div>
+        <dl class="stat-list" id="stat-list"></dl>
+      </div>
+    </section>
+
+    <section class="window" id="win-settings" hidden aria-labelledby="set-title">
+      <header><h3 id="set-title">Settings</h3><button class="x" data-close aria-label="Close">×</button></header>
+      <div class="settings-body">
+        <label>Graphics quality
+          <select id="set-quality">
+            <option value="low">Low</option><option value="medium">Medium</option>
+            <option value="high">High</option><option value="ultra">Ultra</option>
+          </select>
+        </label>
+        <label>Interface scale <output id="set-uiscale-out"></output>
+          <input type="range" id="set-uiscale" min="0.8" max="1.4" step="0.05">
+        </label>
+        <label>Sound volume <output id="set-volume-out"></output>
+          <input type="range" id="set-volume" min="0" max="1" step="0.05">
+        </label>
+        <label class="check"><input type="checkbox" id="set-damage"> Show damage numbers</label>
+        <h4>Key bindings</h4>
+        <p class="hint">Click a key, then press the new one. Esc cancels.</p>
+        <div class="bindings" id="bindings"></div>
+        <button class="btn ghost" id="reset-bindings" type="button">Restore default keys</button>
+        <h4>Session</h4>
+        <div class="row">
+          <button class="btn" id="to-select" type="button">Character select</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="window dialog" id="win-dialog" hidden aria-labelledby="dlg-title">
+      <header><h3 id="dlg-title"></h3><button class="x" data-close aria-label="Close">×</button></header>
+      <div class="dialog-body" id="dlg-body"></div>
+    </section>
+
+    <div class="tooltip" id="tooltip" hidden></div>
+    <div class="notices" id="notices" aria-live="polite"></div>
+    <div class="banner" id="banner" aria-live="polite"></div>
+
+    <div class="overlay" id="death" hidden>
+      <div class="panel">
+        <h2>You have fallen</h2>
+        <p id="death-text"></p>
+        <button class="btn primary" id="revive" type="button" disabled>Return to Emberford</button>
+      </div>
+    </div>
+    <div class="overlay soft" id="reconnect" hidden>
+      <div class="panel"><h2>Connection lost</h2><p id="reconnect-text">Reconnecting…</p>
+        <button class="btn" id="reconnect-give-up" type="button">Back to login</button></div>
+    </div>
+    <ul class="help-hint" id="help-hint" aria-label="Controls">
+      <li><kbd>WASD</kbd> move</li><li><kbd>Drag</kbd> look</li><li><kbd>Click</kbd> target</li>
+      <li><kbd>Space</kbd> attack</li><li><kbd>1</kbd>–<kbd>4</kbd> skills and potions</li><li><kbd>Z</kbd> loot</li>
+      <li><kbd>I</kbd> pack</li><li><kbd>C</kbd> character</li><li><kbd>Esc</kbd> settings</li>
+    </ul>
+  </div>
+
+  <div id="boot" class="boot"><p>Raising the vale…</p></div>
+  <noscript><p class="noscript">Shardveil needs JavaScript and WebGL to run.</p></noscript>
+</body>
+</html>

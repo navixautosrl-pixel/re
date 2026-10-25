@@ -10,6 +10,7 @@ import { log } from './log.js';
 const STATIC_ROOTS = [
   { prefix: '/shared/', dir: path.join(ROOT, 'shared') },
   { prefix: '/vendor/three/', dir: path.join(ROOT, 'node_modules', 'three', 'build') },
+  { prefix: '/vendor/fonts/', dir: path.join(ROOT, 'node_modules', '@fontsource') },
   { prefix: '/', dir: path.join(ROOT, 'client') },
 ];
 
