@@ -1,0 +1,51 @@
+          <form class="form" id="form" novalidate data-reveal>
+            <div class="form-row two">
+              <div class="field">
+                <label for="nume">Nume și prenume</label>
+                <input id="nume" name="nume" type="text" autocomplete="name" required aria-describedby="nume-err">
+                <p class="error" id="nume-err" aria-live="polite"></p>
+              </div>
+              <div class="field">
+                <label for="telefon">Telefon</label>
+                <input id="telefon" name="telefon" type="tel" inputmode="tel" autocomplete="tel" placeholder="07xx xxx xxx" required aria-describedby="telefon-err">
+                <p class="error" id="telefon-err" aria-live="polite"></p>
+              </div>
+            </div>
+            <div class="form-row two">
+              <div class="field">
+                <label for="email">E-mail <span class="opt">(opțional)</span></label>
+                <input id="email" name="email" type="email" autocomplete="email" aria-describedby="email-err">
+                <p class="error" id="email-err" aria-live="polite"></p>
+              </div>
+              <div class="field">
+                <label for="serviciu">Serviciu</label>
+                <select id="serviciu" name="serviciu" required aria-describedby="serviciu-err">
+                  <option value="">Alegeți serviciul</option>
+                  <option>Studiu geotehnic</option>
+                  <option>Foraje geotehnice</option>
+                  <option>Consultanță tehnică</option>
+                  <option>Monitorizare</option>
+                  <option>Nu știu încă</option>
+                </select>
+                <p class="error" id="serviciu-err" aria-live="polite"></p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="locatie">Localitatea amplasamentului</label>
+              <input id="locatie" name="locatie" type="text" placeholder="ex. Popești-Leordeni, Sector 4, Voluntari" required aria-describedby="locatie-err">
+              <p class="error" id="locatie-err" aria-live="polite"></p>
+            </div>
+            <div class="field">
+              <label for="mesaj">Detalii despre construcție <span class="opt">(opțional)</span></label>
+              <textarea id="mesaj" name="mesaj" placeholder="Tipul construcției, regimul de înălțime (ex. P+1), suprafața aproximativă"></textarea>
+            </div>
+            <label class="check">
+              <input type="checkbox" id="acord" name="acord" required aria-describedby="acord-err">
+              <span>Sunt de acord ca datele mele să fie folosite doar pentru a primi răspuns la această solicitare.</span>
+            </label>
+            <p class="error" id="acord-err" aria-live="polite" style="color: var(--err); font-size: var(--step--1); margin: -0.5rem 0 1rem"></p>
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">Trimite solicitarea</button>
+            </div>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
